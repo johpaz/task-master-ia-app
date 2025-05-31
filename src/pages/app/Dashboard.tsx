@@ -1,4 +1,6 @@
 
+import { useAuthStore } from '../../stores/authStore';
+import { ClientDashboard } from './ClientDashboard';
 import { 
   CheckSquare, 
   Clock, 
@@ -8,10 +10,9 @@ import {
   Calendar as CalendarIcon
 } from 'lucide-react';
 import { useTaskStore } from '../../stores/taskStore';
-import { useAuthStore } from '../../stores/authStore';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 
-export const Dashboard = () => {
+const AdminManagerDashboard = () => {
   const { getDashboardMetrics } = useTaskStore();
   const { user } = useAuthStore();
   const metrics = getDashboardMetrics();
@@ -197,4 +198,16 @@ export const Dashboard = () => {
       </Card>
     </div>
   );
+};
+
+export const Dashboard = () => {
+  const { user } = useAuthStore();
+
+  // Mostrar dashboard específico para clientes
+  if (user?.role === 'client') {
+    return <ClientDashboard />;
+  }
+
+  // Dashboard para admin, manager y collaborator
+  return <AdminManagerDashboard />;
 };

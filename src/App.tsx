@@ -22,6 +22,9 @@ import { Login } from "./pages/auth/Login";
 
 // App Pages
 import { Dashboard } from "./pages/app/Dashboard";
+import { Tasks } from "./pages/app/Tasks";
+import { Kanban } from "./pages/app/Kanban";
+import { Calendar } from "./pages/app/Calendar";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -79,10 +82,7 @@ const App = () => {
             <Route path="/tasks" element={
               <ProtectedRoute>
                 <AppLayout>
-                  <div className="p-8 text-center">
-                    <h1 className="text-2xl font-bold">Lista de Tareas</h1>
-                    <p className="text-gray-600 mt-2">Próximamente disponible</p>
-                  </div>
+                  <Tasks />
                 </AppLayout>
               </ProtectedRoute>
             } />
@@ -90,10 +90,7 @@ const App = () => {
             <Route path="/kanban" element={
               <ProtectedRoute>
                 <AppLayout>
-                  <div className="p-8 text-center">
-                    <h1 className="text-2xl font-bold">Tablero Kanban</h1>
-                    <p className="text-gray-600 mt-2">Próximamente disponible</p>
-                  </div>
+                  <Kanban />
                 </AppLayout>
               </ProtectedRoute>
             } />
@@ -101,10 +98,7 @@ const App = () => {
             <Route path="/calendar" element={
               <ProtectedRoute>
                 <AppLayout>
-                  <div className="p-8 text-center">
-                    <h1 className="text-2xl font-bold">Calendario</h1>
-                    <p className="text-gray-600 mt-2">Próximamente disponible</p>
-                  </div>
+                  <Calendar />
                 </AppLayout>
               </ProtectedRoute>
             } />

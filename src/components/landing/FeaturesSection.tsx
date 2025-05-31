@@ -1,98 +1,70 @@
 
 import { 
-  Users, 
-  BarChart, 
   CheckSquare, 
+  Users, 
   Clock, 
-  Zap, 
-  Shield,
-  Brain,
-  FileText,
-  MessageSquare,
-  Calendar
+  BarChart, 
+  Shield, 
+  Zap 
 } from 'lucide-react';
 
 const features = [
   {
     icon: CheckSquare,
-    title: 'Gestión Visual de Tareas',
-    description: 'Tablero Kanban intuitivo con drag & drop para organizar proyectos de desarrollo, agentes IA, soporte y PQR.'
-  },
-  {
-    icon: Brain,
-    title: 'Tipos de Proyecto Especializados',
-    description: 'Plantillas optimizadas para desarrollo web, creación de agentes IA, soporte técnico y consultoría en IA.'
+    title: 'Gestión Completa de Tareas',
+    description: 'Crea, asigna y da seguimiento a tareas de desarrollo, agentes IA, soporte técnico y consultoría.'
   },
   {
     icon: Users,
     title: 'Colaboración en Tiempo Real',
-    description: 'Asignación de roles, comentarios instantáneos y seguimiento colaborativo para todo el equipo.'
-  },
-  {
-    icon: BarChart,
-    title: 'Métricas y Analytics',
-    description: 'Dashboards personalizados con KPIs, tiempo de respuesta, productividad y métricas de satisfacción.'
+    description: 'Trabaja en equipo con roles específicos: admin, manager, colaborador y cliente.'
   },
   {
     icon: Clock,
     title: 'Seguimiento de Tiempo',
-    description: 'Control preciso de horas trabajadas, estimaciones vs. tiempo real y facturación automática.'
+    description: 'Registra tiempo estimado vs real, optimiza recursos y mejora la planificación.'
   },
   {
-    icon: MessageSquare,
-    title: 'Sistema de PQR Integrado',
-    description: 'Gestión completa de peticiones, quejas y reclamos con seguimiento automático y SLA.'
-  },
-  {
-    icon: Calendar,
-    title: 'Planificación Inteligente',
-    description: 'Calendario integrado con deadlines, recordatorios automáticos y sincronización con Google Calendar.'
-  },
-  {
-    icon: FileText,
-    title: 'Documentación Automática',
-    description: 'Generación automática de reportes, documentación técnica y entregables de proyecto.'
+    icon: BarChart,
+    title: 'Reportes y Métricas',
+    description: 'Analiza productividad, tiempos de entrega y rendimiento del equipo.'
   },
   {
     icon: Shield,
-    title: 'Seguridad Empresarial',
-    description: 'Control de acceso por roles, encriptación de datos y cumplimiento con estándares de seguridad.'
+    title: 'Control de Acceso',
+    description: 'Permisos granulares por rol, seguridad de datos y privacidad garantizada.'
   },
   {
     icon: Zap,
-    title: 'Automatización IA',
-    description: 'Clasificación automática de tareas, predicción de tiempos y sugerencias inteligentes de asignación.'
+    title: 'Tablero Kanban',
+    description: 'Visualiza el flujo de trabajo con drag & drop, estados personalizables.'
   }
 ];
 
 export const FeaturesSection = () => {
   return (
-    <section id="features" className="py-20 bg-white">
+    <section id="features" className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Características Diseñadas para{' '}
-            <span className="text-blue-600">Tu Profe de IA</span>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Características Principales
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Herramientas especializadas para gestionar proyectos de inteligencia artificial, 
-            desarrollo de software y consultoría tecnológica con la máxima eficiencia.
+            Todo lo que necesitas para gestionar proyectos de IA y desarrollo de manera eficiente
           </p>
         </div>
 
-        {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
             <div 
               key={index}
-              className="group p-6 rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300"
+              className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100"
             >
               <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-600 transition-colors duration-300">
-                  <feature.icon className="text-blue-600 group-hover:text-white transition-colors duration-300" size={24} />
+                <div className="p-3 bg-blue-100 rounded-lg">
+                  <feature.icon className="h-6 w-6 text-blue-600" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 ml-4 group-hover:text-blue-600 transition-colors">
+                <h3 className="text-xl font-semibold text-gray-900 ml-4">
                   {feature.title}
                 </h3>
               </div>
@@ -103,24 +75,17 @@ export const FeaturesSection = () => {
           ))}
         </div>
 
-        {/* Bottom CTA */}
         <div className="text-center mt-16">
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              ¿Listo para optimizar tu flujo de trabajo?
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white">
+            <h3 className="text-2xl font-bold mb-4">
+              ¿Listo para optimizar tu gestión de proyectos?
             </h3>
-            <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-              Únete a los equipos que ya están transformando su productividad 
-              con TaskMaster IA. Comenzar es simple y gratuito.
+            <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
+              Únete a Tu Profe de IA y transforma la manera en que gestionas tareas de desarrollo e inteligencia artificial
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
-                Solicitar Demo
-              </button>
-              <button className="border border-blue-600 text-blue-600 hover:bg-blue-50 px-8 py-3 rounded-lg font-semibold transition-colors">
-                Ver Precios
-              </button>
-            </div>
+            <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+              Comenzar Ahora
+            </button>
           </div>
         </div>
       </div>
