@@ -18,6 +18,7 @@ import { PublicRoute } from "./components/common/PublicRoute";
 import { LandingPage } from "./pages/public/LandingPage";
 import { FAQ } from "./pages/public/FAQ";
 import { About } from "./pages/public/About";
+import { Contact } from "./pages/public/Contact";
 import { Login } from "./pages/auth/Login";
 
 // App Pages
@@ -25,6 +26,9 @@ import { Dashboard } from "./pages/app/Dashboard";
 import { Tasks } from "./pages/app/Tasks";
 import { Kanban } from "./pages/app/Kanban";
 import { Calendar } from "./pages/app/Calendar";
+import { Reports } from "./pages/app/Reports";
+import { Users } from "./pages/app/Users";
+import { Settings } from "./pages/app/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -70,6 +74,14 @@ const App = () => {
               </PublicRoute>
             } />
 
+            <Route path="/contact" element={
+              <PublicRoute>
+                <PublicLayout>
+                  <Contact />
+                </PublicLayout>
+              </PublicRoute>
+            } />
+
             {/* Protected Routes */}
             <Route path="/dashboard" element={
               <ProtectedRoute>
@@ -106,10 +118,7 @@ const App = () => {
             <Route path="/reports" element={
               <ProtectedRoute requiredRoles={['admin', 'manager']}>
                 <AppLayout>
-                  <div className="p-8 text-center">
-                    <h1 className="text-2xl font-bold">Reportes</h1>
-                    <p className="text-gray-600 mt-2">Próximamente disponible</p>
-                  </div>
+                  <Reports />
                 </AppLayout>
               </ProtectedRoute>
             } />
@@ -117,10 +126,7 @@ const App = () => {
             <Route path="/users" element={
               <ProtectedRoute requiredRoles={['admin']}>
                 <AppLayout>
-                  <div className="p-8 text-center">
-                    <h1 className="text-2xl font-bold">Gestión de Usuarios</h1>
-                    <p className="text-gray-600 mt-2">Próximamente disponible</p>
-                  </div>
+                  <Users />
                 </AppLayout>
               </ProtectedRoute>
             } />
@@ -128,10 +134,7 @@ const App = () => {
             <Route path="/settings" element={
               <ProtectedRoute>
                 <AppLayout>
-                  <div className="p-8 text-center">
-                    <h1 className="text-2xl font-bold">Configuración</h1>
-                    <p className="text-gray-600 mt-2">Próximamente disponible</p>
-                  </div>
+                  <Settings />
                 </AppLayout>
               </ProtectedRoute>
             } />

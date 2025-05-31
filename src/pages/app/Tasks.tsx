@@ -1,22 +1,21 @@
 
 import { useState } from 'react';
-import { 
-  Plus, 
-  Filter, 
-  Search, 
-  Calendar,
-  User,
-  AlertCircle,
-  Clock,
-  CheckCircle
-} from 'lucide-react';
+import { Plus, Search, Filter, Edit, Trash2, CheckSquare as CheckSquareIcon } from 'lucide-react';
 import { useTaskStore } from '../../stores/taskStore';
 import { useAuthStore } from '../../stores/authStore';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { TaskModal } from '../../components/tasks/TaskModal';
+import { Task } from '../../types';
+
+const priorityColors = {
+  baja: 'bg-green-100 text-green-800',
+  media: 'bg-yellow-100 text-yellow-800', 
+  alta: 'bg-orange-100 text-orange-800',
+  urgente: 'bg-red-100 text-red-800'
+};
 
 const statusColors = {
   pendiente: 'bg-gray-100 text-gray-800',
@@ -24,13 +23,6 @@ const statusColors = {
   revision: 'bg-blue-100 text-blue-800',
   completada: 'bg-green-100 text-green-800',
   cancelada: 'bg-red-100 text-red-800'
-};
-
-const priorityColors = {
-  baja: 'bg-green-100 text-green-800',
-  media: 'bg-yellow-100 text-yellow-800',
-  alta: 'bg-orange-100 text-orange-800',
-  urgente: 'bg-red-100 text-red-800'
 };
 
 const typeLabels = {
@@ -43,30 +35,58 @@ const typeLabels = {
 };
 
 export const Tasks = () => {
-  const { getFilteredTasks, filters, setFilters } = useTaskStore();
+  const { tasks, deleteTask } = useTaskStore();
   const { user } = useAuthStore();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState('');
+  const [selectedType, setSelectedType] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedTask, setSelectedTask] = useState(null);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
-  const tasks = getFilteredTasks();
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'pendiente': return <Clock className="h-4 w-4" />;
-      case 'en_progreso': return <AlertCircle className="h-4 w-4" />;
-      case 'completada': return <CheckCircle className="h-4 w-4" />;
-      default: return <Clock className="h-4 w-4" />;
+  // Filter tasks based on user role and search criteria
+  const filteredTasks = tasks.filter(task => {
+    // Role-based filtering
+    if (user?.role === 'client' && task.assignedBy !== user.id) {
+      return false;
     }
-  };
+    if (user?.role === 'collaborator' && task.assignedTo !== user.id) {
+      return false;
+    }
+
+    // Search filtering
+    const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         task.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = !selectedStatus || task.status === selectedStatus;
+    const matchesType = !selectedType || task.type === selectedType;
+
+    return matchesSearch && matchesStatus && matchesType;
+  });
 
   const handleCreateTask = () => {
     setSelectedTask(null);
     setIsModalOpen(true);
   };
 
-  const handleEditTask = (task: any) => {
+  const handleEditTask = (task: Task) => {
     setSelectedTask(task);
     setIsModalOpen(true);
+  };
+
+  const handleDeleteTask = (taskId: string) => {
+    if (confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
+      deleteTask(taskId);
+    }
+  };
+
+  const canEditTask = (task: Task) => {
+    if (user?.role === 'admin') return true;
+    if (user?.role === 'manager') return true;
+    if (user?.role === 'collaborator' && task.assignedTo === user.id) return true;
+    return false;
+  };
+
+  const canDeleteTask = (task: Task) => {
+    return user?.role === 'admin' || (user?.role === 'manager');
   };
 
   return (
@@ -77,7 +97,7 @@ export const Tasks = () => {
           <h1 className="text-2xl font-bold text-gray-900">Gestión de Tareas</h1>
           <p className="text-gray-600">Administra y da seguimiento a todas las tareas</p>
         </div>
-        {(user?.role === 'admin' || user?.role === 'manager') && (
+        {(user?.role === 'admin' || user?.role === 'manager' || user?.role === 'client') && (
           <Button onClick={handleCreateTask} className="flex items-center gap-2">
             <Plus className="h-4 w-4" />
             Nueva Tarea
@@ -93,15 +113,15 @@ export const Tasks = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
                 placeholder="Buscar tareas..."
-                value={filters.search}
-                onChange={(e) => setFilters({ search: e.target.value })}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
               />
             </div>
             
             <select
-              value={filters.status}
-              onChange={(e) => setFilters({ status: e.target.value })}
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value)}
               className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Todos los estados</option>
@@ -113,8 +133,8 @@ export const Tasks = () => {
             </select>
 
             <select
-              value={filters.type}
-              onChange={(e) => setFilters({ type: e.target.value })}
+              value={selectedType}
+              onChange={(e) => setSelectedType(e.target.value)}
               className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Todos los tipos</option>
@@ -126,126 +146,111 @@ export const Tasks = () => {
               <option value="capacitacion">Capacitación</option>
             </select>
 
-            <select
-              value={filters.priority}
-              onChange={(e) => setFilters({ priority: e.target.value })}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Todas las prioridades</option>
-              <option value="baja">Baja</option>
-              <option value="media">Media</option>
-              <option value="alta">Alta</option>
-              <option value="urgente">Urgente</option>
-            </select>
+            <Button variant="outline" className="flex items-center gap-2">
+              <Filter className="h-4 w-4" />
+              Filtros
+            </Button>
           </div>
         </CardContent>
       </Card>
 
       {/* Tasks List */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {tasks.map((task) => (
-          <Card key={task.id} className="hover:shadow-md transition-shadow cursor-pointer">
-            <CardHeader className="pb-3">
-              <div className="flex items-start justify-between">
-                <CardTitle className="text-lg font-semibold text-gray-900 line-clamp-2">
-                  {task.title}
-                </CardTitle>
-                <div className="flex items-center gap-1 ml-2">
-                  {getStatusIcon(task.status)}
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-600 text-sm line-clamp-2">
-                {task.description}
+      <div className="space-y-4">
+        {filteredTasks.length === 0 ? (
+          <Card>
+            <CardContent className="p-12 text-center">
+              <CheckSquareIcon className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No hay tareas</h3>
+              <p className="text-gray-500 mb-4">
+                {searchTerm || selectedStatus || selectedType 
+                  ? 'No se encontraron tareas con los filtros aplicados' 
+                  : 'Aún no tienes tareas asignadas'}
               </p>
-              
-              <div className="flex flex-wrap gap-2">
-                <Badge className={statusColors[task.status]}>
-                  {task.status.replace('_', ' ')}
-                </Badge>
-                <Badge className={priorityColors[task.priority]}>
-                  {task.priority}
-                </Badge>
-                <Badge variant="outline">
-                  {typeLabels[task.type]}
-                </Badge>
-              </div>
-
-              <div className="space-y-2 text-sm text-gray-500">
-                <div className="flex items-center gap-2">
-                  <User className="h-4 w-4" />
-                  <span>Asignado a: Usuario {task.assignedTo}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
-                  <span>Vence: {new Date(task.endDate).toLocaleDateString()}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4" />
-                  <span>{task.actualHours}h / {task.estimatedHours}h</span>
-                </div>
-              </div>
-
-              {task.client && (
-                <div className="bg-gray-50 p-2 rounded text-sm">
-                  <span className="font-medium">Cliente:</span> {task.client}
-                </div>
+              {(user?.role === 'admin' || user?.role === 'manager' || user?.role === 'client') && (
+                <Button onClick={handleCreateTask}>
+                  Crear primera tarea
+                </Button>
               )}
-
-              <div className="flex justify-between items-center pt-2 border-t">
-                <div className="flex flex-wrap gap-1">
-                  {task.tags.slice(0, 2).map((tag, index) => (
-                    <span 
-                      key={index}
-                      className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                  {task.tags.length > 2 && (
-                    <span className="text-xs text-gray-500">
-                      +{task.tags.length - 2} más
-                    </span>
-                  )}
-                </div>
-                
-                {(user?.role === 'admin' || user?.role === 'manager' || task.assignedTo === user?.id) && (
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    onClick={() => handleEditTask(task)}
-                  >
-                    Editar
-                  </Button>
-                )}
-              </div>
             </CardContent>
           </Card>
-        ))}
-      </div>
+        ) : (
+          filteredTasks.map((task) => (
+            <Card key={task.id} className="hover:shadow-md transition-shadow">
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1 space-y-3">
+                    <div className="flex items-start justify-between">
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {task.title}
+                      </h3>
+                      <div className="flex items-center gap-2 ml-4">
+                        {canEditTask(task) && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleEditTask(task)}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        )}
+                        {canDeleteTask(task) && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteTask(task.id)}
+                            className="text-red-600 hover:text-red-700"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        )}
+                      </div>
+                    </div>
 
-      {tasks.length === 0 && (
-        <Card>
-          <CardContent className="text-center py-12">
-            <CheckSquare className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              No se encontraron tareas
-            </h3>
-            <p className="text-gray-500 mb-4">
-              {filters.search || filters.status || filters.type || filters.priority
-                ? 'Intenta ajustar los filtros'
-                : 'Comienza creando tu primera tarea'}
-            </p>
-            {(user?.role === 'admin' || user?.role === 'manager') && (
-              <Button onClick={handleCreateTask}>
-                <Plus className="h-4 w-4 mr-2" />
-                Crear Primera Tarea
-              </Button>
-            )}
-          </CardContent>
-        </Card>
-      )}
+                    <p className="text-gray-600">{task.description}</p>
+
+                    <div className="flex flex-wrap gap-2">
+                      <Badge className={statusColors[task.status]} variant="secondary">
+                        {task.status.replace('_', ' ')}
+                      </Badge>
+                      <Badge className={priorityColors[task.priority]} variant="secondary">
+                        {task.priority}
+                      </Badge>
+                      <Badge variant="outline">
+                        {typeLabels[task.type]}
+                      </Badge>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-600">
+                      <div>
+                        <span className="font-medium">Asignado a:</span> Usuario {task.assignedTo}
+                      </div>
+                      <div>
+                        <span className="font-medium">Tiempo:</span> {task.actualHours}h / {task.estimatedHours}h
+                      </div>
+                      <div>
+                        <span className="font-medium">Vence:</span> {new Date(task.endDate).toLocaleDateString()}
+                      </div>
+                    </div>
+
+                    {task.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1">
+                        {task.tags.map((tag, index) => (
+                          <span 
+                            key={index}
+                            className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        )}
+      </div>
 
       {/* Task Modal */}
       <TaskModal

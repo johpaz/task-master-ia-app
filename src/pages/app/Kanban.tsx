@@ -7,12 +7,13 @@ import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
 import { TaskModal } from '../../components/tasks/TaskModal';
+import { Task } from '../../types';
 
 const columns = [
-  { id: 'pendiente', title: 'Pendiente', color: 'bg-gray-50 border-gray-200' },
-  { id: 'en_progreso', title: 'En Progreso', color: 'bg-yellow-50 border-yellow-200' },
-  { id: 'revision', title: 'En Revisión', color: 'bg-blue-50 border-blue-200' },
-  { id: 'completada', title: 'Completada', color: 'bg-green-50 border-green-200' }
+  { id: 'pendiente' as const, title: 'Pendiente', color: 'bg-gray-50 border-gray-200' },
+  { id: 'en_progreso' as const, title: 'En Progreso', color: 'bg-yellow-50 border-yellow-200' },
+  { id: 'revision' as const, title: 'En Revisión', color: 'bg-blue-50 border-blue-200' },
+  { id: 'completada' as const, title: 'Completada', color: 'bg-green-50 border-green-200' }
 ];
 
 const priorityColors = {
@@ -26,13 +27,13 @@ export const Kanban = () => {
   const { tasks, updateTask } = useTaskStore();
   const { user } = useAuthStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedTask, setSelectedTask] = useState(null);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
-  const getTasksByStatus = (status: string) => {
+  const getTasksByStatus = (status: Task['status']) => {
     return tasks.filter(task => task.status === status);
   };
 
-  const handleDragStart = (e: React.DragEvent, task: any) => {
+  const handleDragStart = (e: React.DragEvent, task: Task) => {
     e.dataTransfer.setData('text/plain', JSON.stringify(task));
   };
 
@@ -40,7 +41,7 @@ export const Kanban = () => {
     e.preventDefault();
   };
 
-  const handleDrop = (e: React.DragEvent, newStatus: string) => {
+  const handleDrop = (e: React.DragEvent, newStatus: Task['status']) => {
     e.preventDefault();
     const task = JSON.parse(e.dataTransfer.getData('text/plain'));
     if (task.status !== newStatus) {
@@ -53,7 +54,7 @@ export const Kanban = () => {
     setIsModalOpen(true);
   };
 
-  const handleEditTask = (task: any) => {
+  const handleEditTask = (task: Task) => {
     setSelectedTask(task);
     setIsModalOpen(true);
   };
