@@ -45,7 +45,7 @@ export const PublicFooter = () => {
             <ul className="space-y-2">
               <li><Link to="/about" className="text-gray-300 hover:text-blue-400 transition-colors">Nosotros</Link></li>
               <li><Link to="/faq" className="text-gray-300 hover:text-blue-400 transition-colors">FAQ</Link></li>
-              <li><Link to="/contact" className="text-gray-300 hover:text-blue-400 transition-colors">Contacto</Link></li>
+              <li><a href="mailto:hola@tuprofedeai.com" className="text-gray-300 hover:text-blue-400 transition-colors">Contacto</a></li>
               <li><a href="#" className="text-gray-300 hover:text-blue-400 transition-colors">Blog</a></li>
             </ul>
           </div>
