@@ -1,11 +1,32 @@
 
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { Button } from '../ui/button';
 
 export const PublicNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleFeaturesClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        const featuresElement = document.getElementById('features');
+        if (featuresElement) {
+          featuresElement.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      const featuresElement = document.getElementById('features');
+      if (featuresElement) {
+        featuresElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+    setIsMenuOpen(false);
+  };
 
   return (
     <nav className="bg-white shadow-sm border-b">
@@ -24,9 +45,12 @@ export const PublicNavbar = () => {
             <Link to="/" className="text-gray-700 hover:text-blue-600 transition-colors">
               Inicio
             </Link>
-            <Link to="/#features" className="text-gray-700 hover:text-blue-600 transition-colors">
+            <button 
+              onClick={handleFeaturesClick}
+              className="text-gray-700 hover:text-blue-600 transition-colors"
+            >
               Características
-            </Link>
+            </button>
             <Link to="/faq" className="text-gray-700 hover:text-blue-600 transition-colors">
               FAQ
             </Link>
@@ -75,13 +99,12 @@ export const PublicNavbar = () => {
               >
                 Inicio
               </Link>
-              <Link
-                to="/#features"
-                className="block px-3 py-2 text-gray-700 hover:text-blue-600"
-                onClick={() => setIsMenuOpen(false)}
+              <button
+                onClick={handleFeaturesClick}
+                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-blue-600"
               >
                 Características
-              </Link>
+              </button>
               <Link
                 to="/faq"
                 className="block px-3 py-2 text-gray-700 hover:text-blue-600"
