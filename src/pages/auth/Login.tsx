@@ -30,7 +30,7 @@ export const Login = () => {
     setIsLoading(true);
 
     try {
-      const success = await login(formData.email, formData.password);
+      const success = await login({ email: formData.email, password: formData.password });
       
       if (success) {
         toast({
