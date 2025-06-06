@@ -1,0 +1,22 @@
+tuprofedeia/
+└── issues_tuprofe/
+    ├── estructura.txt           # Archivo con la estructura del proyecto
+    ├── src/                     # Código fuente principal
+    │   ├── index.tsx            # Punto de entrada de React
+    │   ├── App.tsx              # Componente principal
+    │   ├── components/          # Componentes reutilizables de React
+    │   │   └── User.tsx
+    │   ├── models/              # Tipos y modelos TypeScript
+    │   │   └── user.ts
+    │   ├── services/            # Lógica de negocio/servicios (APIs, etc.)
+    │   │   └── userService.ts
+    │   └── utils/               # Utilidades y funciones auxiliares
+    │       └── helpers.ts
+    ├── tests/                   # Pruebas del proyecto
+    │   └── App.test.tsx
+    ├── public/                  # Archivos estáticos (index.html, favicon, etc.)
+    │   └── index.html
+    ├── package.json             # Dependencias y scripts del proyecto
+    ├── tsconfig.json            # Configuración de TypeScript
+    ├── README.md                # Documentación principal
+    └── .gitignore               # Archivos/Carpetas ignorados por git
