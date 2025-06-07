@@ -1,79 +1,14 @@
 
-import { useState } from 'react';
-import { Plus, Search, Edit, Trash2, UserPlus, Shield } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Plus, Search, Edit, Trash2, UserPlus, Shield, AlertCircle } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: 'admin' | 'manager' | 'collaborator' | 'client';
-  department?: string;
-  status: 'active' | 'inactive';
-  lastLogin: Date;
-  tasksAssigned: number;
-  createdAt: Date;
-}
-
-const mockUsers: User[] = [
-  {
-    id: '1',
-    name: 'Carlos Rodríguez',
-    email: 'admin@tuprofedeai.com',
-    role: 'admin',
-    department: 'Dirección General',
-    status: 'active',
-    lastLogin: new Date('2024-05-30'),
-    tasksAssigned: 5,
-    createdAt: new Date('2024-01-15')
-  },
-  {
-    id: '2',
-    name: 'Ana García',
-    email: 'manager@tuprofedeai.com',
-    role: 'manager',
-    department: 'Desarrollo',
-    status: 'active',
-    lastLogin: new Date('2024-05-30'),
-    tasksAssigned: 12,
-    createdAt: new Date('2024-02-01')
-  },
-  {
-    id: '3',
-    name: 'Miguel Santos',
-    email: 'dev@tuprofedeai.com',
-    role: 'collaborator',
-    department: 'Desarrollo',
-    status: 'active',
-    lastLogin: new Date('2024-05-29'),
-    tasksAssigned: 8,
-    createdAt: new Date('2024-02-15')
-  },
-  {
-    id: '4',
-    name: 'Laura Martínez',
-    email: 'cliente@empresa.com',
-    role: 'client',
-    status: 'active',
-    lastLogin: new Date('2024-05-28'),
-    tasksAssigned: 3,
-    createdAt: new Date('2024-03-01')
-  },
-  {
-    id: '5',
-    name: 'Pedro González',
-    email: 'pedro@tuprofedeai.com',
-    role: 'collaborator',
-    department: 'Soporte',
-    status: 'inactive',
-    lastLogin: new Date('2024-05-20'),
-    tasksAssigned: 0,
-    createdAt: new Date('2024-01-20')
-  }
-];
+import { useToast } from '../../hooks/use-toast';
+import { User } from '../../types';
+import { userService, CreateUserRequest, UpdateUserRequest } from '../../services/userService';
+import { UserModal } from '../../components/users/UserModal';
 
 const roleColors = {
   admin: 'bg-purple-100 text-purple-800',
@@ -90,33 +25,133 @@ const roleLabels = {
 };
 
 export const Users = () => {
-  const [users, setUsers] = useState<User[]>(mockUsers);
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRole, setSelectedRole] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+
+  // Cargar usuarios al montar el componente
+  useEffect(() => {
+    loadUsers();
+  }, []);
+
+  const loadUsers = async () => {
+    try {
+      setLoading(true);
+      const response = await userService.getUsers();
+      setUsers(response.data || response);
+      toast({
+        title: "Usuarios cargados",
+        description: "La lista de usuarios se ha actualizado correctamente.",
+      });
+    } catch (error) {
+      console.error('Error loading users:', error);
+      toast({
+        title: "Error",
+        description: "No se pudieron cargar los usuarios. Verifique su conexión.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredUsers = users.filter(user => {
     const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          user.email.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRole = !selectedRole || user.role === selectedRole;
-    const matchesStatus = !selectedStatus || user.status === selectedStatus;
+    // Para el filtro de estado, asumimos que los usuarios tienen un campo status
+    // Si no lo tienen en la respuesta de la API, puedes ajustar esto
+    const matchesStatus = !selectedStatus || true; // Ajustar según la estructura de tu API
 
     return matchesSearch && matchesRole && matchesStatus;
   });
 
-  const handleDeleteUser = (userId: string) => {
-    if (confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
+  const handleCreateUser = () => {
+    setEditingUser(null);
+    setIsModalOpen(true);
+  };
+
+  const handleEditUser = (user: User) => {
+    setEditingUser(user);
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteUser = async (userId: string) => {
+    if (!confirm('¿Estás seguro de que quieres eliminar este usuario? Esta acción no se puede deshacer.')) {
+      return;
+    }
+
+    try {
+      await userService.deleteUser(userId);
       setUsers(users.filter(user => user.id !== userId));
+      toast({
+        title: "Usuario eliminado",
+        description: "El usuario ha sido eliminado correctamente.",
+      });
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo eliminar el usuario. Inténtelo de nuevo.",
+        variant: "destructive",
+      });
     }
   };
 
-  const handleToggleStatus = (userId: string) => {
-    setUsers(users.map(user => 
-      user.id === userId 
-        ? { ...user, status: user.status === 'active' ? 'inactive' : 'active' }
-        : user
-    ));
+  const handleSaveUser = async (userData: CreateUserRequest | UpdateUserRequest) => {
+    try {
+      setIsSubmitting(true);
+      
+      if (editingUser) {
+        // Actualizar usuario existente
+        const updatedUser = await userService.updateUser(editingUser.id, userData as UpdateUserRequest);
+        setUsers(users.map(user => 
+          user.id === editingUser.id ? { ...user, ...updatedUser.data } : user
+        ));
+        toast({
+          title: "Usuario actualizado",
+          description: "Los datos del usuario se han actualizado correctamente.",
+        });
+      } else {
+        // Crear nuevo usuario
+        const newUser = await userService.createUser(userData as CreateUserRequest);
+        setUsers([...users, newUser.data]);
+        toast({
+          title: "Usuario creado",
+          description: "El nuevo usuario ha sido creado correctamente.",
+        });
+      }
+      
+      setIsModalOpen(false);
+      setEditingUser(null);
+    } catch (error) {
+      console.error('Error saving user:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo guardar el usuario. Verifique los datos e inténtelo de nuevo.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Cargando usuarios...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -126,7 +161,7 @@ export const Users = () => {
           <h1 className="text-2xl font-bold text-gray-900">Gestión de Usuarios</h1>
           <p className="text-gray-600">Administra los usuarios y sus permisos en el sistema</p>
         </div>
-        <Button className="flex items-center gap-2">
+        <Button onClick={handleCreateUser} className="flex items-center gap-2">
           <UserPlus className="h-4 w-4" />
           Nuevo Usuario
         </Button>
@@ -152,7 +187,7 @@ export const Users = () => {
               <div>
                 <p className="text-sm font-medium text-gray-600">Activos</p>
                 <p className="text-3xl font-bold text-green-600">
-                  {users.filter(u => u.status === 'active').length}
+                  {users.length} {/* Ajustar según la estructura de tu API */}
                 </p>
               </div>
               <Shield className="h-8 w-8 text-green-600" />
@@ -225,8 +260,8 @@ export const Users = () => {
               <option value="inactive">Inactivo</option>
             </select>
 
-            <Button variant="outline">
-              Exportar Lista
+            <Button variant="outline" onClick={loadUsers}>
+              Actualizar Lista
             </Button>
           </div>
         </CardContent>
@@ -235,83 +270,86 @@ export const Users = () => {
       {/* Users Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Lista de Usuarios</CardTitle>
+          <CardTitle>Lista de Usuarios ({filteredUsers.length})</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left py-3 px-4">Usuario</th>
-                  <th className="text-left py-3 px-4">Rol</th>
-                  <th className="text-left py-3 px-4">Departamento</th>
-                  <th className="text-center py-3 px-4">Estado</th>
-                  <th className="text-center py-3 px-4">Tareas</th>
-                  <th className="text-center py-3 px-4">Último Acceso</th>
-                  <th className="text-center py-3 px-4">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredUsers.map((user) => (
-                  <tr key={user.id} className="border-b hover:bg-gray-50">
-                    <td className="py-3 px-4">
-                      <div>
-                        <div className="font-medium text-gray-900">{user.name}</div>
-                        <div className="text-sm text-gray-500">{user.email}</div>
-                      </div>
-                    </td>
-                    <td className="py-3 px-4">
-                      <Badge className={roleColors[user.role]} variant="secondary">
-                        {roleLabels[user.role]}
-                      </Badge>
-                    </td>
-                    <td className="py-3 px-4 text-gray-600">
-                      {user.department || '-'}
-                    </td>
-                    <td className="text-center py-3 px-4">
-                      <button
-                        onClick={() => handleToggleStatus(user.id)}
-                        className={`px-2 py-1 rounded text-sm ${
-                          user.status === 'active'
-                            ? 'bg-green-100 text-green-800 hover:bg-green-200'
-                            : 'bg-red-100 text-red-800 hover:bg-red-200'
-                        }`}
-                      >
-                        {user.status === 'active' ? 'Activo' : 'Inactivo'}
-                      </button>
-                    </td>
-                    <td className="text-center py-3 px-4">{user.tasksAssigned}</td>
-                    <td className="text-center py-3 px-4 text-sm text-gray-600">
-                      {user.lastLogin.toLocaleDateString()}
-                    </td>
-                    <td className="text-center py-3 px-4">
-                      <div className="flex items-center justify-center gap-2">
-                        <Button variant="ghost" size="sm">
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDeleteUser(user.id)}
-                          className="text-red-600 hover:text-red-700"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </td>
+          {filteredUsers.length === 0 ? (
+            <div className="text-center py-12">
+              <AlertCircle className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+              <p className="text-gray-500 text-lg mb-2">No se encontraron usuarios</p>
+              <p className="text-gray-400">Intenta ajustar los filtros o crear un nuevo usuario</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left py-3 px-4">Usuario</th>
+                    <th className="text-left py-3 px-4">Rol</th>
+                    <th className="text-left py-3 px-4">Departamento</th>
+                    <th className="text-center py-3 px-4">Fecha Creación</th>
+                    <th className="text-center py-3 px-4">Acciones</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {filteredUsers.length === 0 && (
-            <div className="text-center py-8">
-              <p className="text-gray-500">No se encontraron usuarios</p>
+                </thead>
+                <tbody>
+                  {filteredUsers.map((user) => (
+                    <tr key={user.id} className="border-b hover:bg-gray-50">
+                      <td className="py-3 px-4">
+                        <div>
+                          <div className="font-medium text-gray-900">{user.name}</div>
+                          <div className="text-sm text-gray-500">{user.email}</div>
+                        </div>
+                      </td>
+                      <td className="py-3 px-4">
+                        <Badge className={roleColors[user.role]} variant="secondary">
+                          {roleLabels[user.role]}
+                        </Badge>
+                      </td>
+                      <td className="py-3 px-4 text-gray-600">
+                        {user.department || '-'}
+                      </td>
+                      <td className="text-center py-3 px-4 text-sm text-gray-600">
+                        {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '-'}
+                      </td>
+                      <td className="text-center py-3 px-4">
+                        <div className="flex items-center justify-center gap-2">
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => handleEditUser(user)}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteUser(user.id)}
+                            className="text-red-600 hover:text-red-700"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </CardContent>
       </Card>
+
+      {/* User Modal */}
+      <UserModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingUser(null);
+        }}
+        onSave={handleSaveUser}
+        user={editingUser}
+        isLoading={isSubmitting}
+      />
     </div>
   );
 };
