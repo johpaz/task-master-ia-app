@@ -7,6 +7,7 @@ export interface User {
   avatar?: string;
   department?: string;
   createdAt: Date;
+  token?: string
 }
 
 export interface Task {
