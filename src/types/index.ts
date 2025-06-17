@@ -53,3 +53,11 @@ export interface DashboardMetrics {
   overdueCovers: number;
   averageCompletionTime: number;
 }
+
+export interface Metrics {
+  totalTasks: number;
+  completedTasks: number;
+  pendingTasks: number;
+  inProgressTasks: number;
+  overdueTasks: number; // Tareas cuya fecha de entrega ya pasó
+}

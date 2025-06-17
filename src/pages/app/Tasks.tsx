@@ -6,7 +6,7 @@ import { useAuthStore } from '../../stores/authStore';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Badge } from '../../components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Card, CardContent } from '../../components/ui/card';
 import { TaskModal } from '../../components/tasks/TaskModal';
 import { Task } from '../../types';
 
@@ -234,7 +234,7 @@ export const Tasks = () => {
 
                     {task.tags.length > 0 && (
                       <div className="flex flex-wrap gap-1">
-                        {task.tags.map((tag, index) => (
+                        {task && task.tags.map((tag, index) => (
                           <span 
                             key={index}
                             className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
