@@ -101,7 +101,8 @@ export const userService = {
         'Authorization': `Bearer ${token}`,
       },
     });
-
+    console.log(response);
+    
     if (!response.ok) {
       throw new Error('Error al eliminar usuario');
     }
