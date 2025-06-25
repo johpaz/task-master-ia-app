@@ -1,4 +1,3 @@
-
 import { CheckSquare, Clock, Target, TrendingUp } from 'lucide-react';
 import { Card, CardContent } from '../../ui/card';
 import { Task } from '../../../types';
@@ -25,8 +24,8 @@ export const PersonalMetrics = ({ tasks }: PersonalMetricsProps) => {
       title: 'En Progreso',
       value: inProgressTasks,
       icon: Clock,
-      color: 'text-yellow-600',
-      bgColor: 'bg-yellow-50'
+      color: 'text-purple-600',
+      bgColor: 'bg-purple-50'
     },
     {
       title: 'Horas Trabajadas',
@@ -39,8 +38,8 @@ export const PersonalMetrics = ({ tasks }: PersonalMetricsProps) => {
       title: 'Eficiencia',
       value: `${efficiency}%`,
       icon: Target,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-50'
+      color: 'text-indigo-600',
+      bgColor: 'bg-indigo-50'
     }
   ];
 

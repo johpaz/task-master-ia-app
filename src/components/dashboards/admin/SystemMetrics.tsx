@@ -1,4 +1,3 @@
-
 import { 
   CheckSquare, 
   Clock, 
@@ -27,8 +26,8 @@ export const SystemMetrics = ({ metrics }: SystemMetricsProps) => {
       title: 'En Progreso',
       value: metrics.inProgressTasks,
       icon: Clock,
-      color: 'text-yellow-600',
-      bgColor: 'bg-yellow-50'
+      color: 'text-purple-600',
+      bgColor: 'bg-purple-50'
     },
     {
       title: 'Completadas',
@@ -41,8 +40,8 @@ export const SystemMetrics = ({ metrics }: SystemMetricsProps) => {
       title: 'Usuarios Activos',
       value: 24, // Mock data
       icon: Users,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-50'
+      color: 'text-indigo-600',
+      bgColor: 'bg-indigo-50'
     },
     {
       title: 'Alertas',
@@ -55,8 +54,8 @@ export const SystemMetrics = ({ metrics }: SystemMetricsProps) => {
       title: 'Base de Datos',
       value: '99.9%',
       icon: Database,
-      color: 'text-indigo-600',
-      bgColor: 'bg-indigo-50'
+      color: 'text-teal-600',
+      bgColor: 'bg-teal-50'
     }
   ];
 
