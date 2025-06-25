@@ -70,13 +70,7 @@ export const PublicNavbar = () => {
             <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105 animate-glow">
               <span className="text-white font-bold text-lg">T</span>
             </div>
-            <span className={`text-xl font-bold transition-all duration-300 hidden sm:block ${
-              scrolled 
-                ? 'text-foreground' 
-                : 'text-white'
-            }`}>
-              Tu Profe de IA
-            </span>
+           
           </Link>
 
           {/* Navegación Derecha */}
