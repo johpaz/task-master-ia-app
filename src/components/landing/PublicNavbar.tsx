@@ -44,7 +44,7 @@ export const PublicNavbar = () => {
     <nav className={`fixed w-full z-50 transition-all duration-500 ${
       scrolled 
         ? 'bg-background/95 backdrop-blur-md shadow-lg border-b border-border' 
-        : 'bg-transparent'
+        : 'bg-slate-900/50 backdrop-blur-sm'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative flex justify-between items-center h-16">
@@ -72,7 +72,7 @@ export const PublicNavbar = () => {
             </div>
             <span className={`text-xl font-bold transition-all duration-300 hidden sm:block ${
               scrolled 
-                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent' 
+                ? 'text-foreground' 
                 : 'text-white'
             }`}>
               Tu Profe de IA
