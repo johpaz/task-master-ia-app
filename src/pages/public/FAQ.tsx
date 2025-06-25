@@ -1,4 +1,3 @@
-
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../../components/ui/accordion';
 
 const faqs = [
@@ -46,27 +45,27 @@ const faqs = [
 
 export const FAQ = () => {
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-white dark:bg-slate-900 py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">
             Preguntas Frecuentes
           </h1>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-slate-700 dark:text-gray-300">
             Encuentra respuestas rápidas a las preguntas más comunes sobre TaskMaster IA
           </p>
         </div>
 
         {/* FAQ Accordion */}
-        <div className="bg-white rounded-xl shadow-sm border">
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
           <Accordion type="single" collapsible className="p-6">
             {faqs.map((faq, index) => (
               <AccordionItem key={index} value={`item-${index}`}>
-                <AccordionTrigger className="text-left font-semibold text-gray-900 hover:text-blue-600">
+                <AccordionTrigger className="text-left font-semibold text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400">
                   {faq.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-gray-600 leading-relaxed">
+                <AccordionContent className="text-slate-700 dark:text-gray-300 leading-relaxed">
                   {faq.answer}
                 </AccordionContent>
               </AccordionItem>
@@ -76,18 +75,18 @@ export const FAQ = () => {
 
         {/* Contact CTA */}
         <div className="mt-12 text-center">
-          <div className="bg-blue-50 rounded-xl p-8">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-8 border border-blue-200 dark:border-blue-800">
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
               ¿No encuentras lo que buscas?
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-slate-700 dark:text-gray-300 mb-6">
               Nuestro equipo de soporte está aquí para ayudarte con cualquier pregunta específica
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
                 Contactar Soporte
               </button>
-              <button className="border border-blue-600 text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-lg font-semibold transition-colors">
+              <button className="border border-blue-600 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 px-6 py-3 rounded-lg font-semibold transition-colors">
                 Programar Demo
               </button>
             </div>
