@@ -43,25 +43,13 @@ export const PublicNavbar = () => {
   return (
     <nav className={`fixed w-full z-50 transition-all duration-500 ${
       scrolled 
-        ? 'bg-background/95 backdrop-blur-md shadow-lg border-b border-border' 
-        : 'bg-slate-900/80 backdrop-blur-sm'
+        ? 'bg-background/95 backdrop-blur-md shadow-lg border-b border-border h-20' 
+        : 'bg-slate-900/80 backdrop-blur-sm h-24'
     }`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3 group">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
-              <span className="text-white font-bold text-lg">T</span>
-            </div>
-            <span className={`text-xl font-bold transition-all duration-300 ${
-              scrolled ? 'text-foreground' : 'text-white'
-            }`}>
-              Tu Profe de IA
-            </span>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+        <div className="flex justify-between items-center h-full">
+          {/* Left Navigation - Desktop */}
+          <div className="hidden md:flex items-center space-x-8 flex-1">
             <Link to="/" className={`font-medium transition-all duration-300 ${
               scrolled ? 'text-foreground hover:text-primary' : 'text-white/90 hover:text-white'
             }`}>
@@ -80,6 +68,25 @@ export const PublicNavbar = () => {
             }`}>
               FAQ
             </Link>
+          </div>
+
+          {/* Centered Logo */}
+          <div className="flex justify-center flex-1">
+            <Link to="/" className="group">
+              <div className={`bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl group-hover:shadow-3xl transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 ${
+                scrolled ? 'w-16 h-16' : 'w-20 h-20'
+              }`}>
+                <span className={`text-white font-bold transition-all duration-300 ${
+                  scrolled ? 'text-2xl' : 'text-3xl'
+                }`}>
+                  T
+                </span>
+              </div>
+            </Link>
+          </div>
+
+          {/* Right Navigation - Desktop */}
+          <div className="hidden md:flex items-center space-x-8 flex-1 justify-end">
             <Link to="/about" className={`font-medium transition-all duration-300 ${
               scrolled ? 'text-foreground hover:text-primary' : 'text-white/90 hover:text-white'
             }`}>
@@ -90,10 +97,6 @@ export const PublicNavbar = () => {
             }`}>
               Contacto
             </Link>
-          </div>
-
-          {/* Auth Buttons & Theme Toggle */}
-          <div className="hidden md:flex items-center space-x-4">
             <ThemeToggle />
             <Link to="/login">
               <Button variant="ghost" className={`transition-all duration-300 ${
@@ -112,7 +115,7 @@ export const PublicNavbar = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center space-x-2">
+          <div className="md:hidden flex items-center space-x-2 absolute right-4">
             <ThemeToggle />
             <Button
               variant="ghost"
@@ -129,8 +132,8 @@ export const PublicNavbar = () => {
 
         {/* Mobile menu */}
         {isMenuOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-border bg-background/95 backdrop-blur-md shadow-lg rounded-b-lg mt-2">
+          <div className="md:hidden absolute top-full left-0 right-0">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-border bg-background/95 backdrop-blur-md shadow-lg rounded-b-lg mx-4 mt-2">
               <Link
                 to="/"
                 className="block px-3 py-2 text-foreground hover:text-primary hover:bg-accent rounded-md transition-colors font-medium"
