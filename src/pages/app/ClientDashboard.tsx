@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { 
   CheckSquare, 
@@ -25,7 +24,7 @@ const statusLabels = {
 
 const statusColors = {
   pendiente: 'bg-gray-100 text-gray-800',
-  en_progreso: 'bg-yellow-100 text-yellow-800',
+  en_progreso: 'bg-purple-100 text-purple-800',
   revision: 'bg-blue-100 text-blue-800',
   completada: 'bg-green-100 text-green-800',
   cancelada: 'bg-red-100 text-red-800'
@@ -108,7 +107,7 @@ export const ClientDashboard = () => {
                 <p className="text-sm font-medium text-gray-600">En Proceso</p>
                 <p className="text-3xl font-bold text-gray-900">{metrics.inProgress}</p>
               </div>
-              <Clock className="h-8 w-8 text-yellow-600" />
+              <Clock className="h-8 w-8 text-purple-600" />
             </div>
           </CardContent>
         </Card>
@@ -132,7 +131,7 @@ export const ClientDashboard = () => {
                 <p className="text-sm font-medium text-gray-600">Pendientes</p>
                 <p className="text-3xl font-bold text-gray-900">{metrics.pending}</p>
               </div>
-              <AlertTriangle className="h-8 w-8 text-orange-600" />
+              <AlertTriangle className="h-8 w-8 text-slate-600" />
             </div>
           </CardContent>
         </Card>
@@ -264,7 +263,7 @@ export const ClientDashboard = () => {
                   <span>Soporte Técnico</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
+                  <div className="w-3 h-3 bg-teal-500 rounded-full"></div>
                   <span>Consultoría</span>
                 </div>
                 <div className="flex items-center gap-3">

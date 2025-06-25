@@ -71,7 +71,7 @@ export const HeroSection = () => {
                 <span className="text-blue-100 font-medium">Análisis Avanzado</span>
               </div>
               <div className="flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/20">
-                <Rocket className="text-orange-400 flex-shrink-0" size={24} />
+                <Rocket className="text-teal-400 flex-shrink-0" size={24} />
                 <span className="text-blue-100 font-medium">Resultados Rápidos</span>
               </div>
             </div>
@@ -124,7 +124,7 @@ export const HeroSection = () => {
                 </div>
                 <div className="flex space-x-2">
                   <div className="w-3 h-3 bg-red-400 rounded-full animate-pulse"></div>
-                  <div className="w-3 h-3 bg-yellow-400 rounded-full animate-pulse delay-100"></div>
+                  <div className="w-3 h-3 bg-slate-400 rounded-full animate-pulse delay-100"></div>
                   <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse delay-200"></div>
                 </div>
               </div>
@@ -149,7 +149,7 @@ export const HeroSection = () => {
                   <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 transform transition-all duration-300 hover:bg-white/20">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm font-medium text-white">Chatbot E-commerce</span>
-                      <span className="bg-yellow-500/20 text-yellow-300 text-xs px-2 py-1 rounded-full border border-yellow-400/30">En Progreso</span>
+                      <span className="bg-purple-500/20 text-purple-300 text-xs px-2 py-1 rounded-full border border-purple-400/30">En Progreso</span>
                     </div>
                     <div className="bg-white/20 rounded-full h-2 mb-2">
                       <div className="bg-gradient-to-r from-blue-400 to-indigo-400 h-2 rounded-full transition-all duration-1000" style={{ width: '75%' }}></div>
@@ -174,7 +174,7 @@ export const HeroSection = () => {
                       <span className="bg-red-500/20 text-red-300 text-xs px-2 py-1 rounded-full border border-red-400/30">Urgente</span>
                     </div>
                     <div className="bg-white/20 rounded-full h-2 mb-2">
-                      <div className="bg-gradient-to-r from-red-400 to-orange-400 h-2 rounded-full transition-all duration-1000" style={{ width: '35%' }}></div>
+                      <div className="bg-gradient-to-r from-red-400 to-pink-400 h-2 rounded-full transition-all duration-1000" style={{ width: '35%' }}></div>
                     </div>
                     <div className="text-xs text-blue-200">35% completado</div>
                   </div>

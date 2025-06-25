@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Plus, Filter } from 'lucide-react';
 import { useTaskStore } from '../../stores/taskStore';
@@ -11,16 +10,24 @@ import { Task } from '../../types';
 
 const columns = [
   { id: 'pendiente' as const, title: 'Pendiente', color: 'bg-gray-50 border-gray-200' },
-  { id: 'en_progreso' as const, title: 'En Progreso', color: 'bg-yellow-50 border-yellow-200' },
+  { id: 'en_progreso' as const, title: 'En Progreso', color: 'bg-purple-50 border-purple-200' },
   { id: 'revision' as const, title: 'En Revisión', color: 'bg-blue-50 border-blue-200' },
   { id: 'completada' as const, title: 'Completada', color: 'bg-green-50 border-green-200' }
 ];
 
 const priorityColors = {
   baja: 'bg-green-100 text-green-800',
-  media: 'bg-yellow-100 text-yellow-800',
-  alta: 'bg-orange-100 text-orange-800',
+  media: 'bg-slate-100 text-slate-800',
+  alta: 'bg-teal-100 text-teal-800',
   urgente: 'bg-red-100 text-red-800'
+};
+
+const statusColors = {
+  pendiente: 'bg-gray-100 text-gray-800',
+  en_progreso: 'bg-purple-100 text-purple-800',
+  revision: 'bg-blue-100 text-blue-800',
+  completada: 'bg-green-100 text-green-800',
+  cancelada: 'bg-red-100 text-red-800'
 };
 
 export const Kanban = () => {

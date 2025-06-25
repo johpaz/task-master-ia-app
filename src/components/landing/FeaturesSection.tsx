@@ -36,7 +36,7 @@ const features = [
     icon: Rocket,
     title: 'Automatización Inteligente',
     description: 'Transformamos procesos manuales en flujos automatizados que ahorran tiempo y reducen errores humanos.',
-    gradient: 'from-orange-500 to-red-500'
+    gradient: 'from-teal-500 to-blue-500'
   },
   {
     icon: BarChart,
