@@ -61,7 +61,7 @@ export const Users = () => {
     }
   };
 
-  const filteredUsers = users.filter(user => {
+  const filteredUsers = users && users.filter(user => {
     const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          user.email.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRole = !selectedRole || user.role === selectedRole;

@@ -29,14 +29,6 @@ export const TopBar = () => {
 
         {/* Actions */}
         <div className="flex items-center space-x-4">
-          {/* Search */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
-            <Input
-              placeholder="Buscar tareas..."
-              className="pl-10 w-64"
-            />
-          </div>
 
           {/* Notifications */}
           <Button variant="ghost" size="sm" className="relative">
@@ -44,12 +36,6 @@ export const TopBar = () => {
             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
               3
             </span>
-          </Button>
-
-          {/* New Task */}
-          <Button className="bg-blue-600 hover:bg-blue-700">
-            <Plus size={16} className="mr-2" />
-            Nueva Tarea
           </Button>
         </div>
       </div>

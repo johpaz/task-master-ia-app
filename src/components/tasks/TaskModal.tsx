@@ -13,12 +13,6 @@ interface TaskModalProps {
   task?: any;
 }
 
-const mockUsers = [
-  { id: '1', name: 'Juan Pérez', role: 'admin' },
-  { id: '2', name: 'María García', role: 'manager' },
-  { id: '3', name: 'Carlos López', role: 'collaborator' },
-  { id: '4', name: 'Ana Martínez', role: 'client' }
-];
 
 export const TaskModal = ({ isOpen, onClose, task }: TaskModalProps) => {
   const { addTask, updateTask } = useTaskStore();
@@ -79,8 +73,8 @@ export const TaskModal = ({ isOpen, onClose, task }: TaskModalProps) => {
     const taskData = {
       ...formData,
       assignedBy: user?.id || '1',
-      startDate: new Date(formData.startDate),
-      endDate: new Date(formData.endDate),
+      startDate: formData.startDate,
+      endDate: formData.endDate,
       tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
       attachments: [],
       comments: []
@@ -197,24 +191,7 @@ export const TaskModal = ({ isOpen, onClose, task }: TaskModalProps) => {
                 </div>
               )}
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Asignar a
-                </label>
-                <select
-                  value={formData.assignedTo}
-                  onChange={(e) => setFormData({ ...formData, assignedTo: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                >
-                  <option value="">Seleccionar usuario...</option>
-                  {mockUsers.map((u) => (
-                    <option key={u.id} value={u.id}>
-                      {u.name} ({u.role})
-                    </option>
-                  ))}
-                </select>
-              </div>
+              
             </div>
 
             {/* Cliente */}

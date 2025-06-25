@@ -7,6 +7,7 @@ export interface User {
   avatar?: string;
   department?: string;
   createdAt: Date;
+  token?: string
 }
 
 export interface Task {
@@ -51,4 +52,12 @@ export interface DashboardMetrics {
   pendingTasks: number;
   overdueCovers: number;
   averageCompletionTime: number;
+}
+
+export interface Metrics {
+  totalTasks: number;
+  completedTasks: number;
+  pendingTasks: number;
+  inProgressTasks: number;
+  overdueTasks: number; // Tareas cuya fecha de entrega ya pasó
 }
