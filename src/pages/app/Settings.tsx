@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Save, User, Lock, Bell, Palette, Globe } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';

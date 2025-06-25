@@ -1,4 +1,3 @@
-
 import { Calendar, Clock, AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
 
@@ -30,7 +29,7 @@ export const PersonalCalendar = () => {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'alta': return 'text-red-600 bg-red-50';
-      case 'media': return 'text-yellow-600 bg-yellow-50';
+      case 'media': return 'text-slate-600 bg-slate-50';
       case 'baja': return 'text-green-600 bg-green-50';
       default: return 'text-gray-600 bg-gray-50';
     }
