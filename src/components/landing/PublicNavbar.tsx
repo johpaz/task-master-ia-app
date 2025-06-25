@@ -44,13 +44,29 @@ export const PublicNavbar = () => {
     <nav className={`fixed w-full z-50 transition-all duration-500 ${
       scrolled 
         ? 'bg-background/95 backdrop-blur-md shadow-lg border-b border-border' 
-        : 'bg-slate-900/50 backdrop-blur-sm'
+        : 'bg-slate-900/80 backdrop-blur-sm'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative flex justify-between items-center h-16">
-          {/* Navegación Izquierda */}
+        <div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          <Link to="/" className="flex items-center space-x-3 group">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+              <span className="text-white font-bold text-lg">T</span>
+            </div>
+            <span className={`text-xl font-bold transition-all duration-300 ${
+              scrolled ? 'text-foreground' : 'text-white'
+            }`}>
+              Tu Profe de IA
+            </span>
+          </Link>
+
+          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-           
+            <Link to="/" className={`font-medium transition-all duration-300 ${
+              scrolled ? 'text-foreground hover:text-primary' : 'text-white/90 hover:text-white'
+            }`}>
+              Inicio
+            </Link>
             <button 
               onClick={handleFeaturesClick}
               className={`font-medium transition-all duration-300 ${
@@ -59,18 +75,6 @@ export const PublicNavbar = () => {
             >
               Características
             </button>
-          </div>
-
-          {/* Logo Centrado */}
-          <Link to="/" className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-3 group">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105 animate-glow">
-              <span className="text-white font-bold text-lg">T</span>
-            </div>
-           
-          </Link>
-
-          {/* Navegación Derecha */}
-          <div className="hidden md:flex items-center space-x-6">
             <Link to="/faq" className={`font-medium transition-all duration-300 ${
               scrolled ? 'text-foreground hover:text-primary' : 'text-white/90 hover:text-white'
             }`}>
@@ -86,27 +90,25 @@ export const PublicNavbar = () => {
             }`}>
               Contacto
             </Link>
-            
-            {/* Theme Toggle */}
+          </div>
+
+          {/* Auth Buttons & Theme Toggle */}
+          <div className="hidden md:flex items-center space-x-4">
             <ThemeToggle />
-            
-            {/* Botones de Auth */}
-            <div className="flex items-center space-x-3">
-              <Link to="/login">
-                <Button variant="ghost" className={`transition-all duration-300 ${
-                  scrolled 
-                    ? 'text-foreground hover:text-primary hover:bg-accent' 
-                    : 'text-white/90 hover:text-white hover:bg-white/10'
-                }`}>
-                  Iniciar Sesión
-                </Button>
-              </Link>
-              <Link to="/contact">
-                <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                  Contactar
-                </Button>
-              </Link>
-            </div>
+            <Link to="/login">
+              <Button variant="ghost" className={`transition-all duration-300 ${
+                scrolled 
+                  ? 'text-foreground hover:text-primary hover:bg-accent' 
+                  : 'text-white/90 hover:text-white hover:bg-white/10'
+              }`}>
+                Iniciar Sesión
+              </Button>
+            </Link>
+            <Link to="/contact">
+              <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                Contactar
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -117,7 +119,7 @@ export const PublicNavbar = () => {
               size="sm"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className={`transition-all duration-300 ${
-                scrolled ? 'text-foreground' : 'text-white'
+                scrolled ? 'text-foreground hover:bg-accent' : 'text-white hover:bg-white/10'
               }`}
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
