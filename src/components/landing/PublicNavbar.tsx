@@ -50,11 +50,7 @@ export const PublicNavbar = () => {
         <div className="relative flex justify-between items-center h-16">
           {/* Navegación Izquierda */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/" className={`font-medium transition-all duration-300 ${
-              scrolled ? 'text-foreground hover:text-primary' : 'text-white/90 hover:text-white'
-            }`}>
-              Inicio
-            </Link>
+           
             <button 
               onClick={handleFeaturesClick}
               className={`font-medium transition-all duration-300 ${
