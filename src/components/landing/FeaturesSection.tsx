@@ -36,7 +36,7 @@ const features = [
     icon: Rocket,
     title: 'Automatización Inteligente',
     description: 'Transformamos procesos manuales en flujos automatizados que ahorran tiempo y reducen errores humanos.',
-    gradient: 'from-orange-500 to-red-500'
+    gradient: 'from-teal-500 to-blue-500'
   },
   {
     icon: BarChart,
@@ -61,7 +61,7 @@ const stats = [
 
 export const FeaturesSection = () => {
   return (
-    <section id="features" className="py-20 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-blue-900 dark:to-indigo-900 relative overflow-hidden">
+    <section id="features" className="py-20 bg-gradient-to-br from-white via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-blue-900 dark:to-indigo-900 relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0">
         <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl"></div>
@@ -75,13 +75,13 @@ export const FeaturesSection = () => {
             <Sparkles className="w-4 h-4 mr-2" />
             Tecnología de Vanguardia
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6">
             Características que{' '}
             <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               Transforman
             </span>
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-slate-700 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
             Descubre cómo nuestras soluciones de IA pueden revolucionar tu empresa 
             con tecnología avanzada y resultados medibles
           </p>
@@ -92,7 +92,7 @@ export const FeaturesSection = () => {
           {features.map((feature, index) => (
             <div 
               key={index}
-              className="group relative bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg hover:shadow-2xl border border-white/20 dark:border-slate-700/50 transition-all duration-500 hover:scale-105 hover:-translate-y-2"
+              className="group relative bg-white dark:bg-slate-800/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg hover:shadow-2xl border border-slate-200 dark:border-slate-700/50 transition-all duration-500 hover:scale-105 hover:-translate-y-2"
             >
               {/* Gradient Border Effect */}
               <div className={`absolute inset-0 bg-gradient-to-r ${feature.gradient} rounded-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-500`}></div>
@@ -101,10 +101,10 @@ export const FeaturesSection = () => {
                 <div className={`inline-flex p-4 bg-gradient-to-r ${feature.gradient} rounded-xl shadow-lg mb-6 group-hover:scale-110 transition-transform duration-300`}>
                   <feature.icon className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                <p className="text-slate-700 dark:text-gray-300 leading-relaxed">
                   {feature.description}
                 </p>
               </div>
@@ -113,12 +113,12 @@ export const FeaturesSection = () => {
         </div>
 
         {/* Stats Section */}
-        <div className="bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm rounded-3xl p-8 border border-white/20 dark:border-slate-700/50 shadow-xl">
+        <div className="bg-white dark:bg-slate-800/50 backdrop-blur-sm rounded-3xl p-8 border border-slate-200 dark:border-slate-700/50 shadow-xl">
           <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">
               Resultados que Hablan por Sí Solos
             </h3>
-            <p className="text-gray-600 dark:text-gray-300 text-lg">
+            <p className="text-slate-700 dark:text-gray-300 text-lg">
               Números que demuestran nuestro compromiso con la excelencia
             </p>
           </div>
@@ -129,10 +129,10 @@ export const FeaturesSection = () => {
                 <div className="inline-flex p-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl mb-4 group-hover:scale-110 transition-transform duration-300">
                   <stat.icon className="h-6 w-6 text-white" />
                 </div>
-                <div className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                <div className="text-3xl lg:text-4xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                   {stat.number}
                 </div>
-                <div className="text-gray-600 dark:text-gray-300 font-medium">
+                <div className="text-slate-700 dark:text-gray-300 font-medium">
                   {stat.label}
                 </div>
               </div>

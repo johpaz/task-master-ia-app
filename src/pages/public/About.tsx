@@ -1,4 +1,3 @@
-
 import { Users, Target, Award, Heart } from 'lucide-react';
 
 const team = [
@@ -48,16 +47,16 @@ const values = [
 
 export const About = () => {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-slate-900">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-50 to-indigo-50 py-20">
+      <section className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-slate-900 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            <h1 className="text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white mb-6">
               Quiénes Somos -{' '}
-              <span className="text-blue-600">Tu Profe de IA</span>
+              <span className="text-blue-600 dark:text-blue-400">Tu Profe de IA</span>
             </h1>
-            <p className="text-xl text-gray-600 leading-relaxed">
+            <p className="text-xl text-slate-700 dark:text-gray-300 leading-relaxed">
               Somos expertos en inteligencia artificial y desarrollo de software, 
               comprometidos con democratizar el acceso a la IA a través de educación, 
               consultoría y soluciones tecnológicas innovadoras.
@@ -71,10 +70,10 @@ export const About = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+              <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">
                 Nuestra Historia
               </h2>
-              <div className="space-y-4 text-gray-600 leading-relaxed">
+              <div className="space-y-4 text-slate-700 dark:text-gray-300 leading-relaxed">
                 <p>
                   Tu Profe de IA nació en 2020 con una visión clara: hacer que la 
                   inteligencia artificial sea accesible para todos. Comenzamos como 
@@ -109,27 +108,27 @@ export const About = () => {
       </section>
 
       {/* Values Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-slate-50 dark:bg-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">
               Nuestros Valores
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-slate-700 dark:text-gray-300">
               Los principios que guían cada decisión y proyecto
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {values.map((value, index) => (
-              <div key={index} className="bg-white p-8 rounded-xl shadow-sm border hover:shadow-md transition-shadow">
-                <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
-                  <value.icon className="text-blue-600" size={32} />
+              <div key={index} className="bg-white dark:bg-slate-700 p-8 rounded-xl shadow-sm border border-slate-200 dark:border-slate-600 hover:shadow-md transition-shadow">
+                <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mb-6">
+                  <value.icon className="text-blue-600 dark:text-blue-400" size={32} />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
                   {value.title}
                 </h3>
-                <p className="text-gray-600 leading-relaxed">
+                <p className="text-slate-700 dark:text-gray-300 leading-relaxed">
                   {value.description}
                 </p>
               </div>
@@ -142,10 +141,10 @@ export const About = () => {
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">
               Nuestro Equipo
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-slate-700 dark:text-gray-300">
               Expertos apasionados por la inteligencia artificial
             </p>
           </div>
@@ -157,16 +156,16 @@ export const About = () => {
                   <img 
                     src={member.avatar}
                     alt={member.name}
-                    className="w-24 h-24 rounded-full mx-auto border-4 border-blue-100 group-hover:border-blue-300 transition-colors"
+                    className="w-24 h-24 rounded-full mx-auto border-4 border-blue-100 dark:border-blue-900 group-hover:border-blue-300 dark:group-hover:border-blue-700 transition-colors"
                   />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
                   {member.name}
                 </h3>
-                <p className="text-blue-600 font-semibold mb-3">
+                <p className="text-blue-600 dark:text-blue-400 font-semibold mb-3">
                   {member.role}
                 </p>
-                <p className="text-gray-600 text-sm leading-relaxed">
+                <p className="text-slate-700 dark:text-gray-300 text-sm leading-relaxed">
                   {member.description}
                 </p>
               </div>
@@ -176,7 +175,7 @@ export const About = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-blue-600">
+      <section className="py-20 bg-blue-600 dark:bg-blue-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">
             ¿Listo para trabajar con nosotros?

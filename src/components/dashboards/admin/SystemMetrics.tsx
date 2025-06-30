@@ -1,3 +1,4 @@
+
 import { 
   CheckSquare, 
   Clock, 
@@ -68,8 +69,8 @@ export const SystemMetrics = () => {
       title: 'Total de Usuarios',
       value: data?.totalUsers ?? 0,
       icon: Users,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-50'
+      color: 'text-indigo-600',
+      bgColor: 'bg-indigo-50'
     },
     {
       title: 'Admins',

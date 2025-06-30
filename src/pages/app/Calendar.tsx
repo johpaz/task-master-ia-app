@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { useTaskStore } from '../../stores/taskStore';
@@ -183,12 +182,12 @@ export const Calendar = () => {
                           style={{
                             backgroundColor: 
                               task.priority === 'urgente' ? '#FEE2E2' :
-                              task.priority === 'alta' ? '#FED7AA' :
-                              task.priority === 'media' ? '#FEF3C7' : '#F0FDF4',
+                              task.priority === 'alta' ? '#CCFBF1' :
+                              task.priority === 'media' ? '#E2E8F0' : '#F0FDF4',
                             color:
                               task.priority === 'urgente' ? '#DC2626' :
-                              task.priority === 'alta' ? '#EA580C' :
-                              task.priority === 'media' ? '#D97706' : '#16A34A'
+                              task.priority === 'alta' ? '#0D9488' :
+                              task.priority === 'media' ? '#475569' : '#16A34A'
                           }}
                         >
                           <div className="truncate font-medium">
@@ -224,11 +223,11 @@ export const Calendar = () => {
               <span className="text-sm text-gray-600">Baja</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-yellow-200 rounded"></div>
+              <div className="w-4 h-4 bg-slate-200 rounded"></div>
               <span className="text-sm text-gray-600">Media</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-orange-200 rounded"></div>
+              <div className="w-4 h-4 bg-teal-200 rounded"></div>
               <span className="text-sm text-gray-600">Alta</span>
             </div>
             <div className="flex items-center gap-2">

@@ -1,4 +1,3 @@
-
 import { BarChart, LineChart, PieChart, TrendingUp, Download, Calendar } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTaskStore } from '../../stores/taskStore';
@@ -120,10 +119,10 @@ export const Reports = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Eficiencia</p>
-                <p className="text-3xl font-bold text-orange-600">89%</p>
+                <p className="text-3xl font-bold text-teal-600">89%</p>
                 <p className="text-xs text-gray-500">Tiempo estimado vs real</p>
               </div>
-              <LineChart className="h-8 w-8 text-orange-600" />
+              <LineChart className="h-8 w-8 text-teal-600" />
             </div>
           </CardContent>
         </Card>

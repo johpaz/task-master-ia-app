@@ -1,4 +1,3 @@
-
 import { 
   Users, 
   TrendingUp, 
@@ -32,8 +31,8 @@ export const TeamMetrics = ({ metrics }: TeamMetricsProps) => {
       title: 'En Progreso',
       value: metrics.inProgressTasks,
       icon: Clock,
-      color: 'text-yellow-600',
-      bgColor: 'bg-yellow-50'
+      color: 'text-indigo-600',
+      bgColor: 'bg-indigo-50'
     },
     {
       title: 'Objetivos Alcanzados',

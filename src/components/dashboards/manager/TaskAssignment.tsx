@@ -1,4 +1,3 @@
-
 import { Plus, User, Calendar } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
 import { Button } from '../../ui/button';
@@ -31,8 +30,8 @@ export const TaskAssignment = () => {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'urgente': return 'bg-red-100 text-red-800';
-      case 'alta': return 'bg-orange-100 text-orange-800';
-      case 'media': return 'bg-yellow-100 text-yellow-800';
+      case 'alta': return 'bg-teal-100 text-teal-800';
+      case 'media': return 'bg-slate-100 text-slate-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
