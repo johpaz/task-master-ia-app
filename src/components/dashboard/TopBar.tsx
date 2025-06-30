@@ -30,7 +30,7 @@ export const TopBar = () => {
   };
 
   return (
-    <header className="bg-white border-b border-gray-200 px-6 py-4">
+    <header className="bg-background dark:bg-background border-b border-gray-200 px-6 py-4">
       <div className="flex items-center justify-between">
         {/* Greeting */}
         <div>
@@ -64,7 +64,7 @@ export const TopBar = () => {
                   <DropdownMenuItem
                     key={notification.id}
                     onSelect={() => markAsRead(notification.id)}
-                    className={`flex items-start gap-3 p-2 ${notification.isRead === "0" ? 'bg-blue-50' : ''}`}
+                    className={`flex items-start gap-3 p-2 ${notification.isRead === "0" ? 'bg-accent dark:bg-accent' : ''}`}
                   >
                     <div className="flex-shrink-0">
                       <div className={`h-2 w-2 rounded-full mt-1.5 ${notification.isRead === "0" ? 'bg-blue-500' : 'bg-gray-300'}`}></div>

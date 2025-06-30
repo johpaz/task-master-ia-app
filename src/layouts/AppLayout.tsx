@@ -52,7 +52,7 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-background dark:bg-background flex">
       <Sidebar />
       <div className="flex-1 flex flex-col">
         <TopBar />
