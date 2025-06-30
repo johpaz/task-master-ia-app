@@ -7,86 +7,58 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 
+import { Task } from '../../types';
+
 interface TaskModalProps {
   isOpen: boolean;
   onClose: () => void;
-  task?: any;
+  task?: Task;
+  onSave: (data: any) => void; // Añadir onSave
 }
 
-
-export const TaskModal = ({ isOpen, onClose, task }: TaskModalProps) => {
-  const { addTask, updateTask } = useTaskStore();
+export const TaskModal = ({ isOpen, onClose, task, onSave }: TaskModalProps) => {
   const { user } = useAuthStore();
   
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     type: 'desarrollo' as const,
-    status: 'pendiente' as const,
-    priority: 'media' as const,
-    assignedTo: '',
-    client: '',
-    startDate: new Date().toISOString().split('T')[0],
-    endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    estimatedHours: 8,
-    actualHours: 0,
-    tags: ''
   });
 
   useEffect(() => {
-    if (task) {
-      setFormData({
-        title: task.title,
-        description: task.description,
-        type: task.type,
-        status: task.status,
-        priority: task.priority,
-        assignedTo: task.assignedTo,
-        client: task.client || '',
-        startDate: new Date(task.startDate).toISOString().split('T')[0],
-        endDate: new Date(task.endDate).toISOString().split('T')[0],
-        estimatedHours: task.estimatedHours,
-        actualHours: task.actualHours,
-        tags: task.tags.join(', ')
-      });
-    } else {
+    if (isOpen && !task) {
       setFormData({
         title: '',
         description: '',
         type: 'desarrollo',
-        status: 'pendiente',
-        priority: 'media',
-        assignedTo: '',
-        client: '',
-        startDate: new Date().toISOString().split('T')[0],
-        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-        estimatedHours: 8,
-        actualHours: 0,
-        tags: ''
+      });
+    } else if (task) {
+      setFormData({
+        title: task.title,
+        description: task.description,
+        type: task.type,
       });
     }
-  }, [task, isOpen]);
+  }, [isOpen, task]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Datos que el cliente llena
     const taskData = {
       ...formData,
-      assignedBy: user?.id || '1',
-      startDate: formData.startDate,
-      endDate: formData.endDate,
-      tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
-      attachments: [],
-      comments: []
+      client: user?.id, // Enviar el ID del cliente
+      assignedBy: user?.id, // El creador es el usuario actual
     };
 
-    if (task) {
-      updateTask(task.id, taskData);
-    } else {
-      addTask(taskData);
-    }
-    
-    onClose();
+    // No enviar priority, endDate, estimatedHours, ni tags.
+    // Estos serán calculados por el backend.
+    delete taskData.priority;
+    delete taskData.endDate;
+    delete taskData.estimatedHours;
+    delete taskData.tags;
+
+    onSave(taskData);
   };
 
   if (!isOpen) return null;
@@ -133,146 +105,23 @@ export const TaskModal = ({ isOpen, onClose, task }: TaskModalProps) => {
               />
             </div>
 
-            {/* Tipo y Prioridad */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Tipo de Tarea
-                </label>
-                <select
-                  value={formData.type}
-                  onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="desarrollo">Desarrollo</option>
-                  <option value="agente">Agente IA</option>
-                  <option value="soporte">Soporte</option>
-                  <option value="pqr">PQR</option>
-                  <option value="consultoria">Consultoría</option>
-                  <option value="capacitacion">Capacitación</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Prioridad
-                </label>
-                <select
-                  value={formData.priority}
-                  onChange={(e) => setFormData({ ...formData, priority: e.target.value as any })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="baja">Baja</option>
-                  <option value="media">Media</option>
-                  <option value="alta">Alta</option>
-                  <option value="urgente">Urgente</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Estado y Asignado */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {task && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Estado
-                  </label>
-                  <select
-                    value={formData.status}
-                    onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="pendiente">Pendiente</option>
-                    <option value="en_progreso">En Progreso</option>
-                    <option value="revision">En Revisión</option>
-                    <option value="completada">Completada</option>
-                    <option value="cancelada">Cancelada</option>
-                  </select>
-                </div>
-              )}
-
-              
-            </div>
-
-            {/* Cliente */}
+            {/* Tipo de Tarea */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Cliente (opcional)
+                Tipo de Tarea
               </label>
-              <Input
-                value={formData.client}
-                onChange={(e) => setFormData({ ...formData, client: e.target.value })}
-                placeholder="Ej: TechCommerce S.A."
-              />
-            </div>
-
-            {/* Fechas */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Fecha de Inicio
-                </label>
-                <Input
-                  type="date"
-                  value={formData.startDate}
-                  onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Fecha de Entrega
-                </label>
-                <Input
-                  type="date"
-                  value={formData.endDate}
-                  onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Horas */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Horas Estimadas
-                </label>
-                <Input
-                  type="number"
-                  value={formData.estimatedHours}
-                  onChange={(e) => setFormData({ ...formData, estimatedHours: parseInt(e.target.value) })}
-                  min="1"
-                  required
-                />
-              </div>
-
-              {task && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Horas Trabajadas
-                  </label>
-                  <Input
-                    type="number"
-                    value={formData.actualHours}
-                    onChange={(e) => setFormData({ ...formData, actualHours: parseInt(e.target.value) })}
-                    min="0"
-                  />
-                </div>
-              )}
-            </div>
-
-            {/* Tags */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Etiquetas (separadas por comas)
-              </label>
-              <Input
-                value={formData.tags}
-                onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                placeholder="Ej: React, API, Urgente"
-              />
+              <select
+                value={formData.type}
+                onChange={(e) => setFormData({ ...formData, type: e.target.value as any})}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="desarrollo">Desarrollo</option>
+                <option value="agente">Agente IA</option>
+                <option value="soporte">Soporte</option>
+                <option value="pqr">PQR</option>
+                <option value="consultoria">Consultoría</option>
+                <option value="capacitacion">Capacitación</option>
+              </select>
             </div>
 
             {/* Botones */}

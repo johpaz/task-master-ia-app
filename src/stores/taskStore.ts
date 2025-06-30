@@ -14,7 +14,7 @@ interface TaskState {
   getDashboardMetrics: () => Metrics;
 }
 
-export const useTaskStore = create<TaskState>((set) => ({
+export const useTaskStore = create<TaskState>((set, get) => ({
   tasks: [],
   isLoading: false,
   error: null,
@@ -25,8 +25,8 @@ export const useTaskStore = create<TaskState>((set) => ({
   fetchTasks: async () => {
     set({ isLoading: true, error: null });
     try {
-      const tasks = await taskService.getTasks();
-      set({ tasks, isLoading: false });
+      const response = await taskService.getTasks();
+      set({ tasks: response.data, isLoading: false });
     } catch (error) {
       set({ error: (error as Error).message, isLoading: false });
     }
@@ -85,12 +85,23 @@ export const useTaskStore = create<TaskState>((set) => ({
     }
   },
 
-  getDashboardMetrics: () => {
-    const state = useTaskStore.getState();
+  getDashboardMetrics: (): Metrics => {
+    const { tasks } = get();
+    const completedTasks = tasks.filter(task => task.status === 'completada');
+    const totalCompletionTime = completedTasks.reduce((acc, task) => {
+      const startDate = new Date(task.startDate).getTime();
+      const endDate = new Date(task.endDate).getTime();
+      const diffInHours = (endDate - startDate) / (1000 * 60 * 60);
+      return acc + diffInHours;
+    }, 0);
+
     return {
-      total: state.tasks.length,
-      completed: state.tasks.filter(task => task.status === 'completed').length,
-      pending: state.tasks.filter(task => task.status === 'pending').length
+      totalTasks: tasks.length,
+      completedTasks: completedTasks.length,
+      pendingTasks: tasks.filter(task => task.status === 'pendiente').length,
+      inProgressTasks: tasks.filter(task => task.status === 'en_progreso').length,
+      overdueTasks: tasks.filter(task => new Date(task.endDate) < new Date() && task.status !== 'completada').length,
+      averageCompletionTime: completedTasks.length > 0 ? totalCompletionTime / completedTasks.length : 0,
     };
   },
 

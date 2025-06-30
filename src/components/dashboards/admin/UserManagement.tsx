@@ -1,19 +1,45 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Users, Plus, Search } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
 import { Button } from '../../ui/button';
 import { Input } from '../../ui/input';
+import { Skeleton } from '../../ui/skeleton';
+import { useUserModalStore } from '../../../stores/userModalStore';
+import { userService } from '../../../services/userService';
+import { User } from '../../../types';
 
 export const UserManagement = () => {
+  const navigate = useNavigate();
+  const { openModal } = useUserModalStore();
   const [searchTerm, setSearchTerm] = useState('');
+  const [recentUsers, setRecentUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Mock data for recent users
-  const recentUsers = [
-    { id: '1', name: 'Ana García', role: 'Manager', status: 'active', lastLogin: '2 min ago' },
-    { id: '2', name: 'Carlos López', role: 'Collaborator', status: 'active', lastLogin: '1 hour ago' },
-    { id: '3', name: 'María Rodríguez', role: 'Client', status: 'inactive', lastLogin: '2 days ago' },
-  ];
+  useEffect(() => {
+    const fetchRecentUsers = async () => {
+      try {
+        setLoading(true);
+        const response = await userService.getUsers();
+        // Ordenar por fecha de creación (si está disponible) y tomar los 3 más recientes
+        const sortedUsers = response.sort((a, b) => 
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+        setRecentUsers(sortedUsers.slice(0, 3));
+      } catch (error) {
+        console.error("Failed to fetch recent users:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRecentUsers();
+  }, []);
+
+  const filteredUsers = recentUsers.filter(user =>
+    user.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <Card>
@@ -22,7 +48,7 @@ export const UserManagement = () => {
           <Users className="mr-2 h-5 w-5 text-red-600" />
           Gestión de Usuarios
         </CardTitle>
-        <Button size="sm" className="bg-red-600 hover:bg-red-700">
+        <Button size="sm" className="bg-red-600 hover:bg-red-700" onClick={() => openModal()}>
           <Plus className="h-4 w-4 mr-1" />
           Nuevo
         </Button>
@@ -33,7 +59,7 @@ export const UserManagement = () => {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
             <Input
-              placeholder="Buscar usuarios..."
+              placeholder="Buscar usuarios recientes..."
               className="pl-10"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -42,23 +68,30 @@ export const UserManagement = () => {
 
           {/* Recent Users */}
           <div className="space-y-3">
-            {recentUsers.map((user) => (
-              <div key={user.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <div>
-                  <p className="font-medium text-gray-900">{user.name}</p>
-                  <p className="text-sm text-gray-600">{user.role}</p>
+            {loading ? (
+              Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-3 w-16" />
+                  </div>
+                  <Skeleton className="h-4 w-12" />
                 </div>
-                <div className="text-right">
-                  <span className={`inline-block w-2 h-2 rounded-full mr-2 ${
-                    user.status === 'active' ? 'bg-green-500' : 'bg-gray-400'
-                  }`}></span>
-                  <span className="text-xs text-gray-500">{user.lastLogin}</span>
+              ))
+            ) : (
+              filteredUsers.map((user) => (
+                <div key={user.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div>
+                    <p className="font-medium text-gray-900">{user.name}</p>
+                    <p className="text-sm text-gray-600 capitalize">{user.role}</p>
+                  </div>
+                  {/* Aquí podrías añadir un status o última conexión si la API lo proveyera */}
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
 
-          <Button variant="outline" className="w-full">
+          <Button variant="outline" className="w-full" onClick={() => navigate('/users')}>
             Ver Todos los Usuarios
           </Button>
         </div>

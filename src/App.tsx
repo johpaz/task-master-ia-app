@@ -23,12 +23,19 @@ import { Login } from "./pages/auth/Login";
 
 // App Pages
 import { Dashboard } from "./pages/app/Dashboard";
+import { AdminDashboard } from "./pages/app/AdminDashboard";
+import { ManagerDashboard } from "./pages/app/ManagerDashboard";
+import { CollaboratorDashboard } from "./pages/app/CollaboratorDashboard";
+import { ClientDashboard } from "./pages/app/ClientDashboard";
 import { Tasks } from "./pages/app/Tasks";
+import { TaskDetail } from "./pages/app/TaskDetail";
 import { Kanban } from "./pages/app/Kanban";
 import { Calendar } from "./pages/app/Calendar";
 import { Reports } from "./pages/app/Reports";
 import { Users } from "./pages/app/Users";
+import { UserDetail } from "./pages/app/UserDetail";
 import { Settings } from "./pages/app/Settings";
+import { SystemLogs } from "./pages/app/SystemLogs";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -91,11 +98,51 @@ const App = () => {
                   </AppLayout>
                 </ProtectedRoute>
               } />
+
+              <Route path="/admin/dashboard" element={
+                <ProtectedRoute requiredRoles={['admin']}>
+                  <AppLayout>
+                    <AdminDashboard />
+                  </AppLayout>
+                </ProtectedRoute>
+              } />
+
+              <Route path="/manager/dashboard" element={
+                <ProtectedRoute requiredRoles={['manager']}>
+                  <AppLayout>
+                    <ManagerDashboard />
+                  </AppLayout>
+                </ProtectedRoute>
+              } />
+
+              <Route path="/collaborator/dashboard" element={
+                <ProtectedRoute requiredRoles={['collaborator']}>
+                  <AppLayout>
+                    <CollaboratorDashboard />
+                  </AppLayout>
+                </ProtectedRoute>
+              } />
+
+              <Route path="/client/dashboard" element={
+                <ProtectedRoute requiredRoles={['client']}>
+                  <AppLayout>
+                    <ClientDashboard />
+                  </AppLayout>
+                </ProtectedRoute>
+              } />
               
               <Route path="/tasks" element={
                 <ProtectedRoute>
                   <AppLayout>
                     <Tasks />
+                  </AppLayout>
+                </ProtectedRoute>
+              } />
+
+              <Route path="/tasks/:id" element={
+                <ProtectedRoute>
+                  <AppLayout>
+                    <TaskDetail />
                   </AppLayout>
                 </ProtectedRoute>
               } />
@@ -131,11 +178,27 @@ const App = () => {
                   </AppLayout>
                 </ProtectedRoute>
               } />
+
+              <Route path="/users/:id" element={
+                <ProtectedRoute requiredRoles={['admin']}>
+                  <AppLayout>
+                    <UserDetail />
+                  </AppLayout>
+                </ProtectedRoute>
+              } />
               
               <Route path="/settings" element={
                 <ProtectedRoute>
                   <AppLayout>
                     <Settings />
+                  </AppLayout>
+                </ProtectedRoute>
+              } />
+
+              <Route path="/logs" element={
+                <ProtectedRoute requiredRoles={['admin']}>
+                  <AppLayout>
+                    <SystemLogs />
                   </AppLayout>
                 </ProtectedRoute>
               } />

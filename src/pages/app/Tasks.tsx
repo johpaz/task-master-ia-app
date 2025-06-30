@@ -1,5 +1,6 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Plus, Search, Filter, Edit, Trash2, CheckSquare as CheckSquareIcon } from 'lucide-react';
 import { useTaskStore } from '../../stores/taskStore';
 import { useAuthStore } from '../../stores/authStore';
@@ -7,8 +8,11 @@ import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Badge } from '../../components/ui/badge';
 import { Card, CardContent } from '../../components/ui/card';
+import { Skeleton } from '../../components/ui/skeleton';
 import { TaskModal } from '../../components/tasks/TaskModal';
 import { Task } from '../../types';
+import { useToast } from '../../hooks/use-toast';
+import { taskService, CreateTaskRequest, UpdateTaskRequest } from '../../services/taskService';
 
 const priorityColors = {
   baja: 'bg-green-100 text-green-800',
@@ -35,21 +39,31 @@ const typeLabels = {
 };
 
 export const Tasks = () => {
-  const { tasks, deleteTask } = useTaskStore();
-  const { user } = useAuthStore();
+  // No usar más useTaskStore para la lista principal
+  const { user, token } = useAuthStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
   const [selectedType, setSelectedType] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const { toast } = useToast();
+
+  const { data: tasksData, isLoading, error, refetch } = useQuery({
+    queryKey: ['myTasksPage', token], // Usar una key única para esta página
+    queryFn: () => taskService.getMyTasks(token),
+    enabled: !!token,
+  });
+
+  // Los datos vienen directamente de la consulta
+  const allTasks = tasksData?.tasks || [];
 
   // Filter tasks based on user role and search criteria
-  const filteredTasks = tasks.filter(task => {
-    // Role-based filtering
-    if (user?.role === 'client' && task.assignedBy !== user.id) {
+  const filteredTasks = allTasks.filter(task => {
+    // El filtro de rol ya se hace en el backend con getMyTasks, pero mantenemos por si acaso
+    if (user?.role === 'client' && task.assignedBy !== user.id.toString()) {
       return false;
     }
-    if (user?.role === 'collaborator' && task.assignedTo !== user.id) {
+    if (user?.role === 'collaborator' && task.assignedTo !== user.id.toString()) {
       return false;
     }
 
@@ -72,9 +86,31 @@ export const Tasks = () => {
     setIsModalOpen(true);
   };
 
-  const handleDeleteTask = (taskId: string) => {
+  const handleDeleteTask = async (taskId: string) => {
     if (confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
-      deleteTask(taskId);
+      try {
+        await taskService.deleteTask(taskId);
+        toast({ title: "Tarea eliminada" });
+        refetch(); // Recargar la lista de tareas
+      } catch (error) {
+        toast({ title: "Error al eliminar la tarea", variant: "destructive" });
+      }
+    }
+  };
+
+  const handleSaveTask = async (taskData: CreateTaskRequest | UpdateTaskRequest) => {
+    try {
+      if (selectedTask) {
+        await taskService.updateTask(selectedTask.id, taskData as UpdateTaskRequest);
+        toast({ title: "Tarea actualizada" });
+      } else {
+        await taskService.createTask(taskData as CreateTaskRequest);
+        toast({ title: "Tarea creada" });
+      }
+      setIsModalOpen(false);
+      refetch(); // Recargar la lista de tareas
+    } catch (error) {
+      toast({ title: "Error al guardar la tarea", variant: "destructive" });
     }
   };
 
@@ -88,6 +124,8 @@ export const Tasks = () => {
   const canDeleteTask = (task: Task) => {
     return user?.role === 'admin' || (user?.role === 'manager');
   };
+
+  if (error) return <div>Error al cargar las tareas.</div>;
 
   return (
     <div className="space-y-6">
@@ -156,7 +194,11 @@ export const Tasks = () => {
 
       {/* Tasks List */}
       <div className="space-y-4">
-        {filteredTasks.length === 0 ? (
+        {isLoading ? (
+          Array.from({ length: 5 }).map((_, i) => (
+            <Card key={i}><CardContent className="p-6"><Skeleton className="h-24 w-full" /></CardContent></Card>
+          ))
+        ) : filteredTasks.length === 0 ? (
           <Card>
             <CardContent className="p-12 text-center">
               <CheckSquareIcon className="h-12 w-12 text-gray-300 mx-auto mb-4" />
@@ -232,9 +274,9 @@ export const Tasks = () => {
                       </div>
                     </div>
 
-                    {task.tags.length > 0 && (
+                    {task.tags && (
                       <div className="flex flex-wrap gap-1">
-                        {task && task.tags.map((tag, index) => (
+                        {(typeof task.tags === 'string' ? task.tags.split(',') : task.tags).map((tag, index) => (
                           <span 
                             key={index}
                             className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
@@ -256,6 +298,7 @@ export const Tasks = () => {
       <TaskModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        onSave={handleSaveTask}
         task={selectedTask}
       />
     </div>

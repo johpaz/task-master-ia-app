@@ -23,11 +23,15 @@ const priorityColors = {
   urgente: 'bg-red-100 text-red-800'
 };
 
+import { useToast } from '../../hooks/use-toast';
+import { taskService, CreateTaskRequest, UpdateTaskRequest } from '../../services/taskService';
+
 export const Kanban = () => {
-  const { tasks, updateTask } = useTaskStore();
+  const { tasks, addTask, updateTask } = useTaskStore();
   const { user } = useAuthStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const { toast } = useToast();
 
   const getTasksByStatus = (status: Task['status']) => {
     return tasks.filter(task => task.status === status);
@@ -57,6 +61,23 @@ export const Kanban = () => {
   const handleEditTask = (task: Task) => {
     setSelectedTask(task);
     setIsModalOpen(true);
+  };
+
+  const handleSaveTask = async (taskData: CreateTaskRequest | UpdateTaskRequest) => {
+    try {
+      if (selectedTask) {
+        const updated = await taskService.updateTask(selectedTask.id, taskData as UpdateTaskRequest);
+        updateTask(updated);
+        toast({ title: "Tarea actualizada" });
+      } else {
+        const created = await taskService.createTask(taskData as CreateTaskRequest);
+        addTask(created);
+        toast({ title: "Tarea creada" });
+      }
+      setIsModalOpen(false);
+    } catch (error) {
+      toast({ title: "Error al guardar la tarea", variant: "destructive" });
+    }
   };
 
   return (
@@ -124,9 +145,9 @@ export const Kanban = () => {
                         <span>{task.actualHours}h / {task.estimatedHours}h</span>
                       </div>
 
-                      {task.tags.length > 0 && (
+                      {task.tags && (
                         <div className="flex flex-wrap gap-1">
-                          {task.tags.slice(0, 3).map((tag, index) => (
+                          {(typeof task.tags === 'string' ? task.tags.split(',') : task.tags).slice(0, 3).map((tag, index) => (
                             <span 
                               key={index}
                               className="bg-blue-100 text-blue-800 text-xs px-1.5 py-0.5 rounded"
@@ -134,9 +155,9 @@ export const Kanban = () => {
                               {tag}
                             </span>
                           ))}
-                          {task.tags.length > 3 && (
+                          {(typeof task.tags === 'string' ? task.tags.split(',') : task.tags).length > 3 && (
                             <span className="text-xs text-gray-500">
-                              +{task.tags.length - 3}
+                              +{(typeof task.tags === 'string' ? task.tags.split(',') : task.tags).length - 3}
                             </span>
                           )}
                         </div>
@@ -175,6 +196,7 @@ export const Kanban = () => {
       <TaskModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        onSave={handleSaveTask}
         task={selectedTask}
       />
     </div>

@@ -48,12 +48,33 @@ export const taskService = {
    * Obtiene una lista de todas las tareas.
    * @returns {Promise<Task[]>} Una promesa que resuelve a un array de tareas.
    */
-  async getTasks(): Promise<Task[]> {
+  async getTasks(token: string | null): Promise<{ tasks: Task[] }> {
+    if (!token) {
+      throw new Error('No authentication token provided');
+    }
     const response = await fetch(`${API_BASE_URL}/tasks`, {
       method: 'GET',
-      headers: this.getHeaders(),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
     });
     if (!response.ok) throw new Error('Error al obtener las tareas.');
+    return response.json();
+  },
+
+  async getMyTasks(token: string | null): Promise<{ tasks: Task[] }> {
+    if (!token) {
+      throw new Error('No authentication token provided');
+    }
+    const response = await fetch(`${API_BASE_URL}/tasks/my-tasks`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) throw new Error('Error al obtener mis tareas.');
     return response.json();
   },
 

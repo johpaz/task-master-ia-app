@@ -1,36 +1,56 @@
 
 import { BarChart, LineChart, PieChart, TrendingUp, Download, Calendar } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useTaskStore } from '../../stores/taskStore';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
+import { Metrics } from '@/types';
 
 export const Reports = () => {
-  const { getDashboardMetrics } = useTaskStore();
-  const metrics = getDashboardMetrics();
+  const { fetchTasks } = useTaskStore();
+  const tasks = useTaskStore(state => state.tasks);
 
-  const tasksByType = {
-    desarrollo: 8,
-    agente: 6,
-    soporte: 4,
-    pqr: 3,
-    consultoria: 5,
-    capacitacion: 2
-  };
+  useEffect(() => {
+    const loadTasksAndMetrics = async () => {
+      await fetchTasks();
+    };
+    loadTasksAndMetrics();
+  }, [fetchTasks]);
 
-  const monthlyData = [
-    { month: 'Ene', completed: 12, created: 15 },
-    { month: 'Feb', completed: 18, created: 20 },
-    { month: 'Mar', completed: 22, created: 25 },
-    { month: 'Abr', completed: 28, created: 30 },
-    { month: 'May', completed: 35, created: 38 }
-  ];
+  
 
-  const teamPerformance = [
-    { name: 'Carlos Rodríguez', completed: 24, hours: 186 },
-    { name: 'Ana García', completed: 20, hours: 165 },
-    { name: 'Miguel Santos', completed: 18, hours: 144 },
-    { name: 'Laura Martínez', completed: 15, hours: 120 }
-  ];
+  
+
+  const monthlyData = tasks.reduce((acc, task) => {
+    const month = new Date(task.createdAt).toLocaleString('default', { month: 'short' });
+    const year = new Date(task.createdAt).getFullYear();
+    const key = `${month} ${year}`;
+    if (!acc[key]) {
+      acc[key] = { month: key, completed: 0, created: 0 };
+    }
+    acc[key].created++;
+    if (task.status === 'completada') {
+      acc[key].completed++;
+    }
+    return acc;
+  }, {} as Record<string, { month: string; completed: number; created: number }>);
+
+  const teamPerformance = tasks.reduce((acc, task) => {
+    const member = task.assignedTo;
+    if (!acc[member]) {
+      acc[member] = { name: member, completed: 0, hours: 0 };
+    }
+    if (task.status === 'completada') {
+      acc[member].completed++;
+    }
+    acc[member].hours += task.actualHours;
+    return acc;
+  }, {} as Record<string, { name: string; completed: number; hours: number }>);
+
+  const tasksByType = tasks.reduce((acc, task) => {
+    acc[task.type] = (acc[task.type] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
 
   return (
     <div className="space-y-6">
@@ -73,7 +93,7 @@ export const Reports = () => {
               <div>
                 <p className="text-sm font-medium text-gray-600">Tiempo Promedio</p>
                 <p className="text-3xl font-bold text-blue-600">
-                  {metrics.averageCompletionTime.toFixed(1)}h
+                  {tasks.length > 0 ? (tasks.reduce((acc, task) => acc + task.actualHours, 0) / tasks.length).toFixed(1) : '0'}h
                 </p>
                 <p className="text-xs text-gray-500">-2.5h vs meta</p>
               </div>
@@ -87,7 +107,7 @@ export const Reports = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Tareas Completadas</p>
-                <p className="text-3xl font-bold text-purple-600">{metrics.completedTasks}</p>
+                <p className="text-3xl font-bold text-purple-600">{tasks.filter(task => task.status === 'completada').length || '0'}</p>
                 <p className="text-xs text-gray-500">Este mes</p>
               </div>
               <PieChart className="h-8 w-8 text-purple-600" />
@@ -125,7 +145,7 @@ export const Reports = () => {
                     <div className="w-32 bg-gray-200 rounded-full h-2">
                       <div 
                         className="bg-blue-600 h-2 rounded-full" 
-                        style={{ width: `${(count / 10) * 100}%` }}
+                        style={{ width: `${tasks.length > 0 ? (count / tasks.length) * 100 : 0}%` }}
                       />
                     </div>
                     <span className="text-sm text-gray-600 w-8">{count}</span>
@@ -143,7 +163,7 @@ export const Reports = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {monthlyData.map((data) => (
+              {Object.values(monthlyData).map((data) => (
                 <div key={data.month} className="flex items-center justify-between">
                   <span className="font-medium w-12">{data.month}</span>
                   <div className="flex items-center gap-4 flex-1">
@@ -151,7 +171,7 @@ export const Reports = () => {
                       <div className="w-20 bg-gray-200 rounded-full h-2">
                         <div 
                           className="bg-green-600 h-2 rounded-full" 
-                          style={{ width: `${(data.completed / data.created) * 100}%` }}
+                          style={{ width: `${data.created > 0 ? (data.completed / data.created) * 100 : 0}%` }}
                         />
                       </div>
                       <span className="text-sm text-gray-600">{data.completed}/{data.created}</span>
@@ -182,13 +202,13 @@ export const Reports = () => {
                 </tr>
               </thead>
               <tbody>
-                {teamPerformance.map((member) => (
+                {Object.values(teamPerformance).map((member) => (
                   <tr key={member.name} className="border-b hover:bg-gray-50">
                     <td className="py-3 px-4 font-medium">{member.name}</td>
                     <td className="text-center py-3 px-4">{member.completed}</td>
                     <td className="text-center py-3 px-4">{member.hours}h</td>
                     <td className="text-center py-3 px-4">
-                      {(member.hours / member.completed).toFixed(1)}h
+                      {member.completed > 0 ? `${(member.hours / member.completed).toFixed(1)}h` : '0.0h'}
                     </td>
                     <td className="text-center py-3 px-4">
                       <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">

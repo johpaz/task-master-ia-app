@@ -1,19 +1,55 @@
 
-import { useState } from 'react';
-import { Save, User, Lock, Bell, Palette, Globe } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { Save, User, Lock, Bell, Palette } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { useToast } from '../../hooks/use-toast';
+import { settingsService } from '../../services/settingsService';
+
+const countries = [
+  { name: 'Colombia', code: '+57', flag: '🇨🇴' },
+  { name: 'United States', code: '+1', flag: '🇺🇸' },
+  { name: 'Spain', code: '+34', flag: '🇪🇸' },
+  { name: 'Mexico', code: '+52', flag: '🇲🇽' },
+  { name: 'Argentina', code: '+54', flag: '🇦🇷' },
+  { name: 'Peru', code: '+51', flag: '🇵🇪' },
+  { name: 'Bolivia', code: '+591', flag: '🇧🇴' },
+  { name: 'Brazil', code: '+55', flag: '🇧🇷' },
+];
 
 export const Settings = () => {
-  const { user } = useAuthStore();
+  const { user, setUser } = useAuthStore();
+  const { toast } = useToast();
+  const { search } = useLocation();
   const [activeTab, setActiveTab] = useState('profile');
 
+  useEffect(() => {
+    if (user) {
+      // Separar el código de país del número de teléfono
+      const country = countries.find(c => user.phone?.startsWith(c.code));
+      const phoneNum = country ? user.phone.slice(country.code.length) : user.phone;
+
+      setPhoneCode(country ? country.code : countries[0].code);
+      setProfileData({
+        name: user.name || '',
+        email: user.email || '',
+        department: user.department || '',
+        company: user.company || '',
+        phone: phoneNum || '',
+        bio: user.bio || ''
+      });
+    }
+  }, [user]);
+
+  const [phoneCode, setPhoneCode] = useState(countries[0].code);
   const [profileData, setProfileData] = useState({
     name: user?.name || '',
     email: user?.email || '',
     department: user?.department || '',
+    company: user?.company || '',
     phone: '',
     bio: ''
   });
@@ -39,29 +75,83 @@ export const Settings = () => {
     dateFormat: 'DD/MM/YYYY'
   });
 
-  const handleSaveProfile = () => {
-    console.log('Guardando perfil:', profileData);
-    alert('Perfil actualizado correctamente');
+  const handleSaveProfile = async () => {
+    if (!user) return;
+    try {
+      const fullPhone = `${phoneCode}${profileData.phone}`;
+      const updatedProfileData = { ...profileData, phone: fullPhone };
+      const updatedUser = await settingsService.updateProfile(user.id, updatedProfileData);
+      setUser(updatedUser);
+      toast({
+        title: 'Perfil actualizado',
+        description: 'Tu perfil ha sido actualizado correctamente.',
+      });
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'No se pudo actualizar tu perfil.',
+        variant: 'destructive',
+      });
+    }
   };
 
-  const handleChangePassword = () => {
+  const handleChangePassword = async () => {
     if (securityData.newPassword !== securityData.confirmPassword) {
-      alert('Las contraseñas no coinciden');
+      toast({
+        title: 'Error',
+        description: 'Las contraseñas no coinciden.',
+        variant: 'destructive',
+      });
       return;
     }
-    console.log('Cambiando contraseña');
-    alert('Contraseña actualizada correctamente');
-    setSecurityData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+    try {
+      await settingsService.changePassword(securityData);
+      toast({
+        title: 'Contraseña actualizada',
+        description: 'Tu contraseña ha sido actualizada correctamente.',
+      });
+      setSecurityData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'No se pudo actualizar tu contraseña.',
+        variant: 'destructive',
+      });
+    }
   };
 
-  const handleSaveNotifications = () => {
-    console.log('Guardando notificaciones:', notificationSettings);
-    alert('Configuración de notificaciones actualizada');
+  const handleSaveNotifications = async () => {
+    if (!user) return;
+    try {
+      await settingsService.updateNotificationSettings(user.id, notificationSettings);
+      toast({
+        title: 'Notificaciones actualizadas',
+        description: 'Tu configuración de notificaciones ha sido actualizada.',
+      });
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'No se pudo actualizar tu configuración de notificaciones.',
+        variant: 'destructive',
+      });
+    }
   };
 
-  const handleSavePreferences = () => {
-    console.log('Guardando preferencias:', preferences);
-    alert('Preferencias actualizadas correctamente');
+  const handleSavePreferences = async () => {
+    if (!user) return;
+    try {
+      await settingsService.updatePreferences(user.id, preferences);
+      toast({
+        title: 'Preferencias actualizadas',
+        description: 'Tus preferencias han sido actualizadas correctamente.',
+      });
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'No se pudieron actualizar tus preferencias.',
+        variant: 'destructive',
+      });
+    }
   };
 
   const tabs = [
@@ -162,13 +252,40 @@ export const Settings = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Teléfono
+                      Empresa
                     </label>
                     <Input
-                      value={profileData.phone}
-                      onChange={(e) => setProfileData({...profileData, phone: e.target.value})}
-                      placeholder="+57 300 123 4567"
+                      value={profileData.company}
+                      onChange={(e) => setProfileData({...profileData, company: e.target.value})}
+                      placeholder="Nombre de tu empresa"
                     />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Teléfono
+                    </label>
+                    <div className="flex">
+                      <select
+                        value={phoneCode}
+                        onChange={(e) => setPhoneCode(e.target.value)}
+                        className="w-1/3 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        {countries.map((country) => (
+                          <option key={country.code} value={country.code}>
+                            {country.flag} {country.code}
+                          </option>
+                        ))}
+                      </select>
+                      <Input
+                        value={profileData.phone}
+                        onChange={(e) => setProfileData({...profileData, phone: e.target.value})}
+                        placeholder="300 123 4567"
+                        className="rounded-l-none"
+                      />
+                    </div>
                   </div>
                 </div>
 

@@ -57,11 +57,34 @@ const navigationItems = [
   }
 ];
 
+const getDashboardPath = (role: string | undefined) => {
+  if (!role) return '/dashboard';
+  switch (role) {
+    case 'admin':
+      return '/admin/dashboard';
+    case 'manager':
+      return '/manager/dashboard';
+    case 'collaborator':
+      return '/collaborator/dashboard';
+    case 'client':
+      return '/client/dashboard';
+    default:
+      return '/dashboard';
+  }
+};
+
 export const Sidebar = () => {
   const location = useLocation();
   const { user, logout } = useAuthStore();
 
-  const filteredItems = navigationItems.filter(item => 
+  const dashboardPath = getDashboardPath(user?.role);
+
+  const filteredItems = navigationItems.map(item => {
+    if (item.name === 'Dashboard') {
+      return { ...item, href: dashboardPath };
+    }
+    return item;
+  }).filter(item => 
     user && item.roles.includes(user.role)
   );
 
