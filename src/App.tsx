@@ -1,7 +1,7 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { ThemeProvider } from "@/components/ui/theme-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useAuthStore } from "./stores/authStore";
@@ -44,172 +44,170 @@ const App = () => {
   const { isAuthenticated } = useAuthStore();
 
   return (
-    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/login" element={
-                <PublicRoute>
-                  <Login />
-                </PublicRoute>
-              } />
-              
-              <Route path="/" element={
-                <PublicRoute>
-                  <PublicLayout>
-                    <LandingPage />
-                  </PublicLayout>
-                </PublicRoute>
-              } />
-              
-              <Route path="/faq" element={
-                <PublicRoute>
-                  <PublicLayout>
-                    <FAQ />
-                  </PublicLayout>
-                </PublicRoute>
-              } />
-              
-              <Route path="/about" element={
-                <PublicRoute>
-                  <PublicLayout>
-                    <About />
-                  </PublicLayout>
-                </PublicRoute>
-              } />
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/login" element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            } />
+            
+            <Route path="/" element={
+              <PublicRoute>
+                <PublicLayout>
+                  <LandingPage />
+                </PublicLayout>
+              </PublicRoute>
+            } />
+            
+            <Route path="/faq" element={
+              <PublicRoute>
+                <PublicLayout>
+                  <FAQ />
+                </PublicLayout>
+              </PublicRoute>
+            } />
+            
+            <Route path="/about" element={
+              <PublicRoute>
+                <PublicLayout>
+                  <About />
+                </PublicLayout>
+              </PublicRoute>
+            } />
 
-              <Route path="/contact" element={
-                <PublicRoute>
-                  <PublicLayout>
-                    <Contact />
-                  </PublicLayout>
-                </PublicRoute>
-              } />
+            <Route path="/contact" element={
+              <PublicRoute>
+                <PublicLayout>
+                  <Contact />
+                </PublicLayout>
+              </PublicRoute>
+            } />
 
-              {/* Protected Routes */}
-              <Route path="/dashboard" element={
-                <ProtectedRoute>
-                  <AppLayout>
-                    <Dashboard />
-                  </AppLayout>
-                </ProtectedRoute>
-              } />
+            {/* Protected Routes */}
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <Dashboard />
+                </AppLayout>
+              </ProtectedRoute>
+            } />
 
-              <Route path="/admin/dashboard" element={
-                <ProtectedRoute requiredRoles={['admin']}>
-                  <AppLayout>
-                    <AdminDashboard />
-                  </AppLayout>
-                </ProtectedRoute>
-              } />
+            <Route path="/admin/dashboard" element={
+              <ProtectedRoute requiredRoles={['admin']}>
+                <AppLayout>
+                  <AdminDashboard />
+                </AppLayout>
+              </ProtectedRoute>
+            } />
 
-              <Route path="/manager/dashboard" element={
-                <ProtectedRoute requiredRoles={['manager']}>
-                  <AppLayout>
-                    <ManagerDashboard />
-                  </AppLayout>
-                </ProtectedRoute>
-              } />
+            <Route path="/manager/dashboard" element={
+              <ProtectedRoute requiredRoles={['manager']}>
+                <AppLayout>
+                  <ManagerDashboard />
+                </AppLayout>
+              </ProtectedRoute>
+            } />
 
-              <Route path="/collaborator/dashboard" element={
-                <ProtectedRoute requiredRoles={['collaborator']}>
-                  <AppLayout>
-                    <CollaboratorDashboard />
-                  </AppLayout>
-                </ProtectedRoute>
-              } />
+            <Route path="/collaborator/dashboard" element={
+              <ProtectedRoute requiredRoles={['collaborator']}>
+                <AppLayout>
+                  <CollaboratorDashboard />
+                </AppLayout>
+              </ProtectedRoute>
+            } />
 
-              <Route path="/client/dashboard" element={
-                <ProtectedRoute requiredRoles={['client']}>
-                  <AppLayout>
-                    <ClientDashboard />
-                  </AppLayout>
-                </ProtectedRoute>
-              } />
-              
-              <Route path="/tasks" element={
-                <ProtectedRoute>
-                  <AppLayout>
-                    <Tasks />
-                  </AppLayout>
-                </ProtectedRoute>
-              } />
+            <Route path="/client/dashboard" element={
+              <ProtectedRoute requiredRoles={['client']}>
+                <AppLayout>
+                  <ClientDashboard />
+                </AppLayout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/tasks" element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <Tasks />
+                </AppLayout>
+              </ProtectedRoute>
+            } />
 
-              <Route path="/tasks/:id" element={
-                <ProtectedRoute>
-                  <AppLayout>
-                    <TaskDetail />
-                  </AppLayout>
-                </ProtectedRoute>
-              } />
-              
-              <Route path="/kanban" element={
-                <ProtectedRoute>
-                  <AppLayout>
-                    <Kanban />
-                  </AppLayout>
-                </ProtectedRoute>
-              } />
-              
-              <Route path="/calendar" element={
-                <ProtectedRoute>
-                  <AppLayout>
-                    <Calendar />
-                  </AppLayout>
-                </ProtectedRoute>
-              } />
-              
-              <Route path="/reports" element={
-                <ProtectedRoute requiredRoles={['admin', 'manager']}>
-                  <AppLayout>
-                    <Reports />
-                  </AppLayout>
-                </ProtectedRoute>
-              } />
-              
-              <Route path="/users" element={
-                <ProtectedRoute requiredRoles={['admin']}>
-                  <AppLayout>
-                    <Users />
-                  </AppLayout>
-                </ProtectedRoute>
-              } />
+            <Route path="/tasks/:id" element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <TaskDetail />
+                </AppLayout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/kanban" element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <Kanban />
+                </AppLayout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/calendar" element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <Calendar />
+                </AppLayout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/reports" element={
+              <ProtectedRoute requiredRoles={['admin', 'manager']}>
+                <AppLayout>
+                  <Reports />
+                </AppLayout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/users" element={
+              <ProtectedRoute requiredRoles={['admin']}>
+                <AppLayout>
+                  <Users />
+                </AppLayout>
+              </ProtectedRoute>
+            } />
 
-              <Route path="/users/:id" element={
-                <ProtectedRoute requiredRoles={['admin']}>
-                  <AppLayout>
-                    <UserDetail />
-                  </AppLayout>
-                </ProtectedRoute>
-              } />
-              
-              <Route path="/settings" element={
-                <ProtectedRoute>
-                  <AppLayout>
-                    <Settings />
-                  </AppLayout>
-                </ProtectedRoute>
-              } />
+            <Route path="/users/:id" element={
+              <ProtectedRoute requiredRoles={['admin']}>
+                <AppLayout>
+                  <UserDetail />
+                </AppLayout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/settings" element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <Settings />
+                </AppLayout>
+              </ProtectedRoute>
+            } />
 
-              <Route path="/logs" element={
-                <ProtectedRoute requiredRoles={['admin']}>
-                  <AppLayout>
-                    <SystemLogs />
-                  </AppLayout>
-                </ProtectedRoute>
-              } />
+            <Route path="/logs" element={
+              <ProtectedRoute requiredRoles={['admin']}>
+                <AppLayout>
+                  <SystemLogs />
+                </AppLayout>
+              </ProtectedRoute>
+            } />
 
-              {/* Catch all route */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
+            {/* Catch all route */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
   );
 };
 

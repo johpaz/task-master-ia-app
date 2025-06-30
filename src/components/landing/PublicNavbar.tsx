@@ -1,8 +1,8 @@
+
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { Button } from '../ui/button';
-import { ThemeToggle } from '../ui/theme-toggle';
 
 export const PublicNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -43,7 +43,7 @@ export const PublicNavbar = () => {
   return (
     <nav className={`fixed w-full z-50 transition-all duration-500 ${
       scrolled 
-        ? 'bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-lg border-b border-blue-200 dark:border-slate-700 h-20' 
+        ? 'bg-white/95 backdrop-blur-md shadow-lg border-b border-blue-200 h-20' 
         : 'bg-slate-900/80 backdrop-blur-sm h-24'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
@@ -52,7 +52,7 @@ export const PublicNavbar = () => {
           <div className="hidden md:flex items-center space-x-8 flex-1">
             <Link to="/" className={`font-semibold transition-all duration-300 ${
               scrolled 
-                ? 'text-slate-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400' 
+                ? 'text-slate-800 hover:text-blue-600' 
                 : 'text-white/90 hover:text-white'
             }`}>
               Inicio
@@ -61,7 +61,7 @@ export const PublicNavbar = () => {
               onClick={handleFeaturesClick}
               className={`font-semibold transition-all duration-300 ${
                 scrolled 
-                  ? 'text-slate-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400' 
+                  ? 'text-slate-800 hover:text-blue-600' 
                   : 'text-white/90 hover:text-white'
               }`}
             >
@@ -69,7 +69,7 @@ export const PublicNavbar = () => {
             </button>
             <Link to="/faq" className={`font-semibold transition-all duration-300 ${
               scrolled 
-                ? 'text-slate-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400' 
+                ? 'text-slate-800 hover:text-blue-600' 
                 : 'text-white/90 hover:text-white'
             }`}>
               FAQ
@@ -95,23 +95,22 @@ export const PublicNavbar = () => {
           <div className="hidden md:flex items-center space-x-8 flex-1 justify-end">
             <Link to="/about" className={`font-semibold transition-all duration-300 ${
               scrolled 
-                ? 'text-slate-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400' 
+                ? 'text-slate-800 hover:text-blue-600' 
                 : 'text-white/90 hover:text-white'
             }`}>
               Nosotros
             </Link>
             <Link to="/contact" className={`font-semibold transition-all duration-300 ${
               scrolled 
-                ? 'text-slate-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400' 
+                ? 'text-slate-800 hover:text-blue-600' 
                 : 'text-white/90 hover:text-white'
             }`}>
               Contacto
             </Link>
-            <ThemeToggle />
             <Link to="/login">
               <Button variant="ghost" className={`font-semibold transition-all duration-300 ${
                 scrolled 
-                  ? 'text-slate-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800' 
+                  ? 'text-slate-800 hover:text-blue-600 hover:bg-blue-50' 
                   : 'text-white/90 hover:text-white hover:bg-white/10'
               }`}>
                 Iniciar Sesión
@@ -125,15 +124,14 @@ export const PublicNavbar = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center space-x-2 absolute right-4">
-            <ThemeToggle />
+          <div className="md:hidden flex items-center absolute right-4">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className={`transition-all duration-300 ${
                 scrolled 
-                  ? 'text-slate-800 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-slate-800' 
+                  ? 'text-slate-800 hover:bg-blue-50' 
                   : 'text-white hover:bg-white/10'
               }`}
             >
@@ -145,45 +143,45 @@ export const PublicNavbar = () => {
         {/* Mobile menu */}
         {isMenuOpen && (
           <div className="md:hidden absolute top-full left-0 right-0">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-blue-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-lg rounded-b-lg mx-4 mt-2">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-blue-200 bg-white/95 backdrop-blur-md shadow-lg rounded-b-lg mx-4 mt-2">
               <Link
                 to="/"
-                className="block px-3 py-2 text-slate-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 rounded-md transition-colors font-semibold"
+                className="block px-3 py-2 text-slate-800 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors font-semibold"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Inicio
               </Link>
               <button
                 onClick={handleFeaturesClick}
-                className="block w-full text-left px-3 py-2 text-slate-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 rounded-md transition-colors font-semibold"
+                className="block w-full text-left px-3 py-2 text-slate-800 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors font-semibold"
               >
                 Características
               </button>
               <Link
                 to="/faq"
-                className="block px-3 py-2 text-slate-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 rounded-md transition-colors font-semibold"
+                className="block px-3 py-2 text-slate-800 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors font-semibold"
                 onClick={() => setIsMenuOpen(false)}
               >
                 FAQ
               </Link>
               <Link
                 to="/about"
-                className="block px-3 py-2 text-slate-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 rounded-md transition-colors font-semibold"
+                className="block px-3 py-2 text-slate-800 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors font-semibold"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Nosotros
               </Link>
               <Link
                 to="/contact"
-                className="block px-3 py-2 text-slate-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 rounded-md transition-colors font-semibold"
+                className="block px-3 py-2 text-slate-800 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors font-semibold"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Contacto
               </Link>
-              <div className="pt-4 border-t border-blue-200 dark:border-slate-700 space-y-2">
+              <div className="pt-4 border-t border-blue-200 space-y-2">
                 <Link
                   to="/login"
-                  className="block px-3 py-2 text-slate-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 rounded-md transition-colors font-semibold"
+                  className="block px-3 py-2 text-slate-800 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors font-semibold"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Iniciar Sesión
