@@ -1,16 +1,33 @@
+
 import { create } from 'zustand';
-import { Task } from '../../types';
+import type { Task } from '../types';
 
 interface TaskModalState {
   isOpen: boolean;
-  editingTask: Task | null;
-  openModal: (task?: Task) => void;
+  mode: 'create' | 'edit' | 'view';
+  selectedTask: Task | null;
+  openModal: (mode: 'create' | 'edit' | 'view', task?: Task) => void;
   closeModal: () => void;
 }
 
 export const useTaskModalStore = create<TaskModalState>((set) => ({
   isOpen: false,
-  editingTask: null,
-  openModal: (task = null) => set({ isOpen: true, editingTask: task }),
-  closeModal: () => set({ isOpen: false, editingTask: null }),
+  mode: 'create',
+  selectedTask: null,
+
+  openModal: (mode, task = null) => {
+    set({
+      isOpen: true,
+      mode,
+      selectedTask: task
+    });
+  },
+
+  closeModal: () => {
+    set({
+      isOpen: false,
+      mode: 'create',
+      selectedTask: null
+    });
+  }
 }));
