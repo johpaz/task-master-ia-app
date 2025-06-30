@@ -1,9 +1,20 @@
-import {useAuthStore} from "@/stores/authStore";
-
+import { useAuthStore } from "@/stores/authStore";
 
 const API_BASE_URL = import.meta.env.VITE_REACT_APP_URL;
-const token = useAuthStore.getState().token;
-console.log(token);
+
+const getAuthHeaders = () => {
+  const token = useAuthStore.getState().token;
+  if (!token) {
+    // Devolver cabeceras sin token si no está disponible
+    return {
+      'Content-Type': 'application/json',
+    };
+  }
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`,
+  };
+};
 
 export interface CreateUserRequest {
   name: string;
@@ -11,6 +22,8 @@ export interface CreateUserRequest {
   password: string;
   role: 'admin' | 'manager' | 'collaborator' | 'client';
   department?: string;
+  company?: string;
+  phone?: string;
 }
 
 export interface UpdateUserRequest {
@@ -18,6 +31,8 @@ export interface UpdateUserRequest {
   email?: string;
   role?: 'admin' | 'manager' | 'collaborator' | 'client';
   department?: string;
+  company?: string;
+  phone?: string;
   status?: 'active' | 'inactive';
 }
 
@@ -26,14 +41,12 @@ export const userService = {
   async getUsers() {
     const response = await fetch(`${API_BASE_URL}/users`, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
+      headers: getAuthHeaders(),
     });
 
     if (!response.ok) {
-      throw new Error('Error al obtener usuarios');
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error al obtener usuarios');
     }
 
     return response.json();
@@ -43,32 +56,28 @@ export const userService = {
   async getUserById(id: string) {
     const response = await fetch(`${API_BASE_URL}/users/${id}`, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-      },
+      headers: getAuthHeaders(),
     });
 
     if (!response.ok) {
-      throw new Error('Error al obtener usuario');
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error al obtener usuario');
     }
 
     return response.json();
   },
 
-  // Crear nuevo usuario
+  // Crear nuevo usuario (usa la ruta de registro)
   async createUser(userData: CreateUserRequest) {
     const response = await fetch(`${API_BASE_URL}/auth/register`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify(userData),
     });
 
     if (!response.ok) {
-      throw new Error('Error al crear usuario');
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error al crear usuario');
     }
 
     return response.json();
@@ -78,15 +87,13 @@ export const userService = {
   async updateUser(id: string, userData: UpdateUserRequest) {
     const response = await fetch(`${API_BASE_URL}/users/${id}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify(userData),
     });
 
     if (!response.ok) {
-      throw new Error('Error al actualizar usuario');
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error al actualizar usuario');
     }
 
     return response.json();
@@ -96,17 +103,19 @@ export const userService = {
   async deleteUser(id: string) {
     const response = await fetch(`${API_BASE_URL}/users/${id}`, {
       method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
+      headers: getAuthHeaders(),
     });
-    console.log(response);
     
     if (!response.ok) {
-      throw new Error('Error al eliminar usuario');
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error al eliminar usuario');
     }
 
+    // DELETE puede no devolver un cuerpo, así que no intentamos parsear JSON si la respuesta es 204
+    if (response.status === 204) {
+      return;
+    }
+    
     return response.json();
   },
 };

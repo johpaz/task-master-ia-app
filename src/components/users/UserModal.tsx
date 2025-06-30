@@ -22,6 +22,8 @@ export const UserModal = ({ isOpen, onClose, onSave, user, isLoading }: UserModa
     password: '',
     role: 'collaborator' as 'admin' | 'manager' | 'collaborator' | 'client',
     department: '',
+    company: '',
+    phone: '',
     status: 'active' as 'active' | 'inactive'
   });
 
@@ -35,6 +37,8 @@ export const UserModal = ({ isOpen, onClose, onSave, user, isLoading }: UserModa
         password: '',
         role: user.role || 'collaborator',
         department: user.department || '',
+        company: user.company || '',
+        phone: user.phone || '',
         status: 'active'
       });
     } else {
@@ -44,6 +48,8 @@ export const UserModal = ({ isOpen, onClose, onSave, user, isLoading }: UserModa
         password: '',
         role: 'collaborator',
         department: '',
+        company: '',
+        phone: '',
         status: 'active'
       });
     }
@@ -89,6 +95,8 @@ export const UserModal = ({ isOpen, onClose, onSave, user, isLoading }: UserModa
         email: formData.email,
         role: formData.role,
         department: formData.department,
+        company: formData.company,
+        phone: formData.phone,
         status: formData.status
       };
       onSave(updateData);
@@ -99,7 +107,9 @@ export const UserModal = ({ isOpen, onClose, onSave, user, isLoading }: UserModa
         email: formData.email,
         password: formData.password,
         role: formData.role,
-        department: formData.department
+        department: formData.department,
+        company: formData.company,
+        phone: formData.phone
       };
       onSave(createData);
     }
@@ -195,6 +205,39 @@ export const UserModal = ({ isOpen, onClose, onSave, user, isLoading }: UserModa
             />
           </div>
 
+          <div>
+            <Label htmlFor="company">Empresa (opcional)</Label>
+            <Input
+              id="company"
+              name="company"
+              value={formData.company}
+              onChange={handleChange}
+              placeholder="Ej. TuProfeDeIA, Acme Inc."
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="phone">Teléfono (opcional)</Label>
+            <div className="flex">
+              <select
+                name="phoneCode"
+                className="w-1/4 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="+57">+57</option>
+                <option value="+1">+1</option>
+                <option value="+52">+52</option>
+              </select>
+              <Input
+                id="phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="3001234567"
+                className="rounded-l-none"
+              />
+            </div>
+          </div>
+ 
           {user && (
             <div>
               <Label htmlFor="status">Estado</Label>

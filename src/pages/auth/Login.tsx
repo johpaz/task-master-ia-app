@@ -29,14 +29,14 @@ export const Login = () => {
     setIsLoading(true);
 
     try {
-      const success = await login({ email: formData.email, password: formData.password });
+      const { success, redirectTo } = await login({ email: formData.email, password: formData.password });
       
       if (success) {
         toast({
           title: "¡Bienvenido!",
           description: "Has iniciado sesión correctamente.",
         });
-        navigate(from, { replace: true });
+        navigate(redirectTo || from, { replace: true });
       } else {
         toast({
           title: "Error de autenticación",

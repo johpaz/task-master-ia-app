@@ -4,9 +4,6 @@
   import { persist, createJSONStorage } from 'zustand/middleware';
   import { User } from '../types'; // Ajusta esta ruta si es necesario
 
-  // --- Tipos para Payloads y Respuestas de API ---
-  // (Puedes moverlos a un archivo dedicado como src/types/api.ts si prefieres)
-
   interface LoginCredentials {
     email: string;
     password: string;
@@ -16,6 +13,7 @@
     message: string;
     user: User;
     token: string;
+    redirectTo: string;
   }
 
   interface MeResponse {
@@ -50,10 +48,11 @@
     isAuthenticated: boolean;
     isLoading: boolean; // Para el estado de carga general de operaciones de auth
     error: string | null; // Para mensajes de error
-    login: (credentials: LoginCredentials) => Promise<boolean>;
+    login: (credentials: LoginCredentials) => Promise<{ success: boolean; redirectTo?: string }>;
     logout: () => void;
     checkAuthStatus: () => Promise<void>;
     register: (userData: RegisterPayload) => Promise<{ success: boolean; message?: string }>;
+    setUser: (user: User) => void;
     // Podrías añadir forgotPassword, resetPassword aquí también
   }
 
@@ -80,15 +79,11 @@
               throw new Error(data.message || `Login failed: ${response.status}`);
             }
 
-            // 1. Asegúrate de convertir el id a string
-            const user: User = {
-              ...data.user,
-              id: String(data.user.id),
-            };
+            const user: User = data.user;
 
             // 2. Elimina campo password para no persistirlo
             //    (asume que tu tipo User no lo incluye)
-            delete (user as any).password;
+            // (No es necesario eliminar password porque no existe en User)
 
             // 3. Guarda en el store
             set({
@@ -98,17 +93,17 @@
               isLoading: false,
               error: null,
             });
-            return true;
-          } catch (error: any) {
+            return { success: true, redirectTo: data.redirectTo };
+          } catch (error: unknown) {
             console.error("Login failed:", error);
             set({
               user: null,
               token: null,
               isAuthenticated: false,
               isLoading: false,
-              error: error.message || 'Error desconocido en login',
+              error: error instanceof Error ? error.message : 'Error desconocido en login',
             });
-            return false;
+            return { success: false };
           }
         },
 
@@ -156,7 +151,7 @@
               isLoading: false,
               error: null,
             });
-          } catch (error: any) {
+          } catch (error: Error) {
             console.error("Failed to fetch user status (checkAuthStatus):", error);
             // Si hay error (ej. token expirado, 401, 403), deslogueamos completamente
             set({
@@ -167,6 +162,10 @@
               error: "Your session may have expired or the token is invalid. Please log in again.",
             });
           }
+        },
+
+        setUser: (user: User) => {
+          set({ user });
         },
 
         register: async (userData: RegisterPayload) => {
@@ -188,13 +187,13 @@
               body: JSON.stringify(userData),
             });
 
-            const data: RegisterResponse | { message: string; errors?: any[] } = await response.json();
+            const data: RegisterResponse | { message: string; errors?: unknown[] } = await response.json();
 
             if (!response.ok) {
               const errorMessage = (data as { message: string }).message || `Registration failed with status: ${response.status}`;
               // Si hay 'errors' de Zod, podrías querer mostrarlos
-              if ((data as { errors?: any[] }).errors) {
-                console.error("Validation errors:", (data as { errors?: any[] }).errors);
+              if ((data as { errors?: unknown[] }).errors) {
+                console.error("Validation errors:", (data as { errors?: unknown[] }).errors);
               }
               throw new Error(errorMessage);
             }
@@ -206,7 +205,7 @@
 
             set({ isLoading: false, error: null });
             return { success: true, message: (data as RegisterResponse).message || "Registration successful!" };
-          } catch (error: any) {
+          } catch (error: Error) {
             console.error("Registration failed:", error);
             set({
               isLoading: false,

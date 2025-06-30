@@ -1,57 +1,41 @@
 
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-  role: 'admin' | 'manager' | 'collaborator' | 'client';
-  avatar?: string;
-  department?: string;
-  createdAt: Date;
-  token?: string
-}
-
 export interface Task {
   id: string;
   title: string;
-  description: string;
-  type: 'desarrollo' | 'agente' | 'soporte' | 'pqr' | 'consultoria' | 'capacitacion';
-  status: 'pendiente' | 'en_progreso' | 'revision' | 'completada' | 'cancelada';
+  status: 'por hacer' | 'en progreso' | 'en revisión' | 'completada' | 'cancelada';
   priority: 'baja' | 'media' | 'alta' | 'urgente';
+  type: 'desarrollo' | 'agente' | 'soporte' | 'pqr' | 'consultoria' | 'capacitacion';
+  description: string;
   assignedTo: string;
   assignedBy: string;
-  client?: string;
-  startDate: Date;
-  endDate: Date;
+  client: string;
+  startDate: string;
+  endDate: string;
   estimatedHours: number;
   actualHours: number;
   tags: string[];
   attachments: string[];
-  comments: Comment[];
-  createdAt: Date;
-  updatedAt: Date;
+  comments: string[];
+  createdAt: string;
 }
 
-export interface Comment {
+export interface User {
   id: string;
-  taskId: string;
-  userId: string;
-  content: string;
-  createdAt: Date;
-}
-
-export interface AuthForm {
+  name: string;
   email: string;
-  password: string;
-  rememberMe?: boolean;
+  role: 'admin' | 'manager' | 'colaborador' | 'cliente';
+  department?: string;
+  company?: string;
+  phone?: string;
+  bio?: string;
+  createdAt?: string;
 }
 
 export interface DashboardMetrics {
   totalTasks: number;
-  completedTasks: number;
   inProgressTasks: number;
-  pendingTasks: number;
+  completedTasks: number;
   overdueCovers: number;
-  averageCompletionTime: number;
 }
 
 export interface Metrics {
@@ -59,5 +43,6 @@ export interface Metrics {
   completedTasks: number;
   pendingTasks: number;
   inProgressTasks: number;
-  overdueTasks: number; // Tareas cuya fecha de entrega ya pasó
+  overdueTasks: number;
+  averageCompletionTime: number;
 }

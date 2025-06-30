@@ -1,11 +1,14 @@
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight, Plus, Calendar as CalendarIcon } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { useTaskStore } from '../../stores/taskStore';
 import { useAuthStore } from '../../stores/authStore';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
 import { TaskModal } from '../../components/tasks/TaskModal';
+import { Task } from '../../types';
+
+import { useToast } from '../../hooks/use-toast';
+import { taskService, CreateTaskRequest, UpdateTaskRequest } from '../../services/taskService';
 
 const months = [
   'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -15,11 +18,12 @@ const months = [
 const weekDays = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
 export const Calendar = () => {
-  const { tasks } = useTaskStore();
+  const { tasks, addTask, updateTask } = useTaskStore();
   const { user } = useAuthStore();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedTask, setSelectedTask] = useState(null);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const { toast } = useToast();
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -73,7 +77,24 @@ export const Calendar = () => {
     setIsModalOpen(true);
   };
 
-  const handleTaskClick = (task: any) => {
+  const handleSaveTask = async (taskData: CreateTaskRequest | UpdateTaskRequest) => {
+    try {
+      if (selectedTask) {
+        const updated = await taskService.updateTask(selectedTask.id, taskData as UpdateTaskRequest);
+        updateTask(updated);
+        toast({ title: "Tarea actualizada" });
+      } else {
+        const created = await taskService.createTask(taskData as CreateTaskRequest);
+        addTask(created);
+        toast({ title: "Tarea creada" });
+      }
+      setIsModalOpen(false);
+    } catch (error) {
+      toast({ title: "Error al guardar la tarea", variant: "destructive" });
+    }
+  };
+
+  const handleTaskClick = (task: Task) => {
     setSelectedTask(task);
     setIsModalOpen(true);
   };
@@ -221,6 +242,7 @@ export const Calendar = () => {
       <TaskModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        onSave={handleSaveTask}
         task={selectedTask}
       />
     </div>
