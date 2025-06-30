@@ -93,9 +93,13 @@ export const Sidebar = () => {
       {/* Logo */}
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-lg">T</span>
-          </div>
+         
+           <img
+              src="/logoDash.png"
+              alt="Logo"
+              className="w-16 h-16 rounded-full"
+            />
+         
           <div>
             <h1 className="text-xl font-bold text-gray-900">TaskMaster IA</h1>
             <p className="text-sm text-gray-500">Tu Profe de IA</p>

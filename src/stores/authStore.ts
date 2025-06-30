@@ -4,9 +4,6 @@
   import { persist, createJSONStorage } from 'zustand/middleware';
   import { User } from '../types'; // Ajusta esta ruta si es necesario
 
-  // --- Tipos para Payloads y Respuestas de API ---
-  // (Puedes moverlos a un archivo dedicado como src/types/api.ts si prefieres)
-
   interface LoginCredentials {
     email: string;
     password: string;
@@ -86,7 +83,7 @@
 
             // 2. Elimina campo password para no persistirlo
             //    (asume que tu tipo User no lo incluye)
-            delete (user as Partial<User>).password;
+            // (No es necesario eliminar password porque no existe en User)
 
             // 3. Guarda en el store
             set({
@@ -97,14 +94,14 @@
               error: null,
             });
             return { success: true, redirectTo: data.redirectTo };
-          } catch (error: Error) {
+          } catch (error: unknown) {
             console.error("Login failed:", error);
             set({
               user: null,
               token: null,
               isAuthenticated: false,
               isLoading: false,
-              error: error.message || 'Error desconocido en login',
+              error: error instanceof Error ? error.message : 'Error desconocido en login',
             });
             return { success: false };
           }

@@ -2,7 +2,6 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '../../stores/authStore';
-import { UserTable } from '../../components/dashboard/UserTable';
 import { TaskTable } from '../../components/dashboard/TaskTable';
 import { SystemMetrics } from '@/components/dashboards/admin/SystemMetrics';
 import { AdvancedReports } from '@/components/dashboards/admin/AdvancedReports';
