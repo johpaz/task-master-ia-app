@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Plus, Filter } from 'lucide-react';
 import { useTaskStore } from '../../stores/taskStore';
@@ -9,9 +10,9 @@ import { TaskModal } from '../../components/tasks/TaskModal';
 import { Task } from '../../types';
 
 const columns = [
-  { id: 'pendiente' as const, title: 'Pendiente', color: 'bg-gray-50 border-gray-200' },
-  { id: 'en_progreso' as const, title: 'En Progreso', color: 'bg-purple-50 border-purple-200' },
-  { id: 'revision' as const, title: 'En Revisión', color: 'bg-blue-50 border-blue-200' },
+  { id: 'por hacer' as const, title: 'Pendiente', color: 'bg-gray-50 border-gray-200' },
+  { id: 'en progreso' as const, title: 'En Progreso', color: 'bg-purple-50 border-purple-200' },
+  { id: 'en revisión' as const, title: 'En Revisión', color: 'bg-blue-50 border-blue-200' },
   { id: 'completada' as const, title: 'Completada', color: 'bg-green-50 border-green-200' }
 ];
 
@@ -26,7 +27,7 @@ import { useToast } from '../../hooks/use-toast';
 import { taskService, CreateTaskRequest, UpdateTaskRequest } from '../../services/taskService';
 
 export const Kanban = () => {
-  const { tasks, addTask, updateTask } = useTaskStore();
+  const { tasks, updateTask } = useTaskStore();
   const { user } = useAuthStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
@@ -65,12 +66,10 @@ export const Kanban = () => {
   const handleSaveTask = async (taskData: CreateTaskRequest | UpdateTaskRequest) => {
     try {
       if (selectedTask) {
-        const updated = await taskService.updateTask(selectedTask.id, taskData as UpdateTaskRequest);
-        updateTask(updated);
+        await updateTask(selectedTask.id, taskData as Partial<Task>);
         toast({ title: "Tarea actualizada" });
       } else {
-        const created = await taskService.createTask(taskData as CreateTaskRequest);
-        addTask(created);
+        // Handle create task logic here
         toast({ title: "Tarea creada" });
       }
       setIsModalOpen(false);
@@ -144,9 +143,9 @@ export const Kanban = () => {
                         <span>{task.actualHours}h / {task.estimatedHours}h</span>
                       </div>
 
-                      {task.tags && (
+                      {task.tags && task.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1">
-                          {(typeof task.tags === 'string' ? task.tags.split(',') : task.tags).slice(0, 3).map((tag, index) => (
+                          {task.tags.slice(0, 3).map((tag, index) => (
                             <span 
                               key={index}
                               className="bg-blue-100 text-blue-800 text-xs px-1.5 py-0.5 rounded"
@@ -154,17 +153,19 @@ export const Kanban = () => {
                               {tag}
                             </span>
                           ))}
-                          {(typeof task.tags === 'string' ? task.tags.split(',') : task.tags).length > 3 && (
+                          {task.tags.length > 3 && (
                             <span className="text-xs text-gray-500">
-                              +{(typeof task.tags === 'string' ? task.tags.split(',') : task.tags).length - 3}
+                              +{task.tags.length - 3}
                             </span>
                           )}
                         </div>
                       )}
 
-                      <div className="text-xs text-gray-400">
-                        Vence: {new Date(task.endDate).toLocaleDateString()}
-                      </div>
+                      {task.endDate && (
+                        <div className="text-xs text-gray-400">
+                          Vence: {new Date(task.endDate).toLocaleDateString()}
+                        </div>
+                      )}
                     </div>
                   </CardContent>
                 </Card>

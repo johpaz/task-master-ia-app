@@ -1,3 +1,4 @@
+
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { User } from '../types';
@@ -7,9 +8,10 @@ interface AuthState {
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (credentials: { email: string; password: string }) => Promise<{ success: boolean; redirectTo?: string }>;
   logout: () => void;
   updateUser: (userData: Partial<User>) => void;
+  setUser: (user: User | null) => void;
 }
 
 // Mock users for development
@@ -68,18 +70,18 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       isLoading: false,
 
-      login: async (email: string, password: string) => {
+      login: async (credentials: { email: string; password: string }) => {
         set({ isLoading: true });
         try {
           await new Promise(resolve => setTimeout(resolve, 1000));
 
-          const user = mockUsers.find(u => u.email === email);
+          const user = mockUsers.find(u => u.email === credentials.email);
           
           if (!user) {
             throw new Error('Usuario no encontrado');
           }
 
-          if (password !== 'password123') {
+          if (credentials.password !== 'password123') {
             throw new Error('Contraseña incorrecta');
           }
 
@@ -99,6 +101,7 @@ export const useAuthStore = create<AuthState>()(
           });
 
           console.log('Login exitoso:', { user, token });
+          return { success: true, redirectTo: '/dashboard' };
         } catch (error: any) {
           set({ isLoading: false });
           console.error('Error en login:', error);
@@ -122,6 +125,10 @@ export const useAuthStore = create<AuthState>()(
           const updatedUser = { ...currentUser, ...userData };
           set({ user: updatedUser });
         }
+      },
+
+      setUser: (user: User | null) => {
+        set({ user });
       }
     }),
     {

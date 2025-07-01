@@ -11,7 +11,9 @@ export interface User {
   role: UserRole;
   avatar?: string;
   department?: string;
+  company?: string;
   phone?: string;
+  bio?: string;
   status: 'active' | 'inactive';
   createdAt: string;
   lastLogin?: string;
@@ -29,6 +31,7 @@ export interface Task {
   client: string;
   createdAt: string;
   updatedAt: string;
+  startDate?: string;
   endDate?: string;
   estimatedHours?: number;
   actualHours?: number;
