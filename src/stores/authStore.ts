@@ -1,4 +1,3 @@
-
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { User } from '../types';
@@ -72,28 +71,24 @@ export const useAuthStore = create<AuthState>()(
       login: async (email: string, password: string) => {
         set({ isLoading: true });
         try {
-          // Simular delay de API
           await new Promise(resolve => setTimeout(resolve, 1000));
 
-          // Buscar usuario mock
           const user = mockUsers.find(u => u.email === email);
           
           if (!user) {
             throw new Error('Usuario no encontrado');
           }
 
-          // En producción, aquí validarías la contraseña con el backend
           if (password !== 'password123') {
             throw new Error('Contraseña incorrecta');
           }
 
-          // Simular token JWT
           const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.${btoa(JSON.stringify({ 
             userId: user.id, 
             email: user.email, 
             role: user.role,
             iat: Date.now(),
-            exp: Date.now() + (24 * 60 * 60 * 1000) // 24 horas
+            exp: Date.now() + (24 * 60 * 60 * 1000)
           }))}.signature`;
 
           set({

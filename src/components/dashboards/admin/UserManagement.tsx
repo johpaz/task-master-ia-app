@@ -22,7 +22,6 @@ export const UserManagement = () => {
       try {
         setLoading(true);
         const response = await userService.getUsers();
-        // Ordenar por fecha de creación (si está disponible) y tomar los 3 más recientes
         const sortedUsers = response.sort((a, b) => 
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
@@ -48,14 +47,13 @@ export const UserManagement = () => {
           <Users className="mr-2 h-5 w-5 text-red-600" />
           Gestión de Usuarios
         </CardTitle>
-        <Button size="sm" className="bg-red-600 hover:bg-red-700" onClick={() => openModal()}>
+        <Button size="sm" className="bg-red-600 hover:bg-red-700" onClick={() => openModal('create')}>
           <Plus className="h-4 w-4 mr-1" />
           Nuevo
         </Button>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {/* Search */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
             <Input
@@ -66,7 +64,6 @@ export const UserManagement = () => {
             />
           </div>
 
-          {/* Recent Users */}
           <div className="space-y-3">
             {loading ? (
               Array.from({ length: 3 }).map((_, i) => (
@@ -85,7 +82,6 @@ export const UserManagement = () => {
                     <p className="font-medium text-gray-900">{user.name}</p>
                     <p className="text-sm text-gray-600 capitalize">{user.role}</p>
                   </div>
-                  {/* Aquí podrías añadir un status o última conexión si la API lo proveyera */}
                 </div>
               ))
             )}

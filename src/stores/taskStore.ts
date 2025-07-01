@@ -1,4 +1,3 @@
-
 import { create } from 'zustand';
 import type { Task, CreateTaskData } from '../types';
 
@@ -63,10 +62,7 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   fetchTasks: async () => {
     set({ isLoading: true, error: null });
     try {
-      // Simular delay de API
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // En producción, aquí harías la llamada real a la API
       set({ tasks: mockTasks, isLoading: false });
     } catch (error: any) {
       set({ error: error.message, isLoading: false });
@@ -76,7 +72,6 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   createTask: async (taskData: CreateTaskData) => {
     set({ isLoading: true, error: null });
     try {
-      // Simular delay de API
       await new Promise(resolve => setTimeout(resolve, 500));
 
       const newTask: Task = {
@@ -86,7 +81,7 @@ export const useTaskStore = create<TaskState>((set, get) => ({
         priority: taskData.priority || 'media',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        assignedTo: '3' // Mock assigned user
+        assignedTo: '3'
       };
 
       set((state) => ({
@@ -101,7 +96,6 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   updateTask: async (id: string, updates: Partial<Task>) => {
     set({ isLoading: true, error: null });
     try {
-      // Simular delay de API
       await new Promise(resolve => setTimeout(resolve, 500));
 
       set((state) => ({
@@ -120,7 +114,6 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   deleteTask: async (id: string) => {
     set({ isLoading: true, error: null });
     try {
-      // Simular delay de API
       await new Promise(resolve => setTimeout(resolve, 500));
 
       set((state) => ({

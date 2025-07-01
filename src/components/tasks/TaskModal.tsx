@@ -1,19 +1,17 @@
 
 import { useState, useEffect } from 'react';
-import { X, Calendar, User, Clock, Tag } from 'lucide-react';
-import { useTaskStore } from '../../stores/taskStore';
+import { X } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-
-import { Task } from '../../types';
+import { Task, TaskType } from '../../types';
 
 interface TaskModalProps {
   isOpen: boolean;
   onClose: () => void;
   task?: Task;
-  onSave: (data: any) => void; // Añadir onSave
+  onSave: (data: any) => void;
 }
 
 export const TaskModal = ({ isOpen, onClose, task, onSave }: TaskModalProps) => {
@@ -22,7 +20,7 @@ export const TaskModal = ({ isOpen, onClose, task, onSave }: TaskModalProps) => 
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    type: 'desarrollo' as const,
+    type: 'desarrollo' as TaskType,
   });
 
   useEffect(() => {
@@ -44,19 +42,11 @@ export const TaskModal = ({ isOpen, onClose, task, onSave }: TaskModalProps) => 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Datos que el cliente llena
     const taskData = {
       ...formData,
-      client: user?.id, // Enviar el ID del cliente
-      assignedBy: user?.id, // El creador es el usuario actual
+      client: user?.id || '',
+      assignedBy: user?.id || '',
     };
-
-    // No enviar priority, endDate, estimatedHours, ni tags.
-    // Estos serán calculados por el backend.
-    delete taskData.priority;
-    delete taskData.endDate;
-    delete taskData.estimatedHours;
-    delete taskData.tags;
 
     onSave(taskData);
   };
@@ -77,7 +67,6 @@ export const TaskModal = ({ isOpen, onClose, task, onSave }: TaskModalProps) => 
         
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Título */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Título *
@@ -90,7 +79,6 @@ export const TaskModal = ({ isOpen, onClose, task, onSave }: TaskModalProps) => 
               />
             </div>
 
-            {/* Descripción */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Descripción *
@@ -105,14 +93,13 @@ export const TaskModal = ({ isOpen, onClose, task, onSave }: TaskModalProps) => 
               />
             </div>
 
-            {/* Tipo de Tarea */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Tipo de Tarea
               </label>
               <select
                 value={formData.type}
-                onChange={(e) => setFormData({ ...formData, type: e.target.value as any})}
+                onChange={(e) => setFormData({ ...formData, type: e.target.value as TaskType})}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="desarrollo">Desarrollo</option>
@@ -124,7 +111,6 @@ export const TaskModal = ({ isOpen, onClose, task, onSave }: TaskModalProps) => 
               </select>
             </div>
 
-            {/* Botones */}
             <div className="flex justify-end gap-3 pt-6 border-t">
               <Button type="button" variant="outline" onClick={onClose}>
                 Cancelar

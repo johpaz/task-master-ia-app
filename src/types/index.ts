@@ -66,7 +66,7 @@ export interface Metrics {
 }
 
 export interface DashboardMetrics extends Metrics {
-  overdueCovers: number;
+  inProgressTasks: number;
 }
 
 export interface CreateTaskData {
