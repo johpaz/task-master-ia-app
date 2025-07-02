@@ -3,8 +3,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useAuthStore } from "./stores/authStore";
+import {  Routes, Route } from "react-router-dom";
+
 
 // Layouts
 import { PublicLayout } from "./layouts/PublicLayout";
@@ -41,45 +41,45 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => {
-  const { isAuthenticated } = useAuthStore();
-
+ 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/login" element={
-              <PublicRoute>
-                <Login />
-              </PublicRoute>
-            } />
-            
-            <Route path="/" element={
-              <PublicRoute>
-                <PublicLayout>
-                  <LandingPage />
-                </PublicLayout>
-              </PublicRoute>
-            } />
-            
-            <Route path="/faq" element={
-              <PublicRoute>
-                <PublicLayout>
-                  <FAQ />
-                </PublicLayout>
-              </PublicRoute>
-            } />
-            
-            <Route path="/about" element={
-              <PublicRoute>
-                <PublicLayout>
-                  <About />
-                </PublicLayout>
-              </PublicRoute>
-            } />
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+         
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/login" element={
+                <PublicRoute>
+                  <Login />
+                </PublicRoute>
+              } />
+              
+              <Route path="/" element={
+                <PublicRoute>
+                  <PublicLayout>
+                    <LandingPage />
+                  </PublicLayout>
+                </PublicRoute>
+              } />
+              
+              <Route path="/faq" element={
+                <PublicRoute>
+                  <PublicLayout>
+                    <FAQ />
+                  </PublicLayout>
+                </PublicRoute>
+              } />
+              
+              <Route path="/about" element={
+                <PublicRoute>
+                  <PublicLayout>
+                    <About />
+                  </PublicLayout>
+                </PublicRoute>
+              } />
 
             <Route path="/contact" element={
               <PublicRoute>
@@ -202,12 +202,13 @@ const App = () => {
               </ProtectedRoute>
             } />
 
-            {/* Catch all route */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
+              {/* Catch all route */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+         
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 };
 

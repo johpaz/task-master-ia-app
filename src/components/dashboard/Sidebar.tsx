@@ -89,9 +89,9 @@ export const Sidebar = () => {
   );
 
   return (
-    <div className="w-64 bg-white border-r border-gray-200 flex flex-col h-screen">
+    <div className="w-64 bg-sidebar text-sidebar-foreground border-r border-sidebar-border flex flex-col h-screen">
       {/* Logo */}
-      <div className="p-6 border-b border-gray-200">
+      <div className="p-6 border-b border-sidebar-border">
         <div className="flex items-center space-x-3">
          
            <img
@@ -101,8 +101,8 @@ export const Sidebar = () => {
             />
          
           <div>
-            <h1 className="text-xl font-bold text-gray-900">TaskMaster IA</h1>
-            <p className="text-sm text-gray-500">Tu Profe de IA</p>
+            <h1 className="text-xl font-bold text-sidebar-foreground">TaskMaster IA</h1>
+            <p className="text-sm text-muted-foreground">Tu Profe de IA</p>
           </div>
         </div>
       </div>
@@ -117,8 +117,8 @@ export const Sidebar = () => {
               to={item.href}
               className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                 isActive
-                  ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
-                  : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
               }`}
             >
               <item.icon className="mr-3 h-5 w-5" />
@@ -129,7 +129,7 @@ export const Sidebar = () => {
       </nav>
 
       {/* User Info & Logout */}
-      <div className="p-4 border-t border-gray-200">
+      <div className="p-4 border-t border-sidebar-border">
         <div className="flex items-center space-x-3 mb-4">
           <img
             src={user?.avatar || '/api/placeholder/40/40'}
@@ -137,10 +137,10 @@ export const Sidebar = () => {
             className="w-10 h-10 rounded-full"
           />
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">
+            <p className="text-sm font-medium text-sidebar-foreground truncate">
               {user?.name}
             </p>
-            <p className="text-xs text-gray-500 capitalize">
+            <p className="text-xs text-muted-foreground capitalize">
               {user?.role}
             </p>
           </div>
@@ -149,7 +149,7 @@ export const Sidebar = () => {
           variant="ghost"
           size="sm"
           onClick={logout}
-          className="w-full justify-start text-gray-700 hover:text-red-600 hover:bg-red-50"
+          className="w-full justify-start text-muted-foreground hover:text-destructive hover:bg-destructive/10"
         >
           <LogOut className="mr-2 h-4 w-4" />
           Cerrar Sesión

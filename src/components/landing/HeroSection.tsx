@@ -85,7 +85,7 @@ export const HeroSection = () => {
                 </Button>
               </Link>
               <Link to="#features">
-                <Button variant="outline" size="lg" className="text-lg px-8 py-4 border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm transition-all duration-300 transform hover:scale-105">
+                <Button variant="outline" size="lg" className="text-lg px-8 py-4 border-2 border-border text-foreground hover:bg-accent backdrop-blur-sm transition-all duration-300 transform hover:scale-105">
                   Ver Demo
                 </Button>
               </Link>
