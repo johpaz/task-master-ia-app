@@ -37,6 +37,7 @@ import { UserDetail } from "./pages/app/UserDetail";
 import { Settings } from "./pages/app/Settings";
 import { SystemLogs } from "./pages/app/SystemLogs";
 import NotFound from "./pages/NotFound";
+import { ThemeProvider } from "next-themes";
 
 const queryClient = new QueryClient();
 
