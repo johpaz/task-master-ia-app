@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Save, User, Lock, Bell, Palette } from 'lucide-react';
+import { Save, User, Lock, Bell } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
@@ -68,13 +68,6 @@ export const Settings = () => {
     weeklyReport: false
   });
 
-  const [preferences, setPreferences] = useState({
-    theme: 'light',
-    language: 'es',
-    timezone: 'America/Bogota',
-    dateFormat: 'DD/MM/YYYY'
-  });
-
   const handleSaveProfile = async () => {
     if (!user) return;
     try {
@@ -137,28 +130,10 @@ export const Settings = () => {
     }
   };
 
-  const handleSavePreferences = async () => {
-    if (!user) return;
-    try {
-      await settingsService.updatePreferences(user.id, preferences);
-      toast({
-        title: 'Preferencias actualizadas',
-        description: 'Tus preferencias han sido actualizadas correctamente.',
-      });
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'No se pudieron actualizar tus preferencias.',
-        variant: 'destructive',
-      });
-    }
-  };
-
   const tabs = [
     { id: 'profile', label: 'Perfil', icon: User },
     { id: 'security', label: 'Seguridad', icon: Lock },
-    { id: 'notifications', label: 'Notificaciones', icon: Bell },
-    { id: 'preferences', label: 'Preferencias', icon: Palette }
+    { id: 'notifications', label: 'Notificaciones', icon: Bell }
   ];
 
   // Filter tabs based on user role
@@ -442,87 +417,6 @@ export const Settings = () => {
                 <Button onClick={handleSaveNotifications} className="flex items-center gap-2">
                   <Save className="h-4 w-4" />
                   Guardar Configuración
-                </Button>
-              </CardContent>
-            </Card>
-          )}
-
-          {activeTab === 'preferences' && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Palette className="mr-2 h-5 w-5" />
-                  Preferencias
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Tema
-                    </label>
-                    <select
-                      value={preferences.theme}
-                      onChange={(e) => setPreferences({...preferences, theme: e.target.value})}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="light">Claro</option>
-                      <option value="dark">Oscuro</option>
-                      <option value="auto">Automático</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Idioma
-                    </label>
-                    <select
-                      value={preferences.language}
-                      onChange={(e) => setPreferences({...preferences, language: e.target.value})}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="es">Español</option>
-                      <option value="en">English</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Zona Horaria
-                    </label>
-                    <select
-                      value={preferences.timezone}
-                      onChange={(e) => setPreferences({...preferences, timezone: e.target.value})}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="America/Bogota">Bogotá (GMT-5)</option>
-                      <option value="America/Mexico_City">Ciudad de México (GMT-6)</option>
-                      <option value="America/New_York">Nueva York (GMT-5)</option>
-                      <option value="Europe/Madrid">Madrid (GMT+1)</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Formato de Fecha
-                    </label>
-                    <select
-                      value={preferences.dateFormat}
-                      onChange={(e) => setPreferences({...preferences, dateFormat: e.target.value})}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="DD/MM/YYYY">DD/MM/YYYY</option>
-                      <option value="MM/DD/YYYY">MM/DD/YYYY</option>
-                      <option value="YYYY-MM-DD">YYYY-MM-DD</option>
-                    </select>
-                  </div>
-                </div>
-
-                <Button onClick={handleSavePreferences} className="flex items-center gap-2">
-                  <Save className="h-4 w-4" />
-                  Guardar Preferencias
                 </Button>
               </CardContent>
             </Card>

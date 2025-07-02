@@ -1,3 +1,4 @@
+
 import { CheckSquare, Clock, Target, TrendingUp } from 'lucide-react';
 import { Card, CardContent } from '../../ui/card';
 import { Task } from '../../../types';
@@ -8,8 +9,8 @@ interface PersonalMetricsProps {
 
 export const PersonalMetrics = ({ tasks }: PersonalMetricsProps) => {
   const completedTasks = tasks.filter(t => t.status === 'completada').length;
-  const inProgressTasks = tasks.filter(t => t.status === 'en_progreso').length;
-  const totalHours = tasks.reduce((sum, task) => sum + task.actualHours, 0);
+  const inProgressTasks = tasks.filter(t => t.status === 'en progreso').length;
+  const totalHours = tasks.reduce((sum, task) => sum + (task.actualHours || 0), 0);
   const efficiency = tasks.length > 0 ? Math.round((completedTasks / tasks.length) * 100) : 0;
 
   const metrics = [

@@ -1,8 +1,8 @@
+
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { Button } from '../ui/button';
-import { ThemeToggle } from '../ui/theme-toggle';
 
 export const PublicNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -87,7 +87,6 @@ export const PublicNavbar = () => {
             <Link to="/contact" className="font-semibold text-foreground hover:text-primary transition-colors">
               Contacto
             </Link>
-            <ThemeToggle />
             <Link to="/login">
               <Button variant="ghost" className="font-semibold text-foreground hover:text-primary hover:bg-accent transition-colors">
                 Iniciar Sesión
@@ -101,8 +100,7 @@ export const PublicNavbar = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center space-x-2 absolute right-4">
-            <ThemeToggle />
+          <div className="md:hidden flex items-center absolute right-4">
             <Button
               variant="ghost"
               size="sm"

@@ -1,146 +1,118 @@
 
 import { create } from 'zustand';
-import { Task } from '../types';
-
-interface TimeEntry {
-  id: string;
-  taskId: string;
-  startTime: Date;
-  endTime?: Date;
-  duration: number; // en minutos
-  description?: string;
-}
-
-interface PersonalGoal {
-  id: string;
-  title: string;
-  description: string;
-  targetDate: Date;
-  progress: number;
-  completed: boolean;
-}
+import type { Task, Metrics } from '../types';
 
 interface CollaboratorState {
-  currentSession: TimeEntry | null;
-  timeEntries: TimeEntry[];
-  personalGoals: PersonalGoal[];
-  weeklyHours: number;
-  isTrackingTime: boolean;
-  startTimeTracking: (taskId: string) => void;
-  stopTimeTracking: (description?: string) => void;
-  addPersonalGoal: (goal: Omit<PersonalGoal, 'id'>) => void;
-  updateGoalProgress: (id: string, progress: number) => void;
-  getTasksStats: (tasks: Task[]) => {
-    completed: number;
-    inProgress: number;
-    pending: number;
-    overdue: number;
-  };
+  personalTasks: Task[];
+  timeEntries: any[];
+  personalMetrics: Metrics;
+  isLoading: boolean;
+  error: string | null;
+  fetchPersonalTasks: (userId: string) => Promise<void>;
+  updateTaskStatus: (taskId: string, status: Task['status']) => Promise<void>;
+  addTimeEntry: (entry: any) => Promise<void>;
+  getPersonalMetrics: (userId: string) => Promise<void>;
 }
 
 export const useCollaboratorStore = create<CollaboratorState>((set, get) => ({
-  currentSession: null,
-  timeEntries: [
-    {
-      id: '1',
-      taskId: 'task-1',
-      startTime: new Date('2024-01-07T09:00:00'),
-      endTime: new Date('2024-01-07T12:30:00'),
-      duration: 210,
-      description: 'Desarrollo de componentes React'
-    },
-    {
-      id: '2',
-      taskId: 'task-2',
-      startTime: new Date('2024-01-07T14:00:00'),
-      endTime: new Date('2024-01-07T17:00:00'),
-      duration: 180,
-      description: 'Testing y corrección de bugs'
-    }
-  ],
-  personalGoals: [
-    {
-      id: '1',
-      title: 'Completar certificación React',
-      description: 'Obtener certificación avanzada en React',
-      targetDate: new Date('2024-03-01'),
-      progress: 65,
-      completed: false
-    },
-    {
-      id: '2',
-      title: 'Mejorar tiempo de entrega',
-      description: 'Reducir tiempo promedio de entrega en 20%',
-      targetDate: new Date('2024-02-15'),
-      progress: 40,
-      completed: false
-    }
-  ],
-  weeklyHours: 32,
-  isTrackingTime: false,
-
-  startTimeTracking: (taskId) => {
-    const newSession: TimeEntry = {
-      id: Date.now().toString(),
-      taskId,
-      startTime: new Date(),
-      duration: 0
-    };
-    set({
-      currentSession: newSession,
-      isTrackingTime: true
-    });
+  personalTasks: [],
+  timeEntries: [],
+  personalMetrics: {
+    totalTasks: 0,
+    completedTasks: 0,
+    pendingTasks: 0,
+    overdueTasks: 0,
+    totalUsers: 0,
+    activeUsers: 0,
+    tasksThisMonth: 0,
+    completionRate: 0
   },
+  isLoading: false,
+  error: null,
 
-  stopTimeTracking: (description) => {
-    const { currentSession } = get();
-    if (currentSession) {
-      const endTime = new Date();
-      const duration = Math.floor((endTime.getTime() - currentSession.startTime.getTime()) / 60000);
+  fetchPersonalTasks: async (userId: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      // Simular delay de API
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
-      const completedEntry: TimeEntry = {
-        ...currentSession,
-        endTime,
-        duration,
-        description
-      };
-
-      set((state) => ({
-        timeEntries: [completedEntry, ...state.timeEntries],
-        currentSession: null,
-        isTrackingTime: false
-      }));
+      // Mock data - en producción obtener del API
+      const mockTasks: Task[] = [
+        {
+          id: '1',
+          title: 'Tarea Personal 1',
+          description: 'Descripción de tarea personal',
+          status: 'en progreso',
+          priority: 'alta',
+          type: 'desarrollo',
+          assignedTo: userId,
+          assignedBy: '2',
+          client: 'Cliente A',
+          createdAt: '2024-12-01',
+          updatedAt: '2024-12-15',
+          tags: ['personal']
+        }
+      ];
+      
+      set({ personalTasks: mockTasks, isLoading: false });
+    } catch (error: any) {
+      set({ error: error.message, isLoading: false });
     }
   },
 
-  addPersonalGoal: (goal) => {
-    const newGoal: PersonalGoal = {
-      ...goal,
-      id: Date.now().toString()
-    };
-    set((state) => ({
-      personalGoals: [...state.personalGoals, newGoal]
-    }));
+  updateTaskStatus: async (taskId: string, status: Task['status']) => {
+    set({ isLoading: true, error: null });
+    try {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      set((state) => ({
+        personalTasks: state.personalTasks.map((task) =>
+          task.id === taskId ? { ...task, status, updatedAt: new Date().toISOString() } : task
+        ),
+        isLoading: false
+      }));
+    } catch (error: any) {
+      set({ error: error.message, isLoading: false });
+    }
   },
 
-  updateGoalProgress: (id, progress) => {
-    set((state) => ({
-      personalGoals: state.personalGoals.map(goal =>
-        goal.id === id
-          ? { ...goal, progress, completed: progress >= 100 }
-          : goal
-      )
-    }));
+  addTimeEntry: async (entry: any) => {
+    set({ isLoading: true, error: null });
+    try {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      set((state) => ({
+        timeEntries: [...state.timeEntries, { ...entry, id: Date.now().toString() }],
+        isLoading: false
+      }));
+    } catch (error: any) {
+      set({ error: error.message, isLoading: false });
+    }
   },
 
-  getTasksStats: (tasks) => {
-    return {
-      completed: tasks.filter(t => t.status === 'completada').length,
-      inProgress: tasks.filter(t => t.status === 'en_progreso').length,
-      pending: tasks.filter(t => t.status === 'pendiente').length,
-      overdue: tasks.filter(t => 
-        new Date(t.endDate) < new Date() && t.status !== 'completada'
-      ).length
-    };
+  getPersonalMetrics: async (userId: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const tasks = get().personalTasks;
+      const completedTasks = tasks.filter(task => task.status === 'completada').length;
+      const pendingTasks = tasks.filter(task => task.status === 'en progreso' || task.status === 'por hacer').length;
+      
+      const metrics: Metrics = {
+        totalTasks: tasks.length,
+        completedTasks,
+        pendingTasks,
+        overdueTasks: 0,
+        totalUsers: 1,
+        activeUsers: 1,
+        tasksThisMonth: tasks.length,
+        completionRate: tasks.length > 0 ? Math.round((completedTasks / tasks.length) * 100) : 0
+      };
+      
+      set({ personalMetrics: metrics, isLoading: false });
+    } catch (error: any) {
+      set({ error: error.message, isLoading: false });
+    }
   }
 }));

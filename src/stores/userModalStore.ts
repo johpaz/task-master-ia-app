@@ -1,6 +1,6 @@
 
 import { create } from 'zustand';
-import { User } from '../../types';
+import { User } from '../types';
 
 interface UserModalState {
   isOpen: boolean;
@@ -12,6 +12,6 @@ interface UserModalState {
 export const useUserModalStore = create<UserModalState>((set) => ({
   isOpen: false,
   editingUser: null,
-  openModal: (user = null) => set({ isOpen: true, editingUser: user }),
+  openModal: (user?: User) => set({ isOpen: true, editingUser: user || null }),
   closeModal: () => set({ isOpen: false, editingUser: null }),
 }));

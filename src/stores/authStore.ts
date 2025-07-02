@@ -1,111 +1,113 @@
-  // src/store/useAuthStore.ts  (o la ruta donde lo quieras ubicar)
 
-  import { create } from 'zustand';
-  import { persist, createJSONStorage } from 'zustand/middleware';
-  import { User } from '../types'; // Ajusta esta ruta si es necesario
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import type { User } from '../types';
 
-  interface LoginCredentials {
-    email: string;
-    password: string;
+interface AuthState {
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  login: (credentials: { email: string; password: string }) => Promise<{ success: boolean; redirectTo?: string }>;
+  logout: () => void;
+  updateUser: (userData: Partial<User>) => void;
+  setUser: (user: User | null) => void;
+}
+
+// Mock users for development
+const mockUsers = [
+  {
+    id: '1',
+    name: 'Admin Usuario',
+    email: 'admin@taskmanager.com',
+    role: 'admin' as const,
+    department: 'Administración',
+    phone: '+1234567890',
+    status: 'active' as const,
+    createdAt: '2024-01-01',
+    lastLogin: '2024-12-30'
+  },
+  {
+    id: '2',
+    name: 'Manager Usuario',
+    email: 'manager@taskmanager.com',
+    role: 'manager' as const,
+    department: 'Gestión',
+    phone: '+1234567891',
+    status: 'active' as const,
+    createdAt: '2024-01-01',
+    lastLogin: '2024-12-29'
+  },
+  {
+    id: '3',
+    name: 'Colaborador Usuario',
+    email: 'colaborador@taskmanager.com',
+    role: 'collaborator' as const,
+    department: 'Desarrollo',
+    phone: '+1234567892',
+    status: 'active' as const,
+    createdAt: '2024-01-01',
+    lastLogin: '2024-12-28'
+  },
+  {
+    id: '4',
+    name: 'Cliente Usuario',
+    email: 'cliente@taskmanager.com',
+    role: 'client' as const,
+    department: 'Clientes',
+    phone: '+1234567893',
+    status: 'active' as const,
+    createdAt: '2024-01-01',
+    lastLogin: '2024-12-27'
   }
+];
 
-  interface LoginResponse {
-    message: string;
-    user: User;
-    token: string;
-    redirectTo: string;
-  }
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set, get) => ({
+      user: null,
+      token: null,
+      isAuthenticated: false,
+      isLoading: false,
 
-  interface MeResponse {
-    user: User;
-  }
+      login: async (credentials: { email: string; password: string }) => {
+        set({ isLoading: true });
+        try {
+          await new Promise(resolve => setTimeout(resolve, 1000));
 
-  interface RegisterPayload { // Ajusta esto según los campos que tu API de registro espera
-    email: string;
-    password: string;
-    name: string;
-    role: User['role'];
-    avatar?: string;
-    department?: string;
-  }
-
-  interface RegisterResponse { // Ajusta esto según lo que devuelve tu API de registro
-    message: string;
-    user: User;
-    token?: string; // Algunas APIs devuelven token al registrar, otras no
-  }
-
-  // --- Configuración de la URL Base de la API ---
-
-  const API_BASE_URL = import.meta.env.VITE_REACT_APP_URL;
-
- 
-  // --- Definición del Estado y Acciones del Store ---
-
-  interface AuthState {
-    user: User | null;
-    token: string | null;
-    isAuthenticated: boolean;
-    isLoading: boolean; // Para el estado de carga general de operaciones de auth
-    error: string | null; // Para mensajes de error
-    login: (credentials: LoginCredentials) => Promise<{ success: boolean; redirectTo?: string }>;
-    logout: () => void;
-    checkAuthStatus: () => Promise<void>;
-    register: (userData: RegisterPayload) => Promise<{ success: boolean; message?: string }>;
-    setUser: (user: User) => void;
-    // Podrías añadir forgotPassword, resetPassword aquí también
-  }
-
-  export const useAuthStore = create<AuthState>()(
-    persist(
-      (set, get) => ({
-        user: null,
-        token: null,
-        isAuthenticated: false,
-        isLoading: true, // Inicia como true para el checkAuthStatus inicial
-        error: null,
-
-       login: async (credentials: LoginCredentials) => {
-          set({ isLoading: true, error: null });
-          try {
-            const response = await fetch(`${API_BASE_URL}/auth/login`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(credentials),
-            });
-            const data: LoginResponse = await response.json();
-
-            if (!response.ok) {
-              throw new Error(data.message || `Login failed: ${response.status}`);
-            }
-
-            const user: User = data.user;
-
-            // 2. Elimina campo password para no persistirlo
-            //    (asume que tu tipo User no lo incluye)
-            // (No es necesario eliminar password porque no existe en User)
-
-            // 3. Guarda en el store
-            set({
-              user,
-              token: data.token,
-              isAuthenticated: true,
-              isLoading: false,
-              error: null,
-            });
-            return { success: true, redirectTo: data.redirectTo };
-          } catch (error: unknown) {
-            console.error("Login failed:", error);
-            set({
-              user: null,
-              token: null,
-              isAuthenticated: false,
-              isLoading: false,
-              error: error instanceof Error ? error.message : 'Error desconocido en login',
-            });
-            return { success: false };
+          const user = mockUsers.find(u => u.email === credentials.email);
+          
+          if (!user) {
+            throw new Error('Usuario no encontrado');
           }
-        },
+
+          if (credentials.password !== 'password123') {
+            throw new Error('Contraseña incorrecta');
+          }
+
+          const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.${btoa(JSON.stringify({ 
+            userId: user.id, 
+            email: user.email, 
+            role: user.role,
+            iat: Date.now(),
+            exp: Date.now() + (24 * 60 * 60 * 1000)
+          }))}.signature`;
+
+          set({
+            user,
+            token,
+            isAuthenticated: true,
+            isLoading: false
+          });
+
+          console.log('Login exitoso:', { user, token });
+          return { success: true, redirectTo: '/dashboard' };
+        } catch (error: any) {
+          set({ isLoading: false });
+          console.error('Error en login:', error);
+          throw error;
+        }
+      },
 
         logout: () => {
           set({

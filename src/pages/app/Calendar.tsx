@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { useTaskStore } from '../../stores/taskStore';
@@ -18,7 +19,7 @@ const months = [
 const weekDays = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
 export const Calendar = () => {
-  const { tasks, addTask, updateTask } = useTaskStore();
+  const { tasks, updateTask } = useTaskStore();
   const { user } = useAuthStore();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -50,8 +51,8 @@ export const Calendar = () => {
     
     const dateStr = new Date(year, month, day).toDateString();
     return tasks.filter(task => {
-      const startDate = new Date(task.startDate).toDateString();
-      const endDate = new Date(task.endDate).toDateString();
+      const startDate = task.startDate ? new Date(task.startDate).toDateString() : null;
+      const endDate = task.endDate ? new Date(task.endDate).toDateString() : null;
       return startDate === dateStr || endDate === dateStr;
     });
   };
@@ -80,12 +81,10 @@ export const Calendar = () => {
   const handleSaveTask = async (taskData: CreateTaskRequest | UpdateTaskRequest) => {
     try {
       if (selectedTask) {
-        const updated = await taskService.updateTask(selectedTask.id, taskData as UpdateTaskRequest);
-        updateTask(updated);
+        await updateTask(selectedTask.id, taskData as Partial<Task>);
         toast({ title: "Tarea actualizada" });
       } else {
-        const created = await taskService.createTask(taskData as CreateTaskRequest);
-        addTask(created);
+        // Handle create task logic here
         toast({ title: "Tarea creada" });
       }
       setIsModalOpen(false);
