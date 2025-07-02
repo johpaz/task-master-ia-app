@@ -47,7 +47,7 @@ export const UserManagement = () => {
           <Users className="mr-2 h-5 w-5 text-red-600" />
           Gestión de Usuarios
         </CardTitle>
-        <Button size="sm" className="bg-red-600 hover:bg-red-700" onClick={() => openModal('create')}>
+        <Button size="sm" className="bg-red-600 hover:bg-red-700" onClick={() => openModal()}>
           <Plus className="h-4 w-4 mr-1" />
           Nuevo
         </Button>

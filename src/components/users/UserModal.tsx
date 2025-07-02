@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Button } from '../ui/button';
@@ -23,14 +22,31 @@ export const UserModal = ({ isOpen, onClose, onSave, user, isLoading }: UserModa
     role: 'collaborator' as 'admin' | 'manager' | 'collaborator' | 'client',
     department: '',
     company: '',
+    phoneCode: '+57',
     phone: '',
     status: 'active' as 'active' | 'inactive'
   });
-
+  
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (user) {
+      // Extraer código y número de teléfono si existe
+      let phoneCode = '+57';
+      let phoneNumber = user.phone || '';
+      
+      // Verificar si el teléfono ya tiene código
+      if (user.phone) {
+        const supportedCodes = ['+57', '+1', '+52'];
+        for (const code of supportedCodes) {
+          if (user.phone.startsWith(code)) {
+            phoneCode = code;
+            phoneNumber = user.phone.slice(code.length);
+            break;
+          }
+        }
+      }
+
       setFormData({
         name: user.name || '',
         email: user.email || '',
@@ -38,8 +54,9 @@ export const UserModal = ({ isOpen, onClose, onSave, user, isLoading }: UserModa
         role: user.role || 'collaborator',
         department: user.department || '',
         company: user.company || '',
-        phone: user.phone || '',
-        status: 'active'
+        phone: phoneNumber,
+        phoneCode: phoneCode,
+        status: user.status || 'active'
       });
     } else {
       setFormData({
@@ -49,6 +66,7 @@ export const UserModal = ({ isOpen, onClose, onSave, user, isLoading }: UserModa
         role: 'collaborator',
         department: '',
         company: '',
+        phoneCode: '+57',
         phone: '',
         status: 'active'
       });
@@ -62,7 +80,7 @@ export const UserModal = ({ isOpen, onClose, onSave, user, isLoading }: UserModa
     if (!formData.name.trim()) {
       newErrors.name = 'El nombre es requerido';
     }
-
+    
     if (!formData.email.trim()) {
       newErrors.email = 'El email es requerido';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -88,6 +106,9 @@ export const UserModal = ({ isOpen, onClose, onSave, user, isLoading }: UserModa
       return;
     }
 
+    // Construir teléfono completo con código de país
+    const fullPhone = `${formData.phoneCode}${formData.phone}`;
+
     if (user) {
       // Actualizar usuario existente
       const updateData: UpdateUserRequest = {
@@ -96,7 +117,7 @@ export const UserModal = ({ isOpen, onClose, onSave, user, isLoading }: UserModa
         role: formData.role,
         department: formData.department,
         company: formData.company,
-        phone: formData.phone,
+        phone: fullPhone,
         status: formData.status
       };
       onSave(updateData);
@@ -109,7 +130,7 @@ export const UserModal = ({ isOpen, onClose, onSave, user, isLoading }: UserModa
         role: formData.role,
         department: formData.department,
         company: formData.company,
-        phone: formData.phone
+        phone: fullPhone
       };
       onSave(createData);
     }
@@ -221,19 +242,22 @@ export const UserModal = ({ isOpen, onClose, onSave, user, isLoading }: UserModa
             <div className="flex">
               <select
                 name="phoneCode"
+                value={formData.phoneCode}
+                onChange={handleChange}
                 className="w-1/4 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="+57">+57</option>
-                <option value="+1">+1</option>
-                <option value="+52">+52</option>
+                <option value="+57">+57 CO</option>
+                <option value="+1">+1 US</option>
+                <option value="+52">+52 MX</option>
               </select>
               <Input
                 id="phone"
                 name="phone"
+                type="tel"
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="3001234567"
-                className="rounded-l-none"
+                className="flex-1 rounded-l-none"
               />
             </div>
           </div>
