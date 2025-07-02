@@ -151,7 +151,7 @@
               isLoading: false,
               error: null,
             });
-          } catch (error: Error) {
+          } catch (error: unknown) {
             console.error("Failed to fetch user status (checkAuthStatus):", error);
             // Si hay error (ej. token expirado, 401, 403), deslogueamos completamente
             set({

@@ -30,14 +30,14 @@ export const TopBar = () => {
   };
 
   return (
-    <header className="bg-background dark:bg-background border-b border-gray-200 px-6 py-4">
+    <header className="bg-background border-b border-border px-6 py-4">
       <div className="flex items-center justify-between">
         {/* Greeting */}
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-foreground">
             {getGreeting()}, {user?.name?.split(' ')[0]}
           </h1>
-          <p className="text-gray-600">
+          <p className="text-muted-foreground">
             Gestiona tus proyectos de IA y desarrollo
           </p>
         </div>
@@ -50,7 +50,7 @@ export const TopBar = () => {
               <Button variant="ghost" size="sm" className="relative">
                 <Bell size={20} />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
                     {unreadCount}
                   </span>
                 )}
@@ -64,14 +64,14 @@ export const TopBar = () => {
                   <DropdownMenuItem
                     key={notification.id}
                     onSelect={() => markAsRead(notification.id)}
-                    className={`flex items-start gap-3 p-2 ${notification.isRead === "0" ? 'bg-accent dark:bg-accent' : ''}`}
+                    className={`flex items-start gap-3 p-2 ${notification.isRead === "0" ? 'bg-accent' : ''}`}
                   >
                     <div className="flex-shrink-0">
-                      <div className={`h-2 w-2 rounded-full mt-1.5 ${notification.isRead === "0" ? 'bg-blue-500' : 'bg-gray-300'}`}></div>
+                      <div className={`h-2 w-2 rounded-full mt-1.5 ${notification.isRead === "0" ? 'bg-primary' : 'bg-muted'}`}></div>
                     </div>
                     <div className="flex-grow">
-                      <p className="text-sm text-gray-700">{notification.message}</p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-sm text-foreground">{notification.message}</p>
+                      <p className="text-xs text-muted-foreground">
                         {new Date(notification.createdAt).toLocaleString()}
                       </p>
                     </div>
