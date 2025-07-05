@@ -17,12 +17,21 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '../ui/button';
+import { useNavigate } from 'react-router-dom';
+import { Task } from '../../types';
 
 const API_BASE_URL = import.meta.env.VITE_REACT_APP_URL;
 
-const fetchTasks = async (token: string | null) => {
+type TasksResponse = {
+  data: Task[];
+  total: number;
+  page: number;
+  pageSize: number;
+};
+
+const fetchTasks = async (token: string | null, status: string): Promise<TasksResponse> => {
   if (!token) throw new Error('No authentication token found');
-  const response = await fetch(`${API_BASE_URL}/tasks`, {
+  const response = await fetch(`${API_BASE_URL}/tasks?status=${status}`, {
     headers: {
       'Authorization': `Bearer ${token}`,
     },
@@ -33,54 +42,58 @@ const fetchTasks = async (token: string | null) => {
   return response.json();
 };
 
-import { useNavigate } from 'react-router-dom';
-
-// ...
-
-import { Task } from '../../types';
-
-// ...
-
 export const TaskTable: React.FC = () => {
   const { token } = useAuthStore();
   const navigate = useNavigate();
-  const { data: tasks, isLoading, error } = useQuery<{ data: Task[] }>({
-    queryKey: ['tasks'],
-    queryFn: () => fetchTasks(token),
+
+  const { data, isLoading, error } = useQuery<TasksResponse>({
+    queryKey: ['tasks', 'non-completed'],
+    queryFn: () => fetchTasks(token, 'non-completed'),
     enabled: !!token,
   });
 
-  if (isLoading) return <div>Loading tasks...</div>;
-  if (error) return <div>Error fetching tasks</div>;
+  if (isLoading) return <div className="p-4">Cargando tareas...</div>;
+  if (error) return <div className="p-4 text-red-500">Error al obtener las tareas</div>;
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Recent Tasks</CardTitle>
+        <CardTitle>Tareas recientes</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Title</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Priority</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead>Título</TableHead>
+              <TableHead>Estado</TableHead>
+              <TableHead>Prioridad</TableHead>
+              <TableHead>Acciones</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {tasks?.data.map((task) => (
+            {data?.data.map((task) => (
               <TableRow key={task.id}>
                 <TableCell>{task.title}</TableCell>
                 <TableCell>{task.status}</TableCell>
                 <TableCell>{task.priority}</TableCell>
                 <TableCell>
-                  <Button variant="outline" size="sm" onClick={() => navigate(`/tasks/${task.id}`)}>View</Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => navigate(`/tasks/${task.id}`)}
+                  >
+                    Ver
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
+        {data?.data.length === 0 && (
+          <div className="text-center py-4 text-gray-500">
+            No hay tareas pendientes.
+          </div>
+        )}
       </CardContent>
     </Card>
   );

@@ -1,5 +1,5 @@
-
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Plus, Filter } from 'lucide-react';
 import { useTaskStore } from '../../stores/taskStore';
 import { useAuthStore } from '../../stores/authStore';
@@ -9,10 +9,11 @@ import { Badge } from '../../components/ui/badge';
 import { TaskModal } from '../../components/tasks/TaskModal';
 import { Task } from '../../types';
 
+// Column definitions must match backend status values
 const columns = [
-  { id: 'por hacer' as const, title: 'Pendiente', color: 'bg-gray-50 border-gray-200' },
-  { id: 'en progreso' as const, title: 'En Progreso', color: 'bg-purple-50 border-purple-200' },
-  { id: 'en revisión' as const, title: 'En Revisión', color: 'bg-blue-50 border-blue-200' },
+  { id: 'pendiente' as const, title: 'Pendiente', color: 'bg-gray-50 border-gray-200' },
+  { id: 'en_progreso' as const, title: 'En Progreso', color: 'bg-purple-50 border-purple-200' },
+  { id: 'revision' as const, title: 'En Revisión', color: 'bg-blue-50 border-blue-200' },
   { id: 'completada' as const, title: 'Completada', color: 'bg-green-50 border-green-200' }
 ];
 
@@ -27,15 +28,23 @@ import { useToast } from '../../hooks/use-toast';
 import { taskService, CreateTaskRequest, UpdateTaskRequest } from '../../services/taskService';
 
 export const Kanban = () => {
-  const { tasks, updateTask } = useTaskStore();
-  const { user } = useAuthStore();
+  const { user, token } = useAuthStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const { toast } = useToast();
 
-  const getTasksByStatus = (status: Task['status']) => {
-    return tasks.filter(task => task.status === status);
-  };
+  const { data: tasksData, isLoading, error, refetch } = useQuery({
+    queryKey: ['allTasks', token],
+    queryFn: () => taskService.getTasks(token),
+    enabled: !!token,
+  });
+
+  // Ensure we read the 'data' property returned by the API
+  const tasks: Task[] = tasksData?.data || [];
+
+  const { updateTask } = useTaskStore();
+
+  const getTasksByStatus = (status: Task['status']) => tasks.filter(task => task.status === status);
 
   const handleDragStart = (e: React.DragEvent, task: Task) => {
     e.dataTransfer.setData('text/plain', JSON.stringify(task));
@@ -47,9 +56,10 @@ export const Kanban = () => {
 
   const handleDrop = (e: React.DragEvent, newStatus: Task['status']) => {
     e.preventDefault();
-    const task = JSON.parse(e.dataTransfer.getData('text/plain'));
+    const task: Task = JSON.parse(e.dataTransfer.getData('text/plain'));
     if (task.status !== newStatus) {
       updateTask(task.id, { status: newStatus });
+      refetch();
     }
   };
 
@@ -67,20 +77,38 @@ export const Kanban = () => {
     try {
       if (selectedTask) {
         await updateTask(selectedTask.id, taskData as Partial<Task>);
-        toast({ title: "Tarea actualizada" });
+        toast({ title: 'Tarea actualizada' });
       } else {
-        // Handle create task logic here
-        toast({ title: "Tarea creada" });
+        // if creation logic exists in store
+        await taskService.createTask(taskData as CreateTaskRequest);
+        await refetch();
+        toast({ title: 'Tarea creada' });
       }
       setIsModalOpen(false);
-    } catch (error) {
-      toast({ title: "Error al guardar la tarea", variant: "destructive" });
+    } catch {
+      toast({ title: 'Error al guardar la tarea', variant: 'destructive' });
     }
   };
 
+  const calculateEndDate = (startDate: string, estimatedHours: number) => {
+    if (!startDate || estimatedHours == null) return null;
+    const start = new Date(startDate);
+    const workdayHours = 5;
+    const daysToAdd = Math.ceil(estimatedHours / workdayHours);
+    let added = 0;
+    while (added < daysToAdd) {
+      start.setDate(start.getDate() + 1);
+      const day = start.getDay();
+      if (day !== 0 && day !== 6) added++;
+    }
+    return start.toLocaleDateString();
+  };
+
+  if (isLoading) return <div className="p-4">Cargando tareas...</div>;
+  if (error) return <div className="p-4 text-red-500">Error al cargar tareas</div>;
+
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Tablero Kanban</h1>
@@ -88,16 +116,14 @@ export const Kanban = () => {
         </div>
         {(user?.role === 'admin' || user?.role === 'manager') && (
           <Button onClick={handleCreateTask} className="flex items-center gap-2">
-            <Plus className="h-4 w-4" />
-            Nueva Tarea
+            <Plus className="h-4 w-4" /> Nueva Tarea
           </Button>
         )}
       </div>
 
-      {/* Kanban Board */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 min-h-[600px]">
         {columns.map((column) => (
-          <div 
+          <div
             key={column.id}
             className={`border-2 border-dashed rounded-lg p-4 ${column.color}`}
             onDragOver={handleDragOver}
@@ -105,14 +131,12 @@ export const Kanban = () => {
           >
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-gray-900">{column.title}</h3>
-              <Badge variant="secondary">
-                {getTasksByStatus(column.id).length}
-              </Badge>
+              <Badge variant="secondary">{getTasksByStatus(column.id).length}</Badge>
             </div>
-            
+
             <div className="space-y-3">
               {getTasksByStatus(column.id).map((task) => (
-                <Card 
+                <Card
                   key={task.id}
                   className="cursor-move hover:shadow-md transition-shadow"
                   draggable
@@ -124,11 +148,9 @@ export const Kanban = () => {
                       <h4 className="font-medium text-gray-900 line-clamp-2">
                         {task.title}
                       </h4>
-                      
                       <p className="text-sm text-gray-600 line-clamp-2">
                         {task.description}
                       </p>
-                      
                       <div className="flex flex-wrap gap-2">
                         <Badge className={priorityColors[task.priority]} variant="secondary">
                           {task.priority}
@@ -137,40 +159,18 @@ export const Kanban = () => {
                           {task.type}
                         </Badge>
                       </div>
-
                       <div className="flex items-center justify-between text-xs text-gray-500">
                         <span>Usuario {task.assignedTo}</span>
                         <span>{task.actualHours}h / {task.estimatedHours}h</span>
                       </div>
-
-                      {task.tags && task.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-1">
-                          {task.tags.slice(0, 3).map((tag, index) => (
-                            <span 
-                              key={index}
-                              className="bg-blue-100 text-blue-800 text-xs px-1.5 py-0.5 rounded"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                          {task.tags.length > 3 && (
-                            <span className="text-xs text-gray-500">
-                              +{task.tags.length - 3}
-                            </span>
-                          )}
-                        </div>
-                      )}
-
-                      {task.endDate && (
-                        <div className="text-xs text-gray-400">
-                          Vence: {new Date(task.endDate).toLocaleDateString()}
-                        </div>
-                      )}
+                      <div className="text-xs text-gray-400">
+                        Vence: {task.endDate ? new Date(task.endDate).toLocaleDateString() : calculateEndDate(task.startDate, task.estimatedHours)}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
               ))}
-              
+
               {getTasksByStatus(column.id).length === 0 && (
                 <div className="text-center py-8 text-gray-400">
                   <p className="text-sm">No hay tareas</p>
@@ -182,17 +182,14 @@ export const Kanban = () => {
         ))}
       </div>
 
-      {/* Instructions */}
       <Card>
         <CardContent className="p-4">
           <p className="text-sm text-gray-600">
-            💡 <strong>Tip:</strong> Arrastra las tarjetas entre columnas para cambiar su estado. 
-            Haz clic en una tarea para editarla o ver más detalles.
+            💡 <strong>Tip:</strong> Arrastra las tarjetas entre columnas para cambiar su estado. Haz clic en una tarea para editarla o ver más detalles.
           </p>
         </CardContent>
       </Card>
 
-      {/* Task Modal */}
       <TaskModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

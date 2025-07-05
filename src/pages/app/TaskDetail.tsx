@@ -4,6 +4,8 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '../../stores/authStore';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 const API_BASE_URL = import.meta.env.VITE_REACT_APP_URL;
 
@@ -42,6 +44,9 @@ export const TaskDetail: React.FC = () => {
           <p>Description: {task?.description}</p>
           <p>Status: {task?.status}</p>
           <p>Priority: {task?.priority}</p>
+          <Link to={`/tasks/${id}/edit`}>
+            <Button>Edit Task</Button>
+          </Link>
         </CardContent>
       </Card>
     </div>

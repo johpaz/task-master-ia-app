@@ -18,13 +18,25 @@ const months = [
 
 const weekDays = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
+import { useQuery } from '@tanstack/react-query';
+// ...
 export const Calendar = () => {
-  const { tasks, updateTask } = useTaskStore();
-  const { user } = useAuthStore();
+  const { user, token } = useAuthStore();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const { toast } = useToast();
+
+  const { data: tasksData, isLoading, error, refetch } = useQuery({
+    queryKey: ['allTasks', token],
+    queryFn: () => taskService.getTasks(token),
+    enabled: !!token,
+  });
+
+  const tasks = tasksData?.data || [];
+
+  const { updateTask } = useTaskStore();
+
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();

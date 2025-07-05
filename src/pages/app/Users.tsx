@@ -61,16 +61,19 @@ export const Users = () => {
     loadUsers();
   }, [loadUsers]);
 
-  const filteredUsers = users && users.filter(user => {
-    const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole = !selectedRole || user.role === selectedRole;
-    // Para el filtro de estado, asumimos que los usuarios tienen un campo status
-    // Si no lo tienen en la respuesta de la API, puedes ajustar esto
-    const matchesStatus = !selectedStatus || true; // Ajustar según la estructura de tu API
+ const filteredUsers = Array.isArray(users)
+  ? users
+      .filter(user => user && typeof user.name === 'string' && typeof user.email === 'string')
+      .filter(user => {
+        const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                              user.email.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesRole = !selectedRole || user.role === selectedRole;
+        const matchesStatus = !selectedStatus || true;
 
-    return matchesSearch && matchesRole && matchesStatus;
-  });
+        return matchesSearch && matchesRole && matchesStatus;
+      })
+  : [];
+
 
   const handleCreateUser = () => {
     setEditingUser(null);
@@ -201,7 +204,7 @@ export const Users = () => {
               <div>
                 <p className="text-sm font-medium text-gray-600">Administradores</p>
                 <p className="text-3xl font-bold text-purple-600">
-                  {users.filter(u => u.role === 'admin').length}
+                  {users && users.filter(u => u.role === 'admin').length}
                 </p>
               </div>
               <Shield className="h-8 w-8 text-purple-600" />

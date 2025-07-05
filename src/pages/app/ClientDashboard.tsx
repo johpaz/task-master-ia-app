@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Plus, CheckCircle, Clock, ListTodo } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,10 +10,12 @@ import { dashboardService } from '../../services/dashboardService';
 import { taskService } from '../../services/taskService';
 import { useTaskModalStore } from '../../stores/taskModalStore';
 import { Task } from '../../types';
+import { TaskModal } from '@/components/tasks/TaskModal';
 
 export const ClientDashboard: React.FC = () => {
-  const { openModal } = useTaskModalStore();
+  const { isModalOpen, openModal, closeModal } = useTaskModalStore();
   const { token } = useAuthStore();
+  const queryClient = useQueryClient();
 
   // Consulta para las estadísticas
   const { data: statsData, isLoading: isLoadingStats, error: statsError } = useQuery({
@@ -28,6 +30,13 @@ export const ClientDashboard: React.FC = () => {
     queryFn: () => taskService.getMyTasks(token),
     enabled: !!token,
   });
+
+  const handleSaveTask = async (data: any) => {
+    await taskService.createTask(data, token);
+    queryClient.invalidateQueries({ queryKey: ['myTasks'] });
+    queryClient.invalidateQueries({ queryKey: ['clientDashboardStats'] });
+    closeModal();
+  };
 
   if (statsError || tasksError) return <div>Error al cargar el dashboard.</div>;
 
@@ -123,6 +132,12 @@ export const ClientDashboard: React.FC = () => {
           </Table>
         </CardContent>
       </Card>
+
+      <TaskModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onSave={handleSaveTask}
+      />
     </div>
   );
 };

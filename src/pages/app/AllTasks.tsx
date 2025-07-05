@@ -1,8 +1,8 @@
 
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
 import { Plus, Search, Filter, Edit, Trash2, CheckSquare as CheckSquareIcon } from 'lucide-react';
-import { useTaskStore } from '../../stores/taskStore';
 import { useAuthStore } from '../../stores/authStore';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
@@ -39,8 +39,7 @@ const typeLabels = {
   capacitacion: 'Capacitación'
 };
 
-export const Tasks = () => {
-  // No usar más useTaskStore para la lista principal
+export const AllTasks = () => {
   const { user, token } = useAuthStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
@@ -50,42 +49,21 @@ export const Tasks = () => {
   const { toast } = useToast();
 
   const { data: tasksData, isLoading, error, refetch } = useQuery({
-    queryKey: ['tasks', location.pathname],
-    queryFn: () => {
-      if (location.pathname === '/all-tasks') {
-        return taskService.getTasks(token);
-      }
-      return taskService.getMyTasks(token);
-    },
+    queryKey: ['allTasks', token],
+    queryFn: () => taskService.getTasks(token),
     enabled: !!token,
   });
 
-  // Los datos vienen directamente de la consulta
-  const allTasks = tasksData?.tasks || [];
+  const allTasks = tasksData?.data || [];
   
-  
-  // Filter tasks based on user role and search criteria
-const filteredTasks = allTasks.filter(task => {
-  // Filtro por rol
- if (user?.role === 'client' && task.assignedBy !== user.id) {
-  return false;
-}
-if (user?.role === 'collaborator' && task.assignedTo !== user.id) {
-  return false;
-}
-
-
-  // Filtro por búsqueda
-  const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  const filteredTasks = allTasks.filter(task => {
+    const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                         task.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = !selectedStatus || task.status === selectedStatus;
+    const matchesType = !selectedType || task.type === selectedType;
 
-  // Filtros por estado y tipo
-  const matchesStatus = !selectedStatus || task.status === selectedStatus;
-  const matchesType = !selectedType || task.type === selectedType;
-
-  return matchesSearch && matchesStatus && matchesType;
-});
-
+    return matchesSearch && matchesStatus && matchesType;
+  });
 
   const handleCreateTask = () => {
     setSelectedTask(null);
@@ -102,7 +80,7 @@ if (user?.role === 'collaborator' && task.assignedTo !== user.id) {
       try {
         await taskService.deleteTask(taskId);
         toast({ title: "Tarea eliminada" });
-        refetch(); // Recargar la lista de tareas
+        refetch();
       } catch (error) {
         toast({ title: "Error al eliminar la tarea", variant: "destructive" });
       }
@@ -119,7 +97,7 @@ if (user?.role === 'collaborator' && task.assignedTo !== user.id) {
         toast({ title: "Tarea creada" });
       }
       setIsModalOpen(false);
-      refetch(); // Recargar la lista de tareas
+      refetch();
     } catch (error) {
       toast({ title: "Error al guardar la tarea", variant: "destructive" });
     }
@@ -149,19 +127,15 @@ if (user?.role === 'collaborator' && task.assignedTo !== user.id) {
   const workingHoursPerDay = 5;
   const estimatedDays = Math.ceil(estimatedHours / workingHoursPerDay);
   
-
   const result = new Date(start);
-  
   
   let addedDays = 0;
 
   while (addedDays < estimatedDays) {
     result.setDate(result.getDate() + 1);
     const dayOfWeek = result.getDay();
-   
     
     if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-      // Solo contar días hábiles (lunes a viernes)
       addedDays++;
     }
   }
@@ -171,11 +145,10 @@ if (user?.role === 'collaborator' && task.assignedTo !== user.id) {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Gestión de Tareas</h1>
-          <p className="text-gray-600">Administra y da seguimiento a todas las tareas</p>
+          <h1 className="text-2xl font-bold text-gray-900">Todas las Tareas</h1>
+          <p className="text-gray-600">Administra y da seguimiento a todas las tareas del sistema</p>
         </div>
         {(user?.role === 'admin' || user?.role === 'manager' || user?.role === 'client') && (
           <Button onClick={handleCreateTask} className="flex items-center gap-2">
@@ -185,7 +158,6 @@ if (user?.role === 'collaborator' && task.assignedTo !== user.id) {
         )}
       </div>
 
-      {/* Filters */}
       <Card>
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -234,7 +206,6 @@ if (user?.role === 'collaborator' && task.assignedTo !== user.id) {
         </CardContent>
       </Card>
 
-      {/* Tasks Table */}
       <Card>
         <CardContent>
           <Table>
@@ -263,13 +234,14 @@ if (user?.role === 'collaborator' && task.assignedTo !== user.id) {
                   <TableCell>
                     <div className="flex items-center gap-2">
                       {canEditTask(task) && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleEditTask(task)}
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Button>
+                        <Link to={`/tasks/${task.id}/edit`}>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        </Link>
                       )}
                       {canDeleteTask(task) && (
                         <Button
@@ -290,7 +262,6 @@ if (user?.role === 'collaborator' && task.assignedTo !== user.id) {
         </CardContent>
       </Card>
 
-      {/* Task Modal */}
       <TaskModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
