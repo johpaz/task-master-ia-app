@@ -26,6 +26,12 @@ const navigationItems = [
     roles: ['admin', 'manager', 'collaborator', 'client']
   },
   {
+    name: 'Todas las Tareas',
+    href: '/all-tasks',
+    icon: CheckSquare,
+    roles: ['admin']
+  },
+  {
     name: 'Kanban',
     href: '/kanban',
     icon: LayoutDashboard,

@@ -1,20 +1,21 @@
 import { BarChart, LineChart, PieChart, TrendingUp, Download, Calendar } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { useTaskStore } from '../../stores/taskStore';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Metrics } from '@/types';
-
+import { useQuery } from '@tanstack/react-query';
+import { useAuthStore } from '../../stores/authStore';
+import { taskService } from '../../services/taskService';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+// ...
 export const Reports = () => {
-  const { fetchTasks } = useTaskStore();
-  const tasks = useTaskStore(state => state.tasks);
+  const { token } = useAuthStore();
 
-  useEffect(() => {
-    const loadTasksAndMetrics = async () => {
-      await fetchTasks();
-    };
-    loadTasksAndMetrics();
-  }, [fetchTasks]);
+  const { data: tasksData, isLoading, error } = useQuery({
+    queryKey: ['allTasks', token],
+    queryFn: () => taskService.getTasks(token),
+    enabled: !!token,
+  });
+
+  const tasks = tasksData?.tasks || [];
+
 
   
 

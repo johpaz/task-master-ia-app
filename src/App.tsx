@@ -28,7 +28,9 @@ import { ManagerDashboard } from "./pages/app/ManagerDashboard";
 import { CollaboratorDashboard } from "./pages/app/CollaboratorDashboard";
 import { ClientDashboard } from "./pages/app/ClientDashboard";
 import { Tasks } from "./pages/app/Tasks";
+import { AllTasks } from "./pages/app/AllTasks";
 import { TaskDetail } from "./pages/app/TaskDetail";
+import { EditTask } from "./pages/app/EditTask";
 import { Kanban } from "./pages/app/Kanban";
 import { Calendar } from "./pages/app/Calendar";
 import { Reports } from "./pages/app/Reports";
@@ -139,10 +141,26 @@ const App = () => {
               </ProtectedRoute>
             } />
 
+            <Route path="/all-tasks" element={
+              <ProtectedRoute requiredRoles={['admin']}>
+                <AppLayout>
+                  <AllTasks />
+                </AppLayout>
+              </ProtectedRoute>
+            } />
+
             <Route path="/tasks/:id" element={
               <ProtectedRoute>
                 <AppLayout>
                   <TaskDetail />
+                </AppLayout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/tasks/:id/edit" element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <EditTask />
                 </AppLayout>
               </ProtectedRoute>
             } />

@@ -54,7 +54,7 @@ export const TaskModal = ({ isOpen, onClose, task, onSave }: TaskModalProps) => 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-whiteflex items-center justify-center z-50 p-4">
       <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>
@@ -88,19 +88,19 @@ export const TaskModal = ({ isOpen, onClose, task, onSave }: TaskModalProps) => 
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 placeholder="Describe los detalles de la tarea..."
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border bg-white border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block  text-sm font-medium text-gray-700 mb-2">
                 Tipo de Tarea
               </label>
               <select
                 value={formData.type}
                 onChange={(e) => setFormData({ ...formData, type: e.target.value as TaskType})}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full bg-white px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="desarrollo">Desarrollo</option>
                 <option value="agente">Agente IA</option>

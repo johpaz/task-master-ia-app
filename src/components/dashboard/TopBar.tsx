@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuthStore } from '../../stores/authStore';
 import { useNotificationStore } from '../../stores/notificationStore';
-import { Badge } from '../ui/badge';
+
 
 export const TopBar = () => {
   const { user } = useAuthStore();
