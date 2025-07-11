@@ -240,15 +240,32 @@ export const UserModal = ({ isOpen, onClose, onSave, user, isLoading }: UserModa
           <div>
             <Label htmlFor="phone">Teléfono (opcional)</Label>
             <div className="flex">
-              <select
+             <select
                 name="phoneCode"
                 value={formData.phoneCode}
                 onChange={handleChange}
                 className="w-1/4 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="+57">+57 CO</option>
-                <option value="+1">+1 US</option>
-                <option value="+52">+52 MX</option>
+                
+                <option value="+54">+54 🇦🇷 AR</option> 
+                <option value="+591">+591 🇧🇴 BO</option> 
+                <option value="+55">+55 🇧🇷 BR</option> 
+                <option value="+56">+56 🇨🇱 CL</option> 
+                <option value="+57">+57 🇨🇴 CO</option> 
+                <option value="+506">+506 🇨🇷 CR</option> 
+                <option value="+53">+53 🇨🇺 CU</option> 
+                <option value="+593">+593 🇪🇨 EC</option> 
+                <option value="+503">+503 🇸🇻 SV</option> 
+                <option value="+502">+502 🇬🇹 GT</option> 
+                <option value="+504">+504 🇭🇳 HN</option> 
+                <option value="+52">+52 🇲🇽 MX</option> 
+                <option value="+505">+505 🇳🇮 NI</option> 
+                <option value="+507">+507 🇵🇦 PA</option> 
+                <option value="+595">+595 🇵🇾 PY</option> 
+                <option value="+51">+51 🇵🇪 PE</option> 
+                <option value="+1">+1 🇩🇴 DO</option> 
+                <option value="+598">+598 🇺🇾 UY</option>
+                <option value="+58">+58 🇻🇪 VE</option> 
               </select>
               <Input
                 id="phone"
