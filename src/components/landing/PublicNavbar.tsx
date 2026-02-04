@@ -59,8 +59,8 @@ export const PublicNavbar = () => {
       animate={{ y: 0 }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       className={`fixed w-full z-50 transition-all duration-700 ${scrolled
-        ? 'h-16 bg-slate-950/80 backdrop-blur-xl border-b border-white/[0.05] shadow-[0_8px_32px_rgba(0,0,0,0.4)]'
-        : 'h-20 bg-transparent'
+        ? 'h-24 bg-slate-950/90 backdrop-blur-2xl border-b border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]'
+        : 'h-40 bg-transparent'
         }`}
     >
       <div className="max-w-7xl mx-auto px-6 h-full flex items-center">

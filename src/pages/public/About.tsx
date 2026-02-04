@@ -75,7 +75,7 @@ export const About = () => {
   return (
     <div className="min-h-screen bg-slate-950 text-white selection:bg-blue-500/30">
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden">
+      <section className="relative pt-52 pb-20 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(59,130,246,0.1),transparent_50%)]"></div>
           <div className="absolute top-40 right-10 w-[400px] h-[400px] bg-indigo-500/5 rounded-full blur-[100px]"></div>

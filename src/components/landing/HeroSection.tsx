@@ -5,7 +5,7 @@ import BlurText from '../ui/reactbits/BlurText';
 
 export const HeroSection = () => {
   return (
-    <section className="relative min-h-screen bg-slate-950 overflow-hidden pt-32 pb-24">
+    <section className="relative min-h-screen bg-slate-950 overflow-hidden pt-52 pb-24">
       {/* Background Effects */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,#1e293b_1px,transparent_1px)] bg-[size:3rem_3rem] opacity-[0.15]"></div>
