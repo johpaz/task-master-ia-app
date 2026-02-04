@@ -108,16 +108,26 @@ export const Sidebar = () => {
       {/* Logo Section */}
       <div className="p-8 mb-4">
         <div className="flex flex-col space-y-6">
+
           <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-500/20 border border-white/10"
+            whileHover={{ scale: 1.1, rotate: -2 }}
+            className="w-16 h-16 relative flex items-center justify-center"
           >
             <img
               src="/logoTaks.png"
               alt="Logo"
-              className="w-10 h-10 object-contain"
+              className="w-full h-full object-contain drop-shadow-[0_0_20px_rgba(37,99,235,0.3)]"
+            />
+            {/* Ambient glow behind standalone logo */}
+            <motion.div
+              animate={{
+                opacity: [0.1, 0.3, 0.1]
+              }}
+              transition={{ duration: 5, repeat: Infinity }}
+              className="absolute inset-0 bg-blue-500/20 blur-2xl -z-10"
             />
           </motion.div>
+
 
           <div className="space-y-1">
             <h1 className="text-2xl font-black text-white tracking-tighter">

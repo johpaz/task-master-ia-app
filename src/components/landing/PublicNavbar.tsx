@@ -4,6 +4,12 @@ import { Menu, X, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '../ui/button';
 
+interface NavLinkItem {
+  name: string;
+  path?: string;
+  onClick?: (e: React.MouseEvent) => void;
+}
+
 export const PublicNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -36,9 +42,12 @@ export const PublicNavbar = () => {
     setIsMenuOpen(false);
   };
 
-  const navLinks = [
+  const leftLinks: NavLinkItem[] = [
     { name: 'Inicio', path: '/' },
     { name: 'Características', onClick: handleFeaturesClick },
+  ];
+
+  const rightLinks: NavLinkItem[] = [
     { name: 'FAQ', path: '/faq' },
     { name: 'Nosotros', path: '/about' },
     { name: 'Contacto', path: '/contact' },
@@ -54,61 +63,60 @@ export const PublicNavbar = () => {
         : 'h-20 bg-transparent'
         }`}
     >
-      <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
-        {/* Logo - Left */}
-        <Link to="/" className="relative group flex items-center gap-3">
-          <motion.div
-            whileHover={{ rotate: 5, scale: 1.05 }}
-            className={`relative flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl overflow-hidden shadow-2xl transition-all duration-500 ${scrolled ? 'w-10 h-10' : 'w-12 h-12'
-              }`}
-          >
-            <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <img src="/logoTaks.png" alt="TM" className="w-8 h-8 object-contain" />
-            <motion.div
-              animate={{ opacity: [0.2, 0.5, 0.2] }}
-              transition={{ duration: 3, repeat: Infinity }}
-              className="absolute inset-0 bg-blue-400 blur-xl"
-            />
-          </motion.div>
-          <span className={`font-black tracking-tight text-white transition-all duration-500 ${scrolled ? 'text-xl' : 'text-2xl'
-            }`}>
-            Task<span className="text-blue-500">Master</span>
-          </span>
-        </Link>
-
-        {/* Desktop Nav - Center */}
-        <div className="hidden lg:flex items-center gap-1">
-          {navLinks.map((link) => (
-            link.path ? (
-              <Link
-                key={link.name}
-                to={link.path}
-                className="relative px-4 py-2 text-sm font-bold text-slate-400 hover:text-white transition-colors group"
-              >
-                {link.name}
-                {location.pathname === link.path && (
-                  <motion.div
-                    layoutId="nav-underline"
-                    className="absolute bottom-0 left-4 right-4 h-0.5 bg-blue-500 rounded-full"
-                  />
-                )}
-                <div className="absolute bottom-0 left-4 right-4 h-0.5 bg-white/0 group-hover:bg-white/10 rounded-full transition-all" />
-              </Link>
-            ) : (
-              <button
-                key={link.name}
-                onClick={link.onClick}
-                className="px-4 py-2 text-sm font-bold text-slate-400 hover:text-white transition-colors relative group"
-              >
-                {link.name}
-                <div className="absolute bottom-0 left-4 right-4 h-0.5 bg-white/0 group-hover:bg-white/10 rounded-full transition-all" />
-              </button>
-            )
+      <div className="max-w-7xl mx-auto px-6 h-full flex items-center">
+        {/* Desktop Left Menu */}
+        <div className="hidden lg:flex flex-1 items-center justify-start gap-1">
+          {leftLinks.map((link) => (
+            <NavLink key={link.name} link={link} scrolled={scrolled} />
           ))}
         </div>
 
-        {/* Desktop Actions - Right */}
-        <div className="hidden lg:flex items-center gap-4">
+        {/* Logo - Centered */}
+        <div className="flex-1 lg:flex-none flex justify-start lg:justify-center">
+          <Link to="/" className="relative group flex flex-col items-center justify-center pt-2">
+            <motion.div
+              whileHover={{ scale: 1.2, rotate: 5 }}
+              transition={{ type: "spring", stiffness: 300, damping: 15 }}
+              className={`relative flex items-center justify-center transition-all duration-700 ${scrolled ? 'w-16 h-16' : 'w-32 h-32'
+                }`}
+            >
+              <img
+                src="/logoTaks.png"
+                alt="TM"
+                className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_30px_rgba(37,99,235,0.4)]"
+              />
+
+              {/* Subtle ambient glow effect behind the clean logo */}
+              <motion.div
+                animate={{
+                  scale: [1, 1.3, 1],
+                  opacity: [0.2, 0.4, 0.2]
+                }}
+                transition={{ duration: 4, repeat: Infinity }}
+                className="absolute inset-0 bg-blue-500/20 blur-[50px] -z-10"
+              />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: scrolled ? 0 : 1, y: scrolled ? 10 : 0 }}
+              className="mt-4 whitespace-nowrap"
+            >
+              <span className="text-[12px] font-black tracking-[0.5em] text-white/90 uppercase group-hover:text-blue-400 transition-colors">
+                Task<span className="text-blue-500">Master</span>
+              </span>
+            </motion.div>
+          </Link>
+        </div>
+
+        {/* Desktop Right Menu + Actions */}
+        <div className="hidden lg:flex flex-1 items-center justify-end gap-1">
+          {rightLinks.map((link) => (
+            <NavLink key={link.name} link={link} scrolled={scrolled} />
+          ))}
+
+          <div className="h-4 w-[1px] bg-white/10 mx-4" />
+
           <Link to="/login" className="text-sm font-bold text-slate-400 hover:text-white transition-colors px-4">
             Login
           </Link>
@@ -123,12 +131,14 @@ export const PublicNavbar = () => {
         </div>
 
         {/* Mobile Toggle */}
-        <button
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="lg:hidden p-2 text-slate-400 hover:text-white transition-colors"
-        >
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        <div className="lg:hidden flex flex-1 justify-end">
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="p-2 text-slate-400 hover:text-white transition-colors"
+          >
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -141,7 +151,7 @@ export const PublicNavbar = () => {
             className="lg:hidden bg-slate-950 border-b border-white/[0.05] overflow-hidden"
           >
             <div className="p-6 space-y-4">
-              {navLinks.map((link) => (
+              {[...leftLinks, ...rightLinks].map((link) => (
                 link.path ? (
                   <Link
                     key={link.name}
@@ -154,7 +164,10 @@ export const PublicNavbar = () => {
                 ) : (
                   <button
                     key={link.name}
-                    onClick={link.onClick}
+                    onClick={(e) => {
+                      if (link.onClick) link.onClick(e);
+                      setIsMenuOpen(false);
+                    }}
                     className="block text-2xl font-black text-white hover:text-blue-500 transition-colors w-full text-left"
                   >
                     {link.name}
@@ -180,5 +193,37 @@ export const PublicNavbar = () => {
         )}
       </AnimatePresence>
     </motion.nav>
+  );
+};
+
+const NavLink = ({ link, scrolled }: { link: NavLinkItem, scrolled: boolean }) => {
+  const location = useLocation();
+
+  if (link.path) {
+    return (
+      <Link
+        to={link.path}
+        className="relative px-4 py-2 text-sm font-bold text-slate-400 hover:text-white transition-colors group"
+      >
+        {link.name}
+        {location.pathname === link.path && (
+          <motion.div
+            layoutId="nav-underline"
+            className="absolute bottom-0 left-4 right-4 h-0.5 bg-blue-500 rounded-full"
+          />
+        )}
+        <div className="absolute bottom-0 left-4 right-4 h-0.5 bg-white/0 group-hover:bg-white/10 rounded-full transition-all" />
+      </Link>
+    );
+  }
+
+  return (
+    <button
+      onClick={link.onClick}
+      className="px-4 py-2 text-sm font-bold text-slate-400 hover:text-white transition-colors relative group"
+    >
+      {link.name}
+      <div className="absolute bottom-0 left-4 right-4 h-0.5 bg-white/0 group-hover:bg-white/10 rounded-full transition-all" />
+    </button>
   );
 };
