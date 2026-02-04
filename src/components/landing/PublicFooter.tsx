@@ -8,15 +8,15 @@ export const PublicFooter = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-16">
           {/* Brand */}
           <div className="col-span-1 md:col-span-2 space-y-8">
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl">
+            <a href="https://taskmasterapp.cloud" target="_blank" rel="noreferrer" className="flex items-center space-x-4 group">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-500">
                 <span className="text-white font-black text-2xl">TM</span>
               </div>
-              <span className="text-3xl font-black tracking-tighter text-white">TaskMaster</span>
-            </div>
-            <p className="text-slate-400 max-w-md leading-relaxed font-medium text-lg">
+              <span className="text-3xl font-black tracking-tighter text-white group-hover:text-blue-400 transition-colors">TaskMaster</span>
+            </a>
+            <p className="text-slate-400 max-w-md leading-relaxed font-medium text-base">
               La infraestructura de ejecución definitiva para equipos globales.
-              Ingeniería de alto rendimiento diseñada para la cima de la productividad.
+              Gestión de tareas, automatización con IA y control de planes en una sola consola.
             </p>
             <div className="flex space-x-6">
               {[
