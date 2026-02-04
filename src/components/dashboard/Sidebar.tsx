@@ -1,11 +1,11 @@
 
 import { Link, useLocation } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  CheckSquare, 
-  Calendar, 
-  BarChart, 
-  Users, 
+import {
+  LayoutDashboard,
+  CheckSquare,
+  Calendar,
+  BarChart,
+  Users,
   Settings,
   LogOut
 } from 'lucide-react';
@@ -90,7 +90,7 @@ export const Sidebar = () => {
       return { ...item, href: dashboardPath };
     }
     return item;
-  }).filter(item => 
+  }).filter(item =>
     user && item.roles.includes(user.role)
   );
 
@@ -99,16 +99,16 @@ export const Sidebar = () => {
       {/* Logo */}
       <div className="p-6 border-b border-sidebar-border">
         <div className="flex items-center space-x-3">
-         
-           <img
-              src="/logoDash.png"
-              alt="Logo"
-              className="w-16 h-16 rounded-full"
-            />
-         
+
+          <img
+            src="/logoDash.png"
+            alt="Logo"
+            className="w-16 h-16 rounded-full"
+          />
+
           <div>
-            <h1 className="text-xl font-bold text-sidebar-foreground">TaskMaster IA</h1>
-            <p className="text-sm text-muted-foreground">Tu Profe de IA</p>
+            <h1 className="text-xl font-bold text-sidebar-foreground">TaskMaster</h1>
+            <p className="text-sm text-muted-foreground">App Console</p>
           </div>
         </div>
       </div>
@@ -121,11 +121,10 @@ export const Sidebar = () => {
             <Link
               key={item.name}
               to={item.href}
-              className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                isActive
+              className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive
                   ? 'bg-primary text-primary-foreground'
                   : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
-              }`}
+                }`}
             >
               <item.icon className="mr-3 h-5 w-5" />
               {item.name}

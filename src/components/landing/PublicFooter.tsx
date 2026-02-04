@@ -12,7 +12,7 @@ export const PublicFooter = () => {
               <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl">
                 <span className="text-white font-black text-2xl">TM</span>
               </div>
-              <span className="text-3xl font-black tracking-tighter text-white">Task Manager</span>
+              <span className="text-3xl font-black tracking-tighter text-white">TaskMaster</span>
             </div>
             <p className="text-slate-400 max-w-md leading-relaxed font-medium text-lg">
               La infraestructura de ejecución definitiva para equipos globales.
@@ -52,7 +52,7 @@ export const PublicFooter = () => {
                 <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-all duration-500 shadow-xl">
                   <Mail size={16} />
                 </div>
-                <span className="text-slate-400 group-hover:text-slate-200 transition-colors font-semibold text-sm">ops@taskmanager.io</span>
+                <span className="text-slate-400 group-hover:text-slate-200 transition-colors font-semibold text-sm">ops@taskmasterapp.io</span>
               </li>
               <li className="flex items-center space-x-4 group cursor-pointer">
                 <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition-all duration-500 shadow-xl">
@@ -66,7 +66,7 @@ export const PublicFooter = () => {
 
         <div className="border-t border-white/[0.03] mt-20 pt-10 flex flex-col md:flex-row justify-between items-center gap-8">
           <p className="text-slate-500 text-sm font-bold tracking-tight">
-            © 2026 Task Manager. Powered by <span className="text-blue-500/80">Quantum Architecture</span>.
+            © 2026 TaskMaster. Powered by <span className="text-blue-500/80">Quantum Architecture</span>.
           </p>
           <div className="flex space-x-10">
             <a href="#" className="text-slate-500 hover:text-slate-300 text-sm font-bold transition-colors tracking-tight">Privacidad</a>

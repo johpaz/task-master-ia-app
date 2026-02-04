@@ -117,7 +117,7 @@ export const Login = () => {
           <div className="flex justify-center mb-4">
             <img
               src="logoTaks.png"
-              alt="Logo TaskMaster IA"
+              alt="Logo TaskMaster"
               className="h-16 w-16"
             />
           </div>
@@ -125,7 +125,7 @@ export const Login = () => {
             Iniciar Sesión
           </h2>
           <p className="mt-2 text-muted-foreground">
-            Accede a tu cuenta de TaskMaster IA
+            Accede a tu cuenta de TaskMaster
           </p>
         </div>
 
@@ -145,7 +145,7 @@ export const Login = () => {
                 required
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="tu@tuprofedeai.com"
+                placeholder="tu@taskmasterapp.cloud"
                 className="mt-1"
                 disabled={isLocked}
               />
@@ -227,7 +227,7 @@ export const Login = () => {
             <p className="text-sm text-muted-foreground">
               ¿Necesitas una cuenta?{' '}
               <a
-                href="mailto:hola@tuprofedeai.com"
+                href="mailto:hola@taskmasterapp.cloud"
                 className="text-primary hover:text-primary/80"
                 aria-label="Contactar al soporte"
               >

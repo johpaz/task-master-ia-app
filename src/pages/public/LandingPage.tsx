@@ -4,7 +4,7 @@ import SplashCursor from '../../components/ui/reactbits/SplashCursor';
 
 export const LandingPage = () => {
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-900 relative">
+    <div className="min-h-screen bg-slate-950 relative overflow-hidden">
       <SplashCursor />
       <HeroSection />
       <FeaturesSection />

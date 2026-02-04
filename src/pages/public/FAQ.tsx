@@ -2,7 +2,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '..
 
 const faqs = [
   {
-    question: "¿Cómo puedo crear una nueva tarea en TaskMaster IA?",
+    question: "¿Cómo puedo crear una nueva tarea en TaskMaster?",
     answer: "Para crear una nueva tarea, haz clic en el botón '+' en tu dashboard o ve a la sección 'Tareas' y selecciona 'Nueva Tarea'. Podrás especificar el tipo (desarrollo, agente IA, soporte, PQR, consultoría), asignar responsables, establecer fechas y prioridades."
   },
   {
@@ -19,11 +19,11 @@ const faqs = [
   },
   {
     question: "¿Puedo recibir notificaciones sobre mis tareas?",
-    answer: "Sí, TaskMaster IA envía notificaciones por email cuando: te asignan una nueva tarea, cambia el estado de tus tareas, se acerca una fecha límite, alguien comenta en tus tareas, o hay actualizaciones importantes en proyectos que sigues."
+    answer: "Sí, TaskMaster envía notificaciones por email cuando: te asignan una nueva tarea, cambia el estado de tus tareas, se acerca una fecha límite, alguien comenta en tus tareas, o hay actualizaciones importantes en proyectos que sigues."
   },
   {
     question: "¿Qué tipos de proyectos maneja la plataforma?",
-    answer: "TaskMaster IA está especializado en: Proyectos de desarrollo web y móvil, Creación y entrenamiento de agentes de IA, Soporte técnico y resolución de incidencias, Gestión de PQR (Peticiones, Quejas, Reclamos), Consultorías en inteligencia artificial, y Capacitaciones tecnológicas."
+    answer: "TaskMaster está especializado en: Proyectos de desarrollo web y móvil, Creación y entrenamiento de agentes de IA, Soporte técnico y resolución de incidencias, Gestión de PQR (Peticiones, Quejas, Reclamos), Consultorías en inteligencia artificial, y Capacitaciones tecnológicas."
   },
   {
     question: "¿Cómo funcionan los roles y permisos?",
@@ -35,17 +35,17 @@ const faqs = [
   },
   {
     question: "¿La plataforma se integra con otras herramientas?",
-    answer: "TaskMaster IA se integra con: Google Calendar y Outlook para sincronización de fechas, Slack y Microsoft Teams para notificaciones, GitHub y GitLab para proyectos de desarrollo, y Zapier para conectar con cientos de aplicaciones adicionales."
+    answer: "TaskMaster se integra con: Google Calendar y Outlook para sincronización de fechas, Slack y Microsoft Teams para notificaciones, GitHub y GitLab para proyectos de desarrollo, y Zapier para conectar con cientos de aplicaciones adicionales."
   },
   {
     question: "¿Qué pasa si necesito soporte técnico?",
-    answer: "Ofrecemos soporte completo: Chat en vivo durante horario laboral, Email de soporte (hola@tuprofedeai.com), Base de conocimientos con tutoriales, y para clientes premium, soporte telefónico y sesiones de entrenamiento personalizado."
+    answer: "Ofrecemos soporte completo: Chat en vivo durante horario laboral, Email de soporte (hola@taskmasterapp.cloud), Base de conocimientos con tutoriales, y para clientes premium, soporte telefónico y sesiones de entrenamiento personalizado."
   }
 ];
 
 export const FAQ = () => {
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-900 py-12">
+    <div className="min-h-screen py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
@@ -53,7 +53,7 @@ export const FAQ = () => {
             Preguntas Frecuentes
           </h1>
           <p className="text-xl text-slate-700 dark:text-gray-300">
-            Encuentra respuestas rápidas a las preguntas más comunes sobre TaskMaster IA
+            Encuentra respuestas rápidas a las preguntas más comunes sobre TaskMaster
           </p>
         </div>
 

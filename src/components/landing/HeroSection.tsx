@@ -27,7 +27,7 @@ export const HeroSection = () => {
             <div className="space-y-8">
               <div className="text-7xl lg:text-[100px] font-black tracking-tight leading-[0.9] select-none">
                 <BlurText
-                  text="Task Manager"
+                  text="TaskMaster"
                   className="bg-gradient-to-b from-white via-slate-200 to-slate-400 bg-clip-text text-transparent"
                   delay={100}
                 />
@@ -96,7 +96,7 @@ export const HeroSection = () => {
                     <span className="text-white font-black text-xl">TM</span>
                   </div>
                   <div>
-                    <span className="text-white font-bold text-xl block">Task Manager</span>
+                    <span className="text-white font-bold text-xl block">TaskMaster</span>
                     <div className="flex items-center space-x-2">
                       <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                       <span className="text-slate-400 text-xs font-medium uppercase tracking-tighter">API Online</span>
