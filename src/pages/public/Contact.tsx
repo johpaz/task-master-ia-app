@@ -52,8 +52,8 @@ export const Contact = () => {
                 </div>
                 <div>
                   <h3 className="font-semibold text-slate-900 dark:text-white">Email</h3>
-                  <p className="text-slate-700 dark:text-gray-300">hola@tuprofedeia.com.co</p>
-                  <p className="text-slate-700 dark:text-gray-300">john.paez@tuprofedeia.com</p>
+                  <p className="text-slate-700 dark:text-gray-300">hola@taskmasterapp.cloud</p>
+                  <p className="text-slate-700 dark:text-gray-300">ops@taskmasterapp.cloud</p>
                 </div>
               </div>
 
@@ -131,7 +131,7 @@ export const Contact = () => {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    placeholder="tu@email.com"
+                    placeholder="tu@taskmasterapp.cloud"
                     className="border-slate-300 dark:border-slate-600"
                   />
                 </div>

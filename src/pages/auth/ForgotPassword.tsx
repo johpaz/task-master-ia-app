@@ -101,7 +101,7 @@ export const ForgotPassword = () => {
                                     required
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="tu@tuprofedeai.com"
+                                    placeholder="tu@taskmasterapp.cloud"
                                     className="mt-1"
                                 />
                             </div>

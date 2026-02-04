@@ -26,7 +26,7 @@ export const UserModal = ({ isOpen, onClose, onSave, user, isLoading }: UserModa
     phone: '',
     status: 'active' as 'active' | 'inactive'
   });
-  
+
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export const UserModal = ({ isOpen, onClose, onSave, user, isLoading }: UserModa
       // Extraer código y número de teléfono si existe
       let phoneCode = '+57';
       let phoneNumber = user.phone || '';
-      
+
       // Verificar si el teléfono ya tiene código
       if (user.phone) {
         const supportedCodes = ['+57', '+1', '+52'];
@@ -80,7 +80,7 @@ export const UserModal = ({ isOpen, onClose, onSave, user, isLoading }: UserModa
     if (!formData.name.trim()) {
       newErrors.name = 'El nombre es requerido';
     }
-    
+
     if (!formData.email.trim()) {
       newErrors.email = 'El email es requerido';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -101,7 +101,7 @@ export const UserModal = ({ isOpen, onClose, onSave, user, isLoading }: UserModa
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -139,7 +139,7 @@ export const UserModal = ({ isOpen, onClose, onSave, user, isLoading }: UserModa
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    
+
     // Limpiar error del campo cuando el usuario empiece a escribir
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
@@ -177,7 +177,7 @@ export const UserModal = ({ isOpen, onClose, onSave, user, isLoading }: UserModa
               type="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="usuario@tuprofedeai.com"
+              placeholder="usuario@taskmasterapp.cloud"
               className={errors.email ? 'border-red-500' : ''}
             />
             {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
@@ -233,39 +233,39 @@ export const UserModal = ({ isOpen, onClose, onSave, user, isLoading }: UserModa
               name="company"
               value={formData.company}
               onChange={handleChange}
-              placeholder="Ej. TuProfeDeIA, Acme Inc."
+              placeholder="Ej. TaskmasterApp, Acme Inc."
             />
           </div>
 
           <div>
             <Label htmlFor="phone">Teléfono (opcional)</Label>
             <div className="flex">
-             <select
+              <select
                 name="phoneCode"
                 value={formData.phoneCode}
                 onChange={handleChange}
                 className="w-1/4 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                
-                <option value="+54">+54 🇦🇷 AR</option> 
-                <option value="+591">+591 🇧🇴 BO</option> 
-                <option value="+55">+55 🇧🇷 BR</option> 
-                <option value="+56">+56 🇨🇱 CL</option> 
-                <option value="+57">+57 🇨🇴 CO</option> 
-                <option value="+506">+506 🇨🇷 CR</option> 
-                <option value="+53">+53 🇨🇺 CU</option> 
-                <option value="+593">+593 🇪🇨 EC</option> 
-                <option value="+503">+503 🇸🇻 SV</option> 
-                <option value="+502">+502 🇬🇹 GT</option> 
-                <option value="+504">+504 🇭🇳 HN</option> 
-                <option value="+52">+52 🇲🇽 MX</option> 
-                <option value="+505">+505 🇳🇮 NI</option> 
-                <option value="+507">+507 🇵🇦 PA</option> 
-                <option value="+595">+595 🇵🇾 PY</option> 
-                <option value="+51">+51 🇵🇪 PE</option> 
-                <option value="+1">+1 🇩🇴 DO</option> 
+
+                <option value="+54">+54 🇦🇷 AR</option>
+                <option value="+591">+591 🇧🇴 BO</option>
+                <option value="+55">+55 🇧🇷 BR</option>
+                <option value="+56">+56 🇨🇱 CL</option>
+                <option value="+57">+57 🇨🇴 CO</option>
+                <option value="+506">+506 🇨🇷 CR</option>
+                <option value="+53">+53 🇨🇺 CU</option>
+                <option value="+593">+593 🇪🇨 EC</option>
+                <option value="+503">+503 🇸🇻 SV</option>
+                <option value="+502">+502 🇬🇹 GT</option>
+                <option value="+504">+504 🇭🇳 HN</option>
+                <option value="+52">+52 🇲🇽 MX</option>
+                <option value="+505">+505 🇳🇮 NI</option>
+                <option value="+507">+507 🇵🇦 PA</option>
+                <option value="+595">+595 🇵🇾 PY</option>
+                <option value="+51">+51 🇵🇪 PE</option>
+                <option value="+1">+1 🇩🇴 DO</option>
                 <option value="+598">+598 🇺🇾 UY</option>
-                <option value="+58">+58 🇻🇪 VE</option> 
+                <option value="+58">+58 🇻🇪 VE</option>
               </select>
               <Input
                 id="phone"
@@ -278,7 +278,7 @@ export const UserModal = ({ isOpen, onClose, onSave, user, isLoading }: UserModa
               />
             </div>
           </div>
- 
+
           {user && (
             <div>
               <Label htmlFor="status">Estado</Label>

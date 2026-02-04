@@ -52,7 +52,7 @@ export const PublicFooter = () => {
                 <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-all duration-500 shadow-xl">
                   <Mail size={16} />
                 </div>
-                <span className="text-slate-400 group-hover:text-slate-200 transition-colors font-semibold text-sm">ops@taskmasterapp.io</span>
+                <span className="text-slate-400 group-hover:text-slate-200 transition-colors font-semibold text-sm">ops@taskmasterapp.cloud</span>
               </li>
               <li className="flex items-center space-x-4 group cursor-pointer">
                 <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition-all duration-500 shadow-xl">
