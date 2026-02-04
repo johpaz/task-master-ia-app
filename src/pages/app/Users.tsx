@@ -9,6 +9,8 @@ import { useToast } from '../../hooks/use-toast';
 import { User } from '../../types';
 import { userService, CreateUserRequest, UpdateUserRequest } from '../../services/userService';
 import { UserModal } from '../../components/users/UserModal';
+import { Avatar, AvatarImage, AvatarFallback } from '../../components/ui/avatar';
+import { UserCircle } from 'lucide-react';
 
 const roleColors = {
   admin: 'bg-purple-100 text-purple-800',
@@ -61,18 +63,18 @@ export const Users = () => {
     loadUsers();
   }, [loadUsers]);
 
- const filteredUsers = Array.isArray(users)
-  ? users
+  const filteredUsers = Array.isArray(users)
+    ? users
       .filter(user => user && typeof user.name === 'string' && typeof user.email === 'string')
       .filter(user => {
         const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                              user.email.toLowerCase().includes(searchTerm.toLowerCase());
+          user.email.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesRole = !selectedRole || user.role === selectedRole;
         const matchesStatus = !selectedStatus || true;
 
         return matchesSearch && matchesRole && matchesStatus;
       })
-  : [];
+    : [];
 
 
   const handleCreateUser = () => {
@@ -110,11 +112,11 @@ export const Users = () => {
   const handleSaveUser = async (userData: CreateUserRequest | UpdateUserRequest) => {
     try {
       setIsSubmitting(true);
-      
+
       if (editingUser) {
         // Actualizar usuario existente
         const updatedUser = await userService.updateUser(editingUser.id, userData as UpdateUserRequest);
-        setUsers(users.map(user => 
+        setUsers(users.map(user =>
           user.id === editingUser.id ? { ...user, ...updatedUser.data } : user
         ));
         toast({
@@ -130,7 +132,7 @@ export const Users = () => {
           description: "El nuevo usuario ha sido creado correctamente.",
         });
       }
-      
+
       setIsModalOpen(false);
       setEditingUser(null);
     } catch (error) {
@@ -240,7 +242,7 @@ export const Users = () => {
                 className="pl-10"
               />
             </div>
-            
+
             <select
               value={selectedRole}
               onChange={(e) => setSelectedRole(e.target.value)}
@@ -287,6 +289,7 @@ export const Users = () => {
               <table className="w-full">
                 <thead>
                   <tr className="border-b">
+                    <th className="text-left py-3 px-4 w-12"></th>
                     <th className="text-left py-3 px-4">Usuario</th>
                     <th className="text-left py-3 px-4">Rol</th>
                     <th className="text-left py-3 px-4">Departamento</th>
@@ -296,7 +299,15 @@ export const Users = () => {
                 </thead>
                 <tbody>
                   {filteredUsers.map((user) => (
-                    <tr key={user.id} className="border-b hover:bg-gray-50">
+                    <tr key={user.id} className="border-b hover:bg-gray-50/50 transition-colors">
+                      <td className="py-3 px-4">
+                        <Avatar className="h-10 w-10 rounded-xl">
+                          <AvatarImage src={user.avatar} alt={user.name} />
+                          <AvatarFallback className="bg-slate-100 text-slate-500 rounded-xl">
+                            <UserCircle className="h-6 w-6" />
+                          </AvatarFallback>
+                        </Avatar>
+                      </td>
                       <td className="py-3 px-4">
                         <div>
                           <div className="font-medium text-gray-900">{user.name}</div>
@@ -316,8 +327,8 @@ export const Users = () => {
                       </td>
                       <td className="text-center py-3 px-4">
                         <div className="flex items-center justify-center gap-2">
-                          <Button 
-                            variant="ghost" 
+                          <Button
+                            variant="ghost"
                             size="sm"
                             onClick={() => handleEditUser(user)}
                           >

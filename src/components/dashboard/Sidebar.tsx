@@ -10,10 +10,12 @@ import {
   LogOut,
   ChevronRight,
   Shield,
-  Zap
+  Zap,
+  UserCircle
 } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { Button } from '../ui/button';
+import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
 import { motion } from 'framer-motion';
 
 const navigationItems = [
@@ -171,11 +173,12 @@ export const Sidebar = () => {
         <div className="bg-white/[0.02] border border-white/5 rounded-[2rem] p-4 space-y-4">
           <div className="flex items-center space-x-4">
             <div className="relative">
-              <img
-                src={user?.avatar || '/api/placeholder/40/40'}
-                alt={user?.name}
-                className="w-12 h-12 rounded-2xl border border-white/10 p-0.5"
-              />
+              <Avatar className="w-12 h-12 rounded-2xl border border-white/10 p-0.5">
+                <AvatarImage src={user?.avatar} alt={user?.name} className="rounded-2xl" />
+                <AvatarFallback className="bg-slate-800 text-slate-400 rounded-2xl">
+                  <UserCircle size={24} />
+                </AvatarFallback>
+              </Avatar>
               <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-slate-950 rounded-full" />
             </div>
             <div className="flex-1 min-w-0">

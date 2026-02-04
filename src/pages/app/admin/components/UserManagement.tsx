@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { useUserModalStore } from '@/stores/userModalStore';
 import { userService } from '@/services/userService';
 import { User } from '@/types';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { motion } from 'framer-motion';
 
 export const UserManagement = () => {
@@ -88,15 +89,18 @@ export const UserManagement = () => {
                                 onClick={() => navigate(`/users/${user.id}`)}
                             >
                                 <div className="flex items-center space-x-4">
-                                    <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400 border border-white/5 group-hover:border-blue-500/30 transition-all">
-                                        <UserCircle size={20} />
-                                    </div>
+                                    <Avatar className="w-10 h-10 rounded-xl border border-white/5 group-hover:border-blue-500/30 transition-all">
+                                        <AvatarImage src={user.avatar} alt={user.name} className="rounded-xl" />
+                                        <AvatarFallback className="bg-slate-800 text-slate-400 rounded-xl">
+                                            <UserCircle size={20} />
+                                        </AvatarFallback>
+                                    </Avatar>
                                     <div>
                                         <p className="text-[13px] font-black text-white tracking-tight leading-none mb-1.5">{user.name}</p>
                                         <div className="flex items-center space-x-2">
                                             <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-md border ${user.role === 'admin' ? 'bg-rose-500/10 border-rose-500/20 text-rose-400' :
-                                                    user.role === 'manager' ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' :
-                                                        'bg-slate-500/10 border-slate-500/20 text-slate-400'
+                                                user.role === 'manager' ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' :
+                                                    'bg-slate-500/10 border-slate-500/20 text-slate-400'
                                                 }`}>
                                                 {user.role}
                                             </span>

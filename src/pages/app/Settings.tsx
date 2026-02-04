@@ -145,30 +145,31 @@ export const Settings = () => {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 animate-in fade-in duration-700">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Configuración</h1>
-        <p className="text-gray-600">Gestiona tu cuenta y preferencias</p>
+      <div className="flex flex-col space-y-2">
+        <h1 className="text-3xl font-black text-white tracking-tight drop-shadow-sm">
+          Configuración
+        </h1>
+        <p className="text-slate-400 font-medium">Gestiona tu cuenta y preferencias de acceso</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Sidebar */}
         <div className="lg:col-span-1">
-          <Card>
+          <Card className="bg-white/[0.03] backdrop-blur-3xl border-white/10 rounded-[2rem] overflow-hidden">
             <CardContent className="p-4">
-              <nav className="space-y-1">
+              <nav className="space-y-2">
                 {availableTabs.map((tab) => (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                      activeTab === tab.id
-                        ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
-                        : 'text-gray-700 hover:bg-gray-50'
-                    }`}
+                    className={`w-full flex items-center px-4 py-3 text-sm font-bold rounded-xl transition-all duration-300 ${activeTab === tab.id
+                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'
+                        : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                      }`}
                   >
-                    <tab.icon className="mr-3 h-4 w-4" />
+                    <tab.icon className={`mr-3 h-4 w-4 ${activeTab === tab.id ? 'text-white' : 'text-slate-500'}`} />
                     {tab.label}
                   </button>
                 ))}
@@ -180,243 +181,206 @@ export const Settings = () => {
         {/* Content */}
         <div className="lg:col-span-3">
           {activeTab === 'profile' && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <User className="mr-2 h-5 w-5" />
+            <Card className="bg-white/[0.03] backdrop-blur-3xl border-white/10 rounded-[2.5rem] overflow-hidden">
+              <CardHeader className="border-b border-white/5 pb-6">
+                <CardTitle className="flex items-center text-white font-black tracking-tight">
+                  <User className="mr-3 h-5 w-5 text-blue-400" />
                   Información del Perfil
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="p-8 space-y-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-xs font-black uppercase tracking-widest text-slate-500 mb-3 ml-1">
                       Nombre Completo
                     </label>
                     <Input
                       value={profileData.name}
-                      onChange={(e) => setProfileData({...profileData, name: e.target.value})}
+                      onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
                       placeholder="Tu nombre completo"
+                      className="bg-white/5 border-white/10 rounded-2xl h-12 text-white placeholder:text-slate-600 focus:ring-blue-500/30"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-xs font-black uppercase tracking-widest text-slate-500 mb-3 ml-1">
                       Email
                     </label>
                     <Input
                       type="email"
                       value={profileData.email}
-                      onChange={(e) => setProfileData({...profileData, email: e.target.value})}
+                      onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
                       placeholder="tu@email.com"
                       disabled={user?.role === 'client'}
+                      className="bg-white/5 border-white/10 rounded-2xl h-12 text-white placeholder:text-slate-600 focus:ring-blue-500/30 disabled:opacity-50"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-xs font-black uppercase tracking-widest text-slate-500 mb-3 ml-1">
                       Departamento
                     </label>
                     <Input
                       value={profileData.department}
-                      onChange={(e) => setProfileData({...profileData, department: e.target.value})}
+                      onChange={(e) => setProfileData({ ...profileData, department: e.target.value })}
                       placeholder="Tu departamento"
                       disabled={user?.role === 'client'}
+                      className="bg-white/5 border-white/10 rounded-2xl h-12 text-white placeholder:text-slate-600 focus:ring-blue-500/30 disabled:opacity-50"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-xs font-black uppercase tracking-widest text-slate-500 mb-3 ml-1">
                       Empresa
                     </label>
                     <Input
                       value={profileData.company}
-                      onChange={(e) => setProfileData({...profileData, company: e.target.value})}
+                      onChange={(e) => setProfileData({ ...profileData, company: e.target.value })}
                       placeholder="Nombre de tu empresa"
+                      className="bg-white/5 border-white/10 rounded-2xl h-12 text-white placeholder:text-slate-600 focus:ring-blue-500/30"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-xs font-black uppercase tracking-widest text-slate-500 mb-3 ml-1">
                       Teléfono
                     </label>
-                    <div className="flex">
+                    <div className="flex gap-2">
                       <select
                         value={phoneCode}
                         onChange={(e) => setPhoneCode(e.target.value)}
-                        className="w-1/3 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-1/3 bg-white/5 border border-white/10 rounded-2xl px-3 py-2 text-white focus:outline-none focus:ring-1 focus:ring-blue-500/30 text-xs font-bold"
                       >
                         {countries.map((country) => (
-                          <option key={country.code} value={country.code}>
+                          <option key={country.code} value={country.code} className="bg-slate-900">
                             {country.flag} {country.code}
                           </option>
                         ))}
                       </select>
                       <Input
                         value={profileData.phone}
-                        onChange={(e) => setProfileData({...profileData, phone: e.target.value})}
+                        onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
                         placeholder="300 123 4567"
-                        className="rounded-l-none"
+                        className="bg-white/5 border-white/10 rounded-2xl h-12 text-white placeholder:text-slate-600 focus:ring-blue-500/30"
                       />
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-xs font-black uppercase tracking-widest text-slate-500 mb-3 ml-1">
                     Biografía
                   </label>
                   <textarea
                     value={profileData.bio}
-                    onChange={(e) => setProfileData({...profileData, bio: e.target.value})}
+                    onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
                     rows={4}
-                    className="w-full bg-white px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full bg-white/5 px-4 py-3 border border-white/10 rounded-2xl text-white placeholder:text-slate-600 focus:outline-none focus:ring-1 focus:ring-blue-500/30 transition-all text-sm font-medium"
                     placeholder="Cuéntanos un poco sobre ti..."
                   />
                 </div>
 
-                <Button onClick={handleSaveProfile} className="flex items-center gap-2">
+                <Button onClick={handleSaveProfile} className="bg-blue-600 hover:bg-blue-500 text-white rounded-2xl px-8 h-12 font-black text-xs uppercase tracking-widest transition-all transform active:scale-95 shadow-lg shadow-blue-600/20 flex items-center gap-3">
                   <Save className="h-4 w-4" />
-                  Guardar Cambios
+                  Guardar Perfil
                 </Button>
               </CardContent>
             </Card>
           )}
 
           {activeTab === 'security' && user?.role !== 'client' && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Lock className="mr-2 h-5 w-5" />
-                  Seguridad
+            <Card className="bg-white/[0.03] backdrop-blur-3xl border-white/10 rounded-[2.5rem] overflow-hidden">
+              <CardHeader className="border-b border-white/5 pb-6">
+                <CardTitle className="flex items-center text-white font-black tracking-tight">
+                  <Lock className="mr-3 h-5 w-5 text-rose-400" />
+                  Seguridad de Cuenta
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="p-8 space-y-8">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-xs font-black uppercase tracking-widest text-slate-500 mb-3 ml-1">
                     Contraseña Actual
                   </label>
                   <Input
                     type="password"
                     value={securityData.currentPassword}
-                    onChange={(e) => setSecurityData({...securityData, currentPassword: e.target.value})}
-                    placeholder="Tu contraseña actual"
+                    onChange={(e) => setSecurityData({ ...securityData, currentPassword: e.target.value })}
+                    placeholder="••••••••"
+                    className="bg-white/5 border-white/10 rounded-2xl h-12 text-white placeholder:text-slate-600 focus:ring-blue-500/30"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-xs font-black uppercase tracking-widest text-slate-500 mb-3 ml-1">
                     Nueva Contraseña
                   </label>
                   <Input
                     type="password"
                     value={securityData.newPassword}
-                    onChange={(e) => setSecurityData({...securityData, newPassword: e.target.value})}
-                    placeholder="Nueva contraseña"
+                    onChange={(e) => setSecurityData({ ...securityData, newPassword: e.target.value })}
+                    placeholder="••••••••"
+                    className="bg-white/5 border-white/10 rounded-2xl h-12 text-white placeholder:text-slate-600 focus:ring-blue-500/30"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-xs font-black uppercase tracking-widest text-slate-500 mb-3 ml-1">
                     Confirmar Nueva Contraseña
                   </label>
                   <Input
                     type="password"
                     value={securityData.confirmPassword}
-                    onChange={(e) => setSecurityData({...securityData, confirmPassword: e.target.value})}
-                    placeholder="Confirma tu nueva contraseña"
+                    onChange={(e) => setSecurityData({ ...securityData, confirmPassword: e.target.value })}
+                    placeholder="••••••••"
+                    className="bg-white/5 border-white/10 rounded-2xl h-12 text-white placeholder:text-slate-600 focus:ring-blue-500/30"
                   />
                 </div>
 
-                <Button onClick={handleChangePassword} className="flex items-center gap-2">
+                <Button onClick={handleChangePassword} className="bg-rose-600 hover:bg-rose-500 text-white rounded-2xl px-8 h-12 font-black text-xs uppercase tracking-widest transition-all transform active:scale-95 shadow-lg shadow-rose-600/20 flex items-center gap-3">
                   <Lock className="h-4 w-4" />
-                  Cambiar Contraseña
+                  Actualizar Acceso
                 </Button>
               </CardContent>
             </Card>
           )}
 
           {activeTab === 'notifications' && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Bell className="mr-2 h-5 w-5" />
-                  Notificaciones
+            <Card className="bg-white/[0.03] backdrop-blur-3xl border-white/10 rounded-[2.5rem] overflow-hidden">
+              <CardHeader className="border-b border-white/5 pb-6">
+                <CardTitle className="flex items-center text-white font-black tracking-tight">
+                  <Bell className="mr-3 h-5 w-5 text-emerald-400" />
+                  Preferencias de Alertas
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="p-8 space-y-8">
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="font-medium">Notificaciones por Email</h4>
-                      <p className="text-sm text-gray-500">Recibir notificaciones generales por email</p>
+                  {Object.entries({
+                    emailNotifications: { title: "Notificaciones por Email", desc: "Recibir alertas generales en tu buzón" },
+                    taskAssigned: { title: "Tarea Asignada", desc: "Cuando se te asigne una nueva responsabilidad" },
+                    taskCompleted: { title: "Tarea Completada", desc: "Cuando finalice una gestión que iniciaste" },
+                    deadlineReminder: { title: "Recordatorio Crítico", desc: "Alertas 24 horas antes del vencimiento" },
+                    weeklyReport: { title: "Reporte de Inteligencia", desc: "Resumen ejecutivo cada inicio de semana" }
+                  }).map(([key, info]) => (
+                    <div key={key} className="flex items-center justify-between p-4 bg-white/5 border border-white/5 rounded-2xl">
+                      <div>
+                        <h4 className="text-sm font-black text-white">{info.title}</h4>
+                        <p className="text-xs text-slate-500">{info.desc}</p>
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={notificationSettings[key as keyof typeof notificationSettings]}
+                        onChange={(e) => setNotificationSettings({ ...notificationSettings, [key]: e.target.checked })}
+                        className="h-5 w-5 bg-slate-800 border-white/10 rounded-lg text-blue-600 focus:ring-blue-500/30 transition-all cursor-pointer"
+                      />
                     </div>
-                    <input
-                      type="checkbox"
-                      checked={notificationSettings.emailNotifications}
-                      onChange={(e) => setNotificationSettings({...notificationSettings, emailNotifications: e.target.checked})}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="font-medium">Tarea Asignada</h4>
-                      <p className="text-sm text-gray-500">Cuando te asignen una nueva tarea</p>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={notificationSettings.taskAssigned}
-                      onChange={(e) => setNotificationSettings({...notificationSettings, taskAssigned: e.target.checked})}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="font-medium">Tarea Completada</h4>
-                      <p className="text-sm text-gray-500">Cuando se complete una tarea que creaste</p>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={notificationSettings.taskCompleted}
-                      onChange={(e) => setNotificationSettings({...notificationSettings, taskCompleted: e.target.checked})}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="font-medium">Recordatorio de Fecha Límite</h4>
-                      <p className="text-sm text-gray-500">24 horas antes del vencimiento</p>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={notificationSettings.deadlineReminder}
-                      onChange={(e) => setNotificationSettings({...notificationSettings, deadlineReminder: e.target.checked})}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="font-medium">Reporte Semanal</h4>
-                      <p className="text-sm text-gray-500">Resumen de actividades cada lunes</p>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={notificationSettings.weeklyReport}
-                      onChange={(e) => setNotificationSettings({...notificationSettings, weeklyReport: e.target.checked})}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    />
-                  </div>
+                  ))}
                 </div>
 
-                <Button onClick={handleSaveNotifications} className="flex items-center gap-2">
+                <Button onClick={handleSaveNotifications} className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl px-8 h-12 font-black text-xs uppercase tracking-widest transition-all transform active:scale-95 shadow-lg shadow-emerald-600/20 flex items-center gap-3">
                   <Save className="h-4 w-4" />
-                  Guardar Configuración
+                  Preservar Ajustes
                 </Button>
               </CardContent>
             </Card>
