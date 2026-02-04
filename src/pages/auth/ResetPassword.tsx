@@ -56,7 +56,7 @@ export const ResetPassword = () => {
         setIsLoading(true);
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_REACT_APP_URL}/reset-password`, {
+            const response = await fetch(`${import.meta.env.VITE_REACT_APP_URL}/auth/reset-password`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

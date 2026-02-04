@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useLocation } from 'react-router-dom';
 import { Plus, Search, Filter, Edit, Trash2, CheckSquare as CheckSquareIcon } from 'lucide-react';
 import { useTaskStore } from '../../stores/taskStore';
 import { useAuthStore } from '../../stores/authStore';
@@ -17,7 +18,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 
 const priorityColors = {
   baja: 'bg-green-100 text-green-800',
-  media: 'bg-slate-100 text-slate-800', 
+  media: 'bg-slate-100 text-slate-800',
   alta: 'bg-teal-100 text-teal-800',
   urgente: 'bg-red-100 text-red-800'
 };
@@ -62,29 +63,29 @@ export const Tasks = () => {
 
   // Los datos vienen directamente de la consulta
   const allTasks = tasksData?.tasks || [];
-  
-  
+
+
   // Filter tasks based on user role and search criteria
-const filteredTasks = allTasks.filter(task => {
-  // Filtro por rol
- if (user?.role === 'client' && task.assignedBy !== user.id) {
-  return false;
-}
-if (user?.role === 'collaborator' && task.assignedTo !== user.id) {
-  return false;
-}
+  const filteredTasks = allTasks.filter(task => {
+    // Filtro por rol
+    if (user?.role === 'client' && task.assignedBy !== user.id) {
+      return false;
+    }
+    if (user?.role === 'collaborator' && task.assignedTo !== user.id) {
+      return false;
+    }
 
 
-  // Filtro por búsqueda
-  const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        task.description.toLowerCase().includes(searchTerm.toLowerCase());
+    // Filtro por búsqueda
+    const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      task.description.toLowerCase().includes(searchTerm.toLowerCase());
 
-  // Filtros por estado y tipo
-  const matchesStatus = !selectedStatus || task.status === selectedStatus;
-  const matchesType = !selectedType || task.type === selectedType;
+    // Filtros por estado y tipo
+    const matchesStatus = !selectedStatus || task.status === selectedStatus;
+    const matchesType = !selectedType || task.type === selectedType;
 
-  return matchesSearch && matchesStatus && matchesType;
-});
+    return matchesSearch && matchesStatus && matchesType;
+  });
 
 
   const handleCreateTask = () => {
@@ -139,35 +140,35 @@ if (user?.role === 'collaborator' && task.assignedTo !== user.id) {
   if (error) return <div>Error al cargar las tareas.</div>;
 
   const getDeadlineDate = (
-        startDate: string | Date,
-        endDate: string | Date | null,
-        estimatedHours: number
-      ): string => {
-  if (endDate) return new Date(endDate).toLocaleDateString();
+    startDate: string | Date,
+    endDate: string | Date | null,
+    estimatedHours: number
+  ): string => {
+    if (endDate) return new Date(endDate).toLocaleDateString();
 
-  const start = new Date(startDate);
-  const workingHoursPerDay = 5;
-  const estimatedDays = Math.ceil(estimatedHours / workingHoursPerDay);
-  
+    const start = new Date(startDate);
+    const workingHoursPerDay = 5;
+    const estimatedDays = Math.ceil(estimatedHours / workingHoursPerDay);
 
-  const result = new Date(start);
-  
-  
-  let addedDays = 0;
 
-  while (addedDays < estimatedDays) {
-    result.setDate(result.getDate() + 1);
-    const dayOfWeek = result.getDay();
-   
-    
-    if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-      // Solo contar días hábiles (lunes a viernes)
-      addedDays++;
+    const result = new Date(start);
+
+
+    let addedDays = 0;
+
+    while (addedDays < estimatedDays) {
+      result.setDate(result.getDate() + 1);
+      const dayOfWeek = result.getDay();
+
+
+      if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+        // Solo contar días hábiles (lunes a viernes)
+        addedDays++;
+      }
     }
-  }
 
-  return result.toLocaleDateString();
-};
+    return result.toLocaleDateString();
+  };
 
   return (
     <div className="space-y-6">
@@ -198,7 +199,7 @@ if (user?.role === 'collaborator' && task.assignedTo !== user.id) {
                 className="pl-10"
               />
             </div>
-            
+
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}

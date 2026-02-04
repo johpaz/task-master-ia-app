@@ -27,7 +27,7 @@ export const ForgotPassword = () => {
         setIsLoading(true);
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_REACT_APP_URL}/forgot-password`, {
+            const response = await fetch(`${import.meta.env.VITE_REACT_APP_URL}/auth/forgot-password`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
