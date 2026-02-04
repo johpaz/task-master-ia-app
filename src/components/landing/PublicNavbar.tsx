@@ -41,11 +41,10 @@ export const PublicNavbar = () => {
   };
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-500 ${
-      scrolled 
-        ? 'bg-background/95 backdrop-blur-md shadow-lg border-b border-border h-20' 
-        : 'bg-transparent h-24'
-    }`}>
+    <nav className={`fixed w-full z-50 transition-all duration-500 ${scrolled
+      ? 'bg-background/95 backdrop-blur-md shadow-lg border-b border-border h-20'
+      : 'bg-transparent h-24'
+      }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
         <div className="flex justify-between items-center h-full">
           {/* Left Navigation - Desktop */}
@@ -53,7 +52,7 @@ export const PublicNavbar = () => {
             <Link to="/" className="font-semibold text-foreground hover:text-primary transition-colors">
               Inicio
             </Link>
-            <button 
+            <button
               onClick={handleFeaturesClick}
               className="font-semibold text-foreground hover:text-primary transition-colors"
             >
@@ -67,13 +66,11 @@ export const PublicNavbar = () => {
           {/* Centered Logo */}
           <div className="flex justify-center flex-1">
             <Link to="/" className="group">
-              <div className={`bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center shadow-2xl group-hover:shadow-primary/50 transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 ${
-                scrolled ? 'w-16 h-16' : 'w-20 h-20'
-              }`}>
-                <span className={`text-primary-foreground font-bold transition-all duration-300 ${
-                  scrolled ? 'text-2xl' : 'text-3xl'
+              <div className={`bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center shadow-2xl group-hover:shadow-primary/50 transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 ${scrolled ? 'w-16 h-16' : 'w-20 h-20'
                 }`}>
-                  T
+                <span className={`text-primary-foreground font-bold transition-all duration-300 ${scrolled ? 'text-2xl' : 'text-3xl'
+                  }`}>
+                  <img src="/logoTaks.png" alt="logoTaks" className="w-16 h-16" />
                 </span>
               </div>
             </Link>

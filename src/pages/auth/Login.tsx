@@ -28,7 +28,7 @@ export const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validación básica
     if (!formData.email.includes('@') || formData.password.length < 6) {
       toast({
@@ -38,7 +38,7 @@ export const Login = () => {
       });
       return;
     }
-    
+
     // Verificar si la cuenta está bloqueada
     if (isLocked) {
       toast({
@@ -52,11 +52,11 @@ export const Login = () => {
     setIsLoading(true);
 
     try {
-      const { success, redirectTo } = await login({ 
-        email: formData.email, 
-        password: formData.password 
+      const { success, redirectTo } = await login({
+        email: formData.email,
+        password: formData.password
       });
-      
+
       if (success) {
         toast({
           title: "¡Bienvenido!",
@@ -66,12 +66,12 @@ export const Login = () => {
       } else {
         const newAttempts = attempts + 1;
         setAttempts(newAttempts);
-        
+
         if (newAttempts >= 3) {
           setIsLocked(true);
           setTimeout(() => setIsLocked(false), 300000); // 5 minutos
         }
-        
+
         toast({
           title: "Error de autenticación",
           description: "Email o contraseña incorrectos.",
@@ -102,8 +102,8 @@ export const Login = () => {
       <div className="max-w-md w-full space-y-8">
         {/* Back to home */}
         <div className="flex items-center">
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className="flex items-center text-muted-foreground hover:text-primary transition-colors"
             aria-label="Volver al inicio"
           >
@@ -115,10 +115,10 @@ export const Login = () => {
         {/* Header */}
         <div className="text-center">
           <div className="flex justify-center mb-4">
-            <img 
-              src="logoDash.png" 
-              alt="Logo TaskMaster IA" 
-              className="h-17 w-17 rounded-full"
+            <img
+              src="logoTaks.png"
+              alt="Logo TaskMaster IA"
+              className="h-16 w-16"
             />
           </div>
           <h2 className="text-3xl font-bold text-foreground">
@@ -130,8 +130,8 @@ export const Login = () => {
         </div>
 
         {/* Form */}
-        <form 
-          className="mt-8 space-y-6 bg-card p-6 rounded-lg shadow-lg border dark:border-gray-700" 
+        <form
+          className="mt-8 space-y-6 bg-card p-6 rounded-lg shadow-lg border dark:border-gray-700"
           onSubmit={handleSubmit}
         >
           <div className="space-y-4">
@@ -150,7 +150,7 @@ export const Login = () => {
                 disabled={isLocked}
               />
             </div>
-            
+
             <div>
               <Label htmlFor="password" className="text-foreground">Contraseña</Label>
               <div className="relative mt-1">
@@ -189,7 +189,7 @@ export const Login = () => {
                 id="rememberMe"
                 name="rememberMe"
                 checked={formData.rememberMe}
-                onCheckedChange={(checked) => 
+                onCheckedChange={(checked) =>
                   setFormData(prev => ({ ...prev, rememberMe: checked as boolean }))
                 }
                 disabled={isLocked}
@@ -226,8 +226,8 @@ export const Login = () => {
           <div className="text-center">
             <p className="text-sm text-muted-foreground">
               ¿Necesitas una cuenta?{' '}
-              <a 
-                href="mailto:hola@tuprofedeai.com" 
+              <a
+                href="mailto:hola@tuprofedeai.com"
                 className="text-primary hover:text-primary/80"
                 aria-label="Contactar al soporte"
               >
