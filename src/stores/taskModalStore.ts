@@ -4,6 +4,7 @@ import { Task } from '../types';
 
 interface TaskModalState {
   isOpen: boolean;
+  isModalOpen: boolean;
   editingTask: Task | null;
   openModal: (task?: Task) => void;
   closeModal: () => void;
@@ -11,6 +12,7 @@ interface TaskModalState {
 
 export const useTaskModalStore = create<TaskModalState>((set) => ({
   isOpen: false,
+  isModalOpen: false,
   editingTask: null,
   openModal: (task?: Task) => set({ isOpen: true, editingTask: task || null }),
   closeModal: () => set({ isOpen: false, editingTask: null }),

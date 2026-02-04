@@ -1,9 +1,9 @@
 
 import { useAuthStore } from '../../stores/authStore';
-import { AdminDashboard } from './dashboards/AdminDashboard';
-import { ManagerDashboard } from './dashboards/ManagerDashboard';
-import { CollaboratorDashboard } from './dashboards/CollaboratorDashboard';
-import { ClientDashboard } from './ClientDashboard';
+import { AdminDashboard } from './admin/AdminDashboard';
+import { ManagerDashboard } from './manager/ManagerDashboard';
+import { CollaboratorDashboard } from './collaborator/CollaboratorDashboard';
+import { ClientDashboard } from './client/ClientDashboard';
 
 export const Dashboard = () => {
   const { user } = useAuthStore();

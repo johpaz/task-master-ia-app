@@ -35,12 +35,12 @@ export const Kanban = () => {
 
   const { data: tasksData, isLoading, error, refetch } = useQuery({
     queryKey: ['allTasks', token],
-    queryFn: () => taskService.getTasks(token),
+    queryFn: () => taskService.getTasks(),
     enabled: !!token,
   });
 
   // Ensure we read the 'data' property returned by the API
-  const tasks: Task[] = tasksData?.data || [];
+  const tasks: Task[] = tasksData?.tasks || [];
 
   const { updateTask } = useTaskStore();
 

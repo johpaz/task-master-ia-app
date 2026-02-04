@@ -1,6 +1,6 @@
 
 export type UserRole = 'admin' | 'manager' | 'collaborator' | 'client';
-export type TaskStatus = 'por hacer' | 'en progreso' | 'en revisión' | 'completada' | 'cancelada';
+export type TaskStatus = 'pendiente' | 'en_progreso' | 'revision' | 'completada' | 'cancelada';
 export type TaskType = 'desarrollo' | 'agente' | 'soporte' | 'pqr' | 'consultoria' | 'capacitacion';
 export type TaskPriority = 'baja' | 'media' | 'alta' | 'urgente';
 
@@ -38,6 +38,7 @@ export interface Task {
   tags?: string[];
   comments?: TaskComment[];
   attachments?: TaskAttachment[];
+  collaboratorId?: string;
 }
 
 export interface TaskComment {

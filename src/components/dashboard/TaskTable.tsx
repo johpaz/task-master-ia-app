@@ -50,6 +50,7 @@ export const TaskTable: React.FC = () => {
     queryKey: ['tasks', 'non-completed'],
     queryFn: () => fetchTasks(token, 'non-completed'),
     enabled: !!token,
+    refetchInterval: 30000,
   });
 
   if (isLoading) return <div className="p-4">Cargando tareas...</div>;

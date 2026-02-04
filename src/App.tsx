@@ -25,10 +25,10 @@ import { ResetPassword } from "./pages/auth/ResetPassword";
 
 // App Pages
 import { Dashboard } from "./pages/app/Dashboard";
-import { AdminDashboard } from "./pages/app/AdminDashboard";
-import { ManagerDashboard } from "./pages/app/ManagerDashboard";
-import { CollaboratorDashboard } from "./pages/app/CollaboratorDashboard";
-import { ClientDashboard } from "./pages/app/ClientDashboard";
+import { AdminDashboard } from "./pages/app/admin/AdminDashboard";
+import { ManagerDashboard } from "./pages/app/manager/ManagerDashboard";
+import { CollaboratorDashboard } from "./pages/app/collaborator/CollaboratorDashboard";
+import { ClientDashboard } from "./pages/app/client/ClientDashboard";
 import { Tasks } from "./pages/app/Tasks";
 import { AllTasks } from "./pages/app/AllTasks";
 import { TaskDetail } from "./pages/app/TaskDetail";

@@ -22,13 +22,13 @@ export const EditTask = () => {
 
   const { data: task, isLoading: isLoadingTask } = useQuery<Task>({
     queryKey: ['task', id],
-    queryFn: () => taskService.getTaskById(id!, token),
+    queryFn: () => taskService.getTaskById(id!),
     enabled: !!id && !!token,
   });
 
   const { data: users, isLoading: isLoadingUsers } = useQuery<User[]>({
     queryKey: ['users'],
-    queryFn: () => userService.getUsers(token),
+    queryFn: () => userService.getUsers(),
     enabled: !!token,
   });
 
@@ -44,7 +44,7 @@ export const EditTask = () => {
   }, [task]);
 
   const mutation = useMutation({
-    mutationFn: (updatedTask: any) => taskService.updateTask(id!, updatedTask, token),
+    mutationFn: (updatedTask: any) => taskService.updateTask(id!, updatedTask),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['task', id] });
       queryClient.invalidateQueries({ queryKey: ['tasks'] });

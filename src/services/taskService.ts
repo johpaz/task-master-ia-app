@@ -1,7 +1,7 @@
 // src/services/taskService.ts
 
 import { useAuthStore } from "@/stores/authStore";
-import { Metrics ,Task} from "@/types/index";
+import { Metrics, Task } from "@/types/index";
 
 // La URL base de tu API, tomada de las variables de entorno.
 const API_BASE_URL = import.meta.env.VITE_REACT_APP_URL;
@@ -46,35 +46,41 @@ export const taskService = {
 
   /**
    * Obtiene una lista de todas las tareas.
-   * @returns {Promise<Task[]>} Una promesa que resuelve a un array de tareas.
+   * @returns {Promise<{ tasks: Task[] }>} Una promesa que resuelve a un objeto con el array de tareas.
    */
-  async getTasks(token: string | null): Promise<{ tasks: Task[] }> {
-    if (!token) {
-      throw new Error('No authentication token provided');
-    }
+  async getTasks(): Promise<{ tasks: Task[] }> {
     const response = await fetch(`${API_BASE_URL}/tasks`, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
+      headers: this.getHeaders(),
     });
     if (!response.ok) throw new Error('Error al obtener las tareas.');
     return response.json();
   },
 
-  async getMyTasks(token: string | null): Promise<{ tasks: Task[] }> {
-    if (!token) {
-      throw new Error('No authentication token provided');
-    }
+  /**
+   * Obtiene las tareas asignadas al usuario actual.
+   * @returns {Promise<{ tasks: Task[] }>} Una promesa que resuelve a un objeto con el array de tareas.
+   */
+  async getMyTasks(): Promise<{ tasks: Task[] }> {
     const response = await fetch(`${API_BASE_URL}/tasks/my-tasks`, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
+      headers: this.getHeaders(),
     });
     if (!response.ok) throw new Error('Error al obtener mis tareas.');
+    return response.json();
+  },
+
+  /**
+   * Obtiene una tarea específica por su ID.
+   * @param {string} id - El ID de la tarea.
+   * @returns {Promise<Task>} La tarea encontrada.
+   */
+  async getTaskById(id: string): Promise<Task> {
+    const response = await fetch(`${API_BASE_URL}/tasks/${id}`, {
+      method: 'GET',
+      headers: this.getHeaders(),
+    });
+    if (!response.ok) throw new Error('Error al obtener el detalle de la tarea.');
     return response.json();
   },
 
@@ -104,7 +110,7 @@ export const taskService = {
    */
   async updateTask(id: string, taskData: UpdateTaskRequest): Promise<Task> {
     const response = await fetch(`${API_BASE_URL}/tasks/${id}`, {
-      method: 'PUT', // o 'PATCH' si tu API lo soporta
+      method: 'PUT',
       headers: this.getHeaders(),
       body: JSON.stringify(taskData),
     });
@@ -127,7 +133,8 @@ export const taskService = {
     });
     if (!response.ok) throw new Error('Error al eliminar la tarea.');
   },
-   /**
+
+  /**
    * Obtiene las métricas del dashboard desde el backend.
    * @returns {Promise<Metrics>} Una promesa que resuelve a un objeto con las métricas.
    */
@@ -141,5 +148,4 @@ export const taskService = {
     }
     return response.json();
   },
-
 };

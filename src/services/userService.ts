@@ -105,7 +105,7 @@ export const userService = {
       method: 'DELETE',
       headers: getAuthHeaders(),
     });
-    
+
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.message || 'Error al eliminar usuario');
@@ -115,7 +115,7 @@ export const userService = {
     if (response.status === 204) {
       return;
     }
-    
+
     return response.json();
   },
 };

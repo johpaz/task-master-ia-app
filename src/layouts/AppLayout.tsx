@@ -52,11 +52,18 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-background dark:bg-background flex">
+    <div className="min-h-screen bg-slate-950 flex relative overflow-hidden">
+      {/* Immersive Background Layer */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-[0.1]"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(30,58,138,0.15),transparent_70%)]"></div>
+        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-blue-600/5 rounded-full blur-[120px]"></div>
+      </div>
+
       <Sidebar />
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col relative z-10 overflow-hidden">
         <TopBar />
-        <main className="flex-1 p-6 overflow-auto">
+        <main className="flex-1 p-4 md:p-8 overflow-auto custom-scrollbar">
           {children}
         </main>
       </div>
