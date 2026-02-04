@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {  Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 
 // Layouts
@@ -20,6 +20,8 @@ import { FAQ } from "./pages/public/FAQ";
 import { About } from "./pages/public/About";
 import { Contact } from "./pages/public/Contact";
 import { Login } from "./pages/auth/Login";
+import { ForgotPassword } from "./pages/auth/ForgotPassword";
+import { ResetPassword } from "./pages/auth/ResetPassword";
 
 // App Pages
 import { Dashboard } from "./pages/app/Dashboard";
@@ -44,45 +46,57 @@ import { ThemeProvider } from "next-themes";
 const queryClient = new QueryClient();
 
 const App = () => {
- 
+
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <Toaster />
           <Sonner />
-         
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/login" element={
-                <PublicRoute>
-                  <Login />
-                </PublicRoute>
-              } />
-              
-              <Route path="/" element={
-                <PublicRoute>
-                  <PublicLayout>
-                    <LandingPage />
-                  </PublicLayout>
-                </PublicRoute>
-              } />
-              
-              <Route path="/faq" element={
-                <PublicRoute>
-                  <PublicLayout>
-                    <FAQ />
-                  </PublicLayout>
-                </PublicRoute>
-              } />
-              
-              <Route path="/about" element={
-                <PublicRoute>
-                  <PublicLayout>
-                    <About />
-                  </PublicLayout>
-                </PublicRoute>
-              } />
+
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/login" element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            } />
+
+            <Route path="/forgot-password" element={
+              <PublicRoute>
+                <ForgotPassword />
+              </PublicRoute>
+            } />
+
+            <Route path="/reset-password" element={
+              <PublicRoute>
+                <ResetPassword />
+              </PublicRoute>
+            } />
+
+            <Route path="/" element={
+              <PublicRoute>
+                <PublicLayout>
+                  <LandingPage />
+                </PublicLayout>
+              </PublicRoute>
+            } />
+
+            <Route path="/faq" element={
+              <PublicRoute>
+                <PublicLayout>
+                  <FAQ />
+                </PublicLayout>
+              </PublicRoute>
+            } />
+
+            <Route path="/about" element={
+              <PublicRoute>
+                <PublicLayout>
+                  <About />
+                </PublicLayout>
+              </PublicRoute>
+            } />
 
             <Route path="/contact" element={
               <PublicRoute>
@@ -132,7 +146,7 @@ const App = () => {
                 </AppLayout>
               </ProtectedRoute>
             } />
-            
+
             <Route path="/tasks" element={
               <ProtectedRoute>
                 <AppLayout>
@@ -164,7 +178,7 @@ const App = () => {
                 </AppLayout>
               </ProtectedRoute>
             } />
-            
+
             <Route path="/kanban" element={
               <ProtectedRoute>
                 <AppLayout>
@@ -172,7 +186,7 @@ const App = () => {
                 </AppLayout>
               </ProtectedRoute>
             } />
-            
+
             <Route path="/calendar" element={
               <ProtectedRoute>
                 <AppLayout>
@@ -180,7 +194,7 @@ const App = () => {
                 </AppLayout>
               </ProtectedRoute>
             } />
-            
+
             <Route path="/reports" element={
               <ProtectedRoute requiredRoles={['admin', 'manager']}>
                 <AppLayout>
@@ -188,7 +202,7 @@ const App = () => {
                 </AppLayout>
               </ProtectedRoute>
             } />
-            
+
             <Route path="/users" element={
               <ProtectedRoute requiredRoles={['admin']}>
                 <AppLayout>
@@ -204,7 +218,7 @@ const App = () => {
                 </AppLayout>
               </ProtectedRoute>
             } />
-            
+
             <Route path="/settings" element={
               <ProtectedRoute>
                 <AppLayout>
@@ -221,10 +235,10 @@ const App = () => {
               </ProtectedRoute>
             } />
 
-              {/* Catch all route */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-         
+            {/* Catch all route */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+
         </TooltipProvider>
       </QueryClientProvider>
     </ThemeProvider>
