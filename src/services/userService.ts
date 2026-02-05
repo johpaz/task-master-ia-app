@@ -118,4 +118,19 @@ export const userService = {
 
     return response.json();
   },
+
+  // Obtener estado de suscripción
+  async getSubscriptionStatus(id: string) {
+    const response = await fetch(`${API_BASE_URL}/users/${id}/subscription-status`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error al obtener estado de suscripción');
+    }
+
+    return response.json();
+  },
 };

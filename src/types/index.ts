@@ -17,6 +17,21 @@ export interface User {
   status: 'active' | 'inactive';
   createdAt: string;
   lastLogin?: string;
+  tieneSuscripcionMensual?: boolean;
+  linkPago?: string;
+  costoSuscripcion?: string;
+  inicioSuscripcion?: string;
+  finSuscripcion?: string;
+  diaPago?: number;
+  isPago?: boolean;
+}
+
+export interface SubscriptionStatus {
+  id: string;
+  active: boolean;
+  reason: string;
+  finSuscripcion?: string | null;
+  linkPago?: string | null;
 }
 
 export interface Task {

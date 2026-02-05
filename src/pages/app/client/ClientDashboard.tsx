@@ -1,14 +1,15 @@
 import { motion } from 'framer-motion';
-import { Plus, ShieldCheck, Activity, Sparkles, Send } from 'lucide-react';
+import { Plus, ShieldCheck, Activity, Sparkles, Send, CreditCard, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '../../../components/ui/button';
 import { useAuthStore } from '../../../stores/authStore';
 import { dashboardService } from '../../../services/dashboardService';
 import { taskService } from '../../../services/taskService';
+import { userService } from '../../../services/userService';
 import { useTaskModalStore } from '../../../stores/taskModalStore';
 import { CreateTaskRequest } from '../../../services/taskService';
-import { Task } from '../../../types';
+import { Task, SubscriptionStatus } from '../../../types';
 import { TaskModal } from '../../../components/tasks/TaskModal';
 import { ClientStats } from './components/ClientStats';
 import { RecentRequests } from './components/RecentRequests';
@@ -29,6 +30,12 @@ export const ClientDashboard = () => {
         queryKey: ['myTasks', token],
         queryFn: () => taskService.getMyTasks(),
         enabled: !!token,
+    });
+
+    const { data: subData, isLoading: isLoadingSub } = useQuery<SubscriptionStatus>({
+        queryKey: ['subscriptionStatus', user?.id],
+        queryFn: () => userService.getSubscriptionStatus(user?.id || ''),
+        enabled: !!user?.id,
     });
 
     const handleSaveTask = async (data: CreateTaskRequest) => {
@@ -78,6 +85,17 @@ export const ClientDashboard = () => {
                         </div>
 
                         <div className="flex items-center space-x-6 pt-2">
+                            {subData && (
+                                <div className={`flex items-center space-x-2 px-3 py-1.5 rounded-xl border ${subData.active
+                                        ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500'
+                                        : 'bg-rose-500/10 border-rose-500/20 text-rose-500'
+                                    }`}>
+                                    {subData.active ? <CheckCircle2 size={14} /> : <AlertCircle size={14} />}
+                                    <span className="text-[10px] font-black uppercase tracking-widest">
+                                        {subData.active ? 'Suscripción Activa' : subData.reason}
+                                    </span>
+                                </div>
+                            )}
                             <div className="flex items-center space-x-2 text-blue-500/60 uppercase text-[10px] font-black tracking-widest">
                                 <Activity size={14} />
                                 <span>Canal Encriptado</span>
@@ -100,6 +118,33 @@ export const ClientDashboard = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Subscription Payment Alert */}
+            {subData && !subData.active && subData.linkPago && (
+                <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    className="bg-gradient-to-r from-rose-600/20 to-rose-600/5 border border-rose-500/20 rounded-[2.5rem] p-8 flex flex-col md:flex-row items-center justify-between gap-6"
+                >
+                    <div className="flex items-center space-x-6">
+                        <div className="h-16 w-16 bg-rose-600 rounded-[1.2rem] flex items-center justify-center text-white shadow-xl shadow-rose-500/20">
+                            <CreditCard size={28} />
+                        </div>
+                        <div>
+                            <h4 className="text-white font-black uppercase tracking-tight text-lg">Pago Pendiente Detectado</h4>
+                            <p className="text-slate-400 font-medium text-sm">Tu suscripción ha expirado o el pago no ha sido procesado. Los servicios de agentes están pausados.</p>
+                        </div>
+                    </div>
+                    <Button
+                        asChild
+                        className="bg-rose-600 hover:bg-rose-500 text-white h-14 px-10 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-rose-500/20"
+                    >
+                        <a href={subData.linkPago} target="_blank" rel="noopener noreferrer">
+                            Pagar Ahora
+                        </a>
+                    </Button>
+                </motion.div>
+            )}
 
             {/* Core Metrics */}
             <ClientStats stats={statsData} isLoading={isLoadingStats} />
